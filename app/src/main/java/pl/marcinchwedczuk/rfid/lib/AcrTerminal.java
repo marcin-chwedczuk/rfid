@@ -24,5 +24,4 @@ public class AcrTerminal {
             throw new AcrException(e);
         }
     }
-
 }

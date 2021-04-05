@@ -3,8 +3,7 @@ package pl.marcinchwedczuk.rfid.gui;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
-import pl.marcinchwedczuk.rfid.lib.AcrCard;
-import pl.marcinchwedczuk.rfid.lib.AtrInfo;
+import pl.marcinchwedczuk.rfid.lib.*;
 
 import javax.smartcardio.*;
 import java.util.List;
@@ -49,7 +48,16 @@ public class MainWindow {
             out("STANDARD: %s", atrInfo.cardStandard.readableName());
             out("CARD NAME: %s", atrInfo.cardName.readableName());
 
+            //out("FIRMWARE: %s", acrCard.getReaderFirmwareVersion());
+            out("CARD UID: %s", acrCard.getCardUID());
 
+            byte ff = (byte)0xff;
+            int reg = 0;
+            acrCard.loadKeyToRegister(new byte[] { ff, ff, ff, ff, ff, ff }, reg);
+            acrCard.authenticate(SectorBlock.firstBlockOfSector(0), KeyType.KEY_A, reg);
+
+            byte[] data = acrCard.readBinaryBlock(SectorBlock.firstBlockOfSector(0), 16);
+            out("DATA: %s", ByteUtils.asHexString(data, ":"));
             /*
             card.beginExclusive();
             try {

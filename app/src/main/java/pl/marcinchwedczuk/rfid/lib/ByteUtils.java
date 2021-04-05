@@ -17,7 +17,7 @@ public class ByteUtils {
                 sb.append(separator);
             }
 
-            String hex = Integer.toHexString(bytes[i]);
+            String hex = Integer.toHexString(0xFF & bytes[i]);
             if (hex.length() == 1) {
                 sb.append('0');
             }
