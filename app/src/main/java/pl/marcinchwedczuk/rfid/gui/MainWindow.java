@@ -6,6 +6,7 @@ import javafx.scene.control.TextArea;
 import pl.marcinchwedczuk.rfid.lib.*;
 
 import javax.smartcardio.*;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class MainWindow {
@@ -54,10 +55,13 @@ public class MainWindow {
             byte ff = (byte)0xff;
             int reg = 0;
             acrCard.loadKeyToRegister(new byte[] { ff, ff, ff, ff, ff, ff }, reg);
-            acrCard.authenticate(SectorBlock.firstBlockOfSector(0), KeyType.KEY_A, reg);
+            acrCard.authenticate(SectorBlock.firstBlockOfSector(1), KeyType.KEY_A, reg);
 
-            byte[] data = acrCard.readBinaryBlock(SectorBlock.firstBlockOfSector(0), 16);
+            byte[] data = acrCard.readBinaryBlock(SectorBlock.firstBlockOfSector(1), 16);
             out("DATA: %s", ByteUtils.asHexString(data, ":"));
+
+            acrCard.writeBinaryBlock(SectorBlock.firstBlockOfSector(1),
+                    "Hello, world!...".getBytes(StandardCharsets.US_ASCII));
             /*
             card.beginExclusive();
             try {

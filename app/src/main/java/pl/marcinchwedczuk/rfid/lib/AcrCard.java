@@ -149,4 +149,35 @@ public class AcrCard {
             throw new AcrException("Cannot read block.", e);
         }
     }
+
+    public void writeBinaryBlock(SectorBlock block, byte[] data16) {
+        if (data16.length != 16) {
+            throw new IllegalArgumentException("Block is 16 bytes long for Mifare 1K/4K.");
+        }
+
+        byte[] commandBytes = new byte[] {
+                (byte)0xFF, (byte)0xD6, 0x00, (byte)block.blockNumber(),
+                (byte)data16.length, // must be 16 for Mifare 1K/4K
+                data16[0], data16[1], data16[2], data16[3],
+                data16[4], data16[5], data16[6], data16[7],
+                data16[8], data16[9], data16[10], data16[11],
+                data16[12], data16[13], data16[14], data16[15]
+        };
+
+        try {
+            ResponseAPDU response =
+                    card.getBasicChannel().transmit(new CommandAPDU(commandBytes));
+
+            int sw = response.getSW();
+            if (sw == 0x6300) {
+                throw new AcrException("Reading block failed.");
+            }
+            if (sw != 0x9000) {
+                throw new AcrException(String.format("Unknown SW code 0x%04x.", sw));
+            }
+            // Success
+        } catch (CardException e) {
+            throw new AcrException("Cannot read block.", e);
+        }
+    }
 }
