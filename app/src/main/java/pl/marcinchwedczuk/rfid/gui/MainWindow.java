@@ -57,11 +57,20 @@ public class MainWindow {
             acrCard.loadKeyToRegister(new byte[] { ff, ff, ff, ff, ff, ff }, reg);
             acrCard.authenticate(SectorBlock.firstBlockOfSector(1), KeyType.KEY_A, reg);
 
-            byte[] data = acrCard.readBinaryBlock(SectorBlock.firstBlockOfSector(1), 16);
-            out("DATA: %s", ByteUtils.asHexString(data, ":"));
+            //byte[] data = acrCard.readBinaryBlock(SectorBlock.firstBlockOfSector(1), 16);
+            //out("DATA: %s", ByteUtils.asHexString(data, ":"));
 
-            acrCard.writeBinaryBlock(SectorBlock.firstBlockOfSector(1),
-                    "Hello, world!...".getBytes(StandardCharsets.US_ASCII));
+            //acrCard.writeBinaryBlock(SectorBlock.firstBlockOfSector(1),
+             //       "Hello, world!...".getBytes(StandardCharsets.US_ASCII));
+
+            byte[] trailer1 = acrCard.readBinaryBlock(SectorBlock.fromSectorAndBlock(1, 3), 16);
+            TrailerBlock tb = new TrailerBlock(trailer1);
+
+            out("%s", tb.accessBits.asTable());
+
+            out("KEY A: %s", ByteUtils.asHexString(tb.keyA, ":"));
+            out("KEY B: %s", ByteUtils.asHexString(tb.keyB, ":"));
+
             /*
             card.beginExclusive();
             try {
