@@ -3,6 +3,8 @@ package pl.marcinchwedczuk.rfid.gui;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
+import pl.marcinchwedczuk.rfid.lib.AcrCard;
+import pl.marcinchwedczuk.rfid.lib.AtrInfo;
 
 import javax.smartcardio.*;
 import java.util.List;
@@ -42,9 +44,13 @@ public class MainWindow {
             Card card = terminal.connect("T=0");
             out("PROTOCOL: %s", card.getProtocol());
 
-            byte[] atr = card.getATR().getBytes();
-            out("BYTES: %s", bytesToHex(atr));
+            AcrCard acrCard = new AcrCard(null, card);
+            AtrInfo atrInfo = acrCard.atrInfo();
+            out("STANDARD: %s", atrInfo.cardStandard.readableName());
+            out("CARD NAME: %s", atrInfo.cardName.readableName());
 
+
+            /*
             card.beginExclusive();
             try {
                 CardChannel chann = card.getBasicChannel();
@@ -53,7 +59,7 @@ public class MainWindow {
                 }));
             } finally {
                 card.endExclusive();
-            }
+            }*/
 
             card.disconnect(true);
 

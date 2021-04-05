@@ -13,7 +13,7 @@ public class AcrCard {
     }
 
     public AtrInfo atrInfo() {
-        ATR atrBytes = card.getATR();
-        return AtrInfo.parse(atrBytes);
+        ATR atr = card.getATR();
+        return AtrInfo.parse(atr.getBytes());
     }
 }
