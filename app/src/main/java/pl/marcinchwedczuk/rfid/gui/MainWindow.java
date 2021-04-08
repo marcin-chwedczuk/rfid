@@ -1,34 +1,85 @@
 package pl.marcinchwedczuk.rfid.gui;
 
-import javafx.beans.property.SimpleListProperty;
-import javafx.collections.ObservableList;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.TextArea;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import pl.marcinchwedczuk.rfid.lib.*;
 
 import javax.smartcardio.*;
-import java.nio.charset.StandardCharsets;
+import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainWindow {
-    private final ObservableList<AcrTerminal> terminalsList = new SimpleListProperty<>();
+    @FXML public ComboBox<AcrTerminal> terminalsList;
+    @FXML public Label infoScreen;
 
-    @FXML public TextArea output;
+    private final Timer timer = new Timer();
+    private Optional<Stage> cartWindow = Optional.empty();
 
     private void out(String format, Object... args) {
-        output.appendText(String.format(format, args));
-        output.appendText(System.lineSeparator());
     }
 
     @FXML
     public void initialize() {
-        terminalsList.addAll(AcrTerminal.getTerminals());
+        refreshTerminalList(null);
+
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(() -> {
+                    checkCardStateChanged();
+                });
+            }
+        }, 1000, 500);
+    }
+
+    private void checkCardStateChanged() {
+        currentTerminal().ifPresent(
+                terminal -> {
+                    if (!terminal.isCardPresent()) {
+                        cartWindow.ifPresent(stage -> stage.close());
+                        cartWindow = Optional.empty();
+                    } else {
+                        if (cartWindow.isEmpty()) {
+                            cartWindow = Optional.of(showCardWindow());
+                        }
+                    }
+                });
+    }
+
+    private Stage showCardWindow() {
+        try {
+            Parent cardWindow = FXMLLoader.load(
+                    getClass().getResource("/pl/marcinchwedczuk/rfid/gui/CardWindow.fxml"));
+
+            Scene childScene = new Scene(cardWindow, 230, 100);
+
+            // New window (Stage)
+            Stage newWindow = new Stage();
+            newWindow.setTitle("MIFARE 1K Tag Editor");
+            newWindow.setScene(childScene);
+            newWindow.initModality(Modality.APPLICATION_MODAL);
+            newWindow.initOwner(terminalsList.getScene().getWindow());
+
+            newWindow.show();
+            return newWindow;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void buttonClicked(ActionEvent actionEvent) {
         try {
-            output.clear();
             out("default terminal type: %s", TerminalFactory.getDefaultType());
 
 
@@ -36,11 +87,8 @@ public class MainWindow {
             TerminalFactory factory = TerminalFactory.getInstance("PC/SC", null);
             List<CardTerminal> terminals = factory.terminals().list();
 
-            for (CardTerminal t : terminals) {
-                output.appendText(t.getName() + System.lineSeparator());
-            }
 
-            output.appendText("DONE" + System.lineSeparator());
+
 
 
             // Use the first terminal
@@ -129,5 +177,27 @@ public class MainWindow {
             hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
         }
         return new String(hexChars);
+    }
+
+    public void refreshTerminalList(ActionEvent actionEvent) {
+        infoScreen.setText("Select terminal to start...");
+
+        terminalsList.getItems().clear();
+        terminalsList.getItems().addAll(AcrTerminal.getTerminals());
+        terminalsList.getSelectionModel().selectFirst();
+
+        if (!terminalsList.getSelectionModel().isEmpty()) {
+            infoScreen.setText("Put MIFARE 1K card on the terminal to start...");
+        } else if (terminalsList.getItems().isEmpty()) {
+            infoScreen.setText("No terminal found...");
+        }
+    }
+
+    private Optional<AcrTerminal> currentTerminal() {
+        return Optional.ofNullable(terminalsList.getSelectionModel().getSelectedItem());
+    }
+
+    public void closeMainWindow(ActionEvent actionEvent) {
+        Platform.exit();
     }
 }

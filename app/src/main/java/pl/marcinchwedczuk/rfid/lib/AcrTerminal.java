@@ -32,6 +32,20 @@ public class AcrTerminal {
         return cardTerminal.getName();
     }
 
+    public boolean isCardPresent() {
+        try {
+            return cardTerminal.isCardPresent();
+        } catch (CardException e) {
+            logger.warn("isCardPresent failed", e);
+            return false;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return name();
+    }
+
     public AcrCard connect() {
         try {
             Card card = cardTerminal.connect("T=0");
