@@ -1,5 +1,7 @@
 package pl.marcinchwedczuk.rfid.gui;
 
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
@@ -10,11 +12,18 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class MainWindow {
+    private final ObservableList<AcrTerminal> terminalsList = new SimpleListProperty<>();
+
     @FXML public TextArea output;
 
     private void out(String format, Object... args) {
         output.appendText(String.format(format, args));
         output.appendText(System.lineSeparator());
+    }
+
+    @FXML
+    public void initialize() {
+        terminalsList.addAll(AcrTerminal.getTerminals());
     }
 
     public void buttonClicked(ActionEvent actionEvent) {

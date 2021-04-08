@@ -1,0 +1,13 @@
+#infoPane {
+    -fx-border-insets: 0;
+    -fx-border-radius: 5px;
+    -fx-border-width: 2px;
+    -fx-border-color: #888 lightgray lightgray #888;
+}
+
+#infoText {
+  -fx-text-fill: #333;
+  /* -fx-font-family: monospace; */
+  -fx-font-size: 20;
+  -fx-font-weight: bold;
+}
