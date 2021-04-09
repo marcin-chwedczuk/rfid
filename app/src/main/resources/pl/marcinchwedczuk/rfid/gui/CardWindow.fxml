@@ -16,7 +16,7 @@
       <Label layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="54.0" text="Card ID:" />
       <TextField fx:id="cardId" disable="true" editable="false" layoutX="68.0" layoutY="9.0" prefHeight="27.0" prefWidth="155.0" text="AA:BB:CC:DD:EE:FF" />
       <Label layoutX="248.0" layoutY="14.0" prefHeight="17.0" prefWidth="54.0" text="Standard:" />
-      <TextField fx:id="cardStandard" disable="true" editable="false" layoutX="312.0" layoutY="9.0" prefHeight="27.0" prefWidth="699.0" AnchorPane.rightAnchor="12.0" />
+      <TextField fx:id="cardStandard" disable="true" editable="false" layoutX="312.0" layoutY="9.0" prefHeight="27.0" prefWidth="699.0" AnchorPane.leftAnchor="312.0" AnchorPane.rightAnchor="12.0" />
       <Label layoutX="14.0" layoutY="53.0" prefHeight="17.0" prefWidth="54.0" text="KEY:" />
       <TextField fx:id="key" editable="false" layoutX="68.0" layoutY="48.0" prefHeight="27.0" prefWidth="155.0" text="AA:BB:CC:DD:EE:FF" />
       <RadioButton fx:id="hexKey" layoutX="229.0" layoutY="53.0" mnemonicParsing="false" selected="true" text="HEX">
@@ -41,13 +41,20 @@
                         <TableView fx:id="dataTable" editable="true" layoutX="334.0" layoutY="14.0" prefHeight="652.0" prefWidth="675.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="334.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
 
                         </TableView>
-                        <Spinner fx:id="fromSector" layoutX="23.0" layoutY="46.0" prefHeight="27.0" prefWidth="297.0" />
-                        <Label layoutX="23.0" layoutY="23.0" text="From Sector:" />
-                        <Button layoutX="153.0" layoutY="158.0" mnemonicParsing="false" onAction="#readSectors" prefHeight="27.0" prefWidth="167.0" text="READ" />
-                        <Label layoutX="23.0" layoutY="91.0" text="To Sector:" />
-                        <Spinner fx:id="toSector" layoutX="23.0" layoutY="108.0" prefHeight="27.0" prefWidth="297.0" />
-                        <Button layoutX="24.0" layoutY="158.0" mnemonicParsing="false" onAction="#selectAllSectors" text="Entire Card" />
-                        <Button layoutX="153.0" layoutY="218.0" mnemonicParsing="false" onAction="#writeSectors" prefHeight="27.0" prefWidth="167.0" text="WRITE" />
+                        <Spinner fx:id="fromSector" layoutX="14.0" layoutY="102.0" prefHeight="27.0" prefWidth="297.0" />
+                        <Label layoutX="14.0" layoutY="79.0" text="From Sector:" />
+                        <Button layoutX="144.0" layoutY="214.0" mnemonicParsing="false" onAction="#readSectors" prefHeight="27.0" prefWidth="167.0" text="READ" />
+                        <Label layoutX="14.0" layoutY="147.0" text="To Sector:" />
+                        <Spinner fx:id="toSector" layoutX="14.0" layoutY="164.0" prefHeight="27.0" prefWidth="297.0" />
+                        <Button layoutX="15.0" layoutY="214.0" mnemonicParsing="false" onAction="#selectAllSectors" text="Entire Card" />
+                        <Button layoutX="144.0" layoutY="274.0" mnemonicParsing="false" onAction="#writeSectors" prefHeight="27.0" prefWidth="167.0" text="WRITE" />
+                        <Label layoutX="14.0" layoutY="20.0" text="Display Data As:" />
+                        <RadioButton layoutX="15.0" layoutY="44.0" mnemonicParsing="false" selected="true" text="HEX">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="displayMode" />
+                           </toggleGroup>
+                        </RadioButton>
+                        <RadioButton layoutX="84.0" layoutY="44.0" mnemonicParsing="false" text="ASCII" toggleGroup="$displayMode" />
                      </children>
                   </AnchorPane>
             </content>

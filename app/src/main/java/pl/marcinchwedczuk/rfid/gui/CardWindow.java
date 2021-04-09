@@ -83,8 +83,8 @@ public class CardWindow {
             // Editable
             dataColumn.setEditable(true);
             dataColumn.setSortable(false);
-            dataColumn.setMaxWidth(40.0);
-            dataColumn.setMinWidth(40.0);
+            dataColumn.setMaxWidth(60.0);
+            dataColumn.setMinWidth(60.0);
             dataColumn.setCellFactory(l -> new DataRowByteTableCell(new SimpleBooleanProperty(true)));
 
             dataColumns.add(dataColumn);
@@ -112,10 +112,17 @@ public class CardWindow {
     }
 
     public void writeSectors(ActionEvent actionEvent) {
+        StringBuilder sb = new StringBuilder();
 
+        for (var row: rows) {
+            sb.append(row.toDebugString()).append(System.lineSeparator());
+        }
+
+        new DialogBoxes().info(sb.toString());
     }
 
     public void loadDefaultFactoryKey(ActionEvent actionEvent) {
-
+        hexKey.setSelected(true);
+        key.setText("FF:FF:FF:FF:FF:FF");
     }
 }

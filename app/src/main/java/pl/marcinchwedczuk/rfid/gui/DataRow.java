@@ -1,5 +1,7 @@
 package pl.marcinchwedczuk.rfid.gui;
 
+import pl.marcinchwedczuk.rfid.lib.ByteUtils;
+
 public class DataRow {
     public final int sector;
     public final int block;
@@ -19,5 +21,10 @@ public class DataRow {
 
     public int getBlock() {
         return block;
+    }
+
+    public String toDebugString() {
+        return String.format("S: %d, B: %d, %s, trailer? %s", sector, block,
+                ByteUtils.asHexString(bytes, ":"), isSectorTrailer);
     }
 }

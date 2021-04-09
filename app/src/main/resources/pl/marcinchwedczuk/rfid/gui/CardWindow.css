@@ -8,3 +8,7 @@
 .table-cell:readonly-table-cell {
     -fx-background-color: #aaaaaa;
 }
+
+.table-cell {
+    -fx-font-family: monospace ;
+}

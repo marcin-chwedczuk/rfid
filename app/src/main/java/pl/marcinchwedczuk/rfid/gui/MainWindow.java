@@ -71,6 +71,8 @@ public class MainWindow {
             childWindow.setScene(new Scene(loader.load(), 800, 1024));
             childWindow.initModality(Modality.APPLICATION_MODAL);
             childWindow.initOwner(terminalsList.getScene().getWindow());
+            childWindow.setMinWidth(800);
+            childWindow.setMinHeight(640);
 
             childWindow.setOnCloseRequest(we -> card.disconnect());
             ((CardWindow)loader.getController()).setCard(card);
