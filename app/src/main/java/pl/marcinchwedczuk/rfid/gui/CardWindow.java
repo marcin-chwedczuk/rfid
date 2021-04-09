@@ -1,8 +1,6 @@
 package pl.marcinchwedczuk.rfid.gui;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.*;
 import javafx.beans.value.ObservableIntegerValue;
 import javafx.beans.value.ObservableValueBase;
 import javafx.collections.FXCollections;
@@ -37,7 +35,7 @@ public class CardWindow {
 
     private final TableColumn<DataRow, String> sectorColumn = new TableColumn<>("SECTOR");
     private final TableColumn<DataRow, String> blockColumn = new TableColumn<>("BLOCK");
-    private final List<TableColumn<DataRow, Integer>> dataColumns = new ArrayList<>();
+    private final List<TableColumn<DataRow, Byte>> dataColumns = new ArrayList<>();
 
     private final ObservableList<DataRow> rows = FXCollections.observableArrayList();
 
@@ -69,50 +67,25 @@ public class CardWindow {
 
         for (int i = 0; i < 16; i++) {
             int index = i;
-            TableColumn<DataRow, Integer> dataColumn = new TableColumn<>("B" + i);
+            TableColumn<DataRow, Byte> dataColumn = new TableColumn<>("B" + i);
 
-            dataColumn.setCellValueFactory((TableColumn.CellDataFeatures<DataRow, Integer> row) -> {
+            dataColumn.setCellValueFactory((TableColumn.CellDataFeatures<DataRow, Byte> row) -> {
                 DataRow dataRow = row.getValue();
 
-                SimpleIntegerProperty byteProp = new SimpleIntegerProperty(dataRow.bytes[index]);
+                SimpleObjectProperty<Byte> byteProp = new SimpleObjectProperty<Byte>(dataRow.bytes[index]);
                 byteProp.addListener((unused, oldValue, newValue) -> {
                     dataRow.bytes[index] = (byte)(int)newValue;
                 });
 
-                return byteProp.asObject();
+                return byteProp;
             });
 
             // Editable
             dataColumn.setEditable(true);
-            dataColumn.setMaxWidth(40.0);
             dataColumn.setSortable(false);
-            dataColumn.setCellFactory(l -> new TextFieldTableCell<DataRow, Integer>(
-                    new StringConverter<Integer>() {
-                        @Override
-                        public String toString(Integer pattern) {
-                            return String.format("%02X", pattern);
-                        }
-
-                        @Override
-                        public Integer fromString(String string) {
-                            try {
-                                return Integer.parseInt(string, 16); // validate
-                            } catch (Exception e) {
-                                return null;
-                            }
-                        }
-                    }) {
-
-                              @Override
-                              public void commitEdit(Integer pattern) {
-                                  if (!isEditing()) return;
-                                  PseudoClass errorClass = PseudoClass.getPseudoClass("invalid-byte-value");
-                                  pseudoClassStateChanged(errorClass, pattern == null);
-                                  if (pattern != null) {
-                                      super.commitEdit(pattern);
-                                  }
-                              }
-                          });
+            dataColumn.setMaxWidth(40.0);
+            dataColumn.setMinWidth(40.0);
+            dataColumn.setCellFactory(l -> new DataRowByteTableCell(new SimpleBooleanProperty(true)));
 
             dataColumns.add(dataColumn);
         }
@@ -122,9 +95,16 @@ public class CardWindow {
     }
 
     public void readSectors(ActionEvent actionEvent) {
-        DataRow example = new DataRow(0, 1, new byte[] { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 });
+        DataRow example = new DataRow(0, 1, new byte[] { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 }, true);
+        DataRow example2 = new DataRow(0, 1, new byte[] { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 }, false);
+        DataRow example3 = new DataRow(0, 1, new byte[] { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 }, false);
+
         rows.clear();
         rows.add(example);
+        rows.add(example2);
+        rows.add(example3);
+
+        dataTable.refresh();
     }
 
     public void selectAllSectors(ActionEvent actionEvent) {
