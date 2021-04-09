@@ -2,6 +2,7 @@ package pl.marcinchwedczuk.rfid.gui;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,6 +11,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import pl.marcinchwedczuk.rfid.lib.*;
 
 import javax.smartcardio.*;
@@ -23,7 +25,7 @@ public class MainWindow {
     @FXML public ComboBox<AcrTerminal> terminalsList;
     @FXML public Label infoScreen;
 
-    private final Timer timer = new Timer();
+    private final Timer timer = new Timer(true);
     private Optional<Stage> cartWindow = Optional.empty();
 
     private void out(String format, Object... args) {
@@ -58,21 +60,23 @@ public class MainWindow {
     }
 
     private Stage showCardWindow() {
+        AcrCard card = currentTerminal().get().connect();
+
         try {
-            Parent cardWindow = FXMLLoader.load(
+            FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/pl/marcinchwedczuk/rfid/gui/CardWindow.fxml"));
 
-            Scene childScene = new Scene(cardWindow, 230, 100);
+            Stage childWindow = new Stage();
+            childWindow.setTitle("MIFARE 1K Tag Editor");
+            childWindow.setScene(new Scene(loader.load(), 800, 1024));
+            childWindow.initModality(Modality.APPLICATION_MODAL);
+            childWindow.initOwner(terminalsList.getScene().getWindow());
 
-            // New window (Stage)
-            Stage newWindow = new Stage();
-            newWindow.setTitle("MIFARE 1K Tag Editor");
-            newWindow.setScene(childScene);
-            newWindow.initModality(Modality.APPLICATION_MODAL);
-            newWindow.initOwner(terminalsList.getScene().getWindow());
+            childWindow.setOnCloseRequest(we -> card.disconnect());
+            ((CardWindow)loader.getController()).setCard(card);
 
-            newWindow.show();
-            return newWindow;
+            childWindow.show();
+            return childWindow;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

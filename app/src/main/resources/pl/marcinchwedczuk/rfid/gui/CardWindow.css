@@ -1,0 +1,6 @@
+
+.table-cell:invalid-byte-value .text-field {
+    -fx-focus-color: red ;
+    -fx-control-inner-background: #ffc0c0 ;
+    -fx-accent: red ;
+}

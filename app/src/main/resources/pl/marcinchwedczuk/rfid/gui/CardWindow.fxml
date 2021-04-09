@@ -1,14 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="pl.marcinchwedczuk.rfid.gui.CardWindow"
-            prefHeight="400.0" prefWidth="600.0">
+<AnchorPane minHeight="400.0" minWidth="800.0" prefHeight="802.0" prefWidth="1023.0" stylesheets="@CardWindow.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.marcinchwedczuk.rfid.gui.CardWindow">
+   <children>
+      <Label layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="54.0" text="Card ID:" />
+      <TextField fx:id="cardId" disable="true" editable="false" layoutX="68.0" layoutY="9.0" prefHeight="27.0" prefWidth="155.0" text="AA:BB:CC:DD:EE:FF" />
+      <Label layoutX="248.0" layoutY="14.0" prefHeight="17.0" prefWidth="54.0" text="Standard:" />
+      <TextField fx:id="cardStandard" disable="true" editable="false" layoutX="312.0" layoutY="9.0" prefHeight="27.0" prefWidth="699.0" AnchorPane.rightAnchor="12.0" />
+      <Label layoutX="14.0" layoutY="53.0" prefHeight="17.0" prefWidth="54.0" text="KEY:" />
+      <TextField fx:id="key" editable="false" layoutX="68.0" layoutY="48.0" prefHeight="27.0" prefWidth="155.0" text="AA:BB:CC:DD:EE:FF" />
+      <RadioButton fx:id="hexKey" layoutX="229.0" layoutY="53.0" mnemonicParsing="false" selected="true" text="HEX">
+         <toggleGroup>
+            <ToggleGroup fx:id="keyMode" />
+         </toggleGroup>
+      </RadioButton>
+      <RadioButton layoutX="288.0" layoutY="53.0" mnemonicParsing="false" text="ASCII" toggleGroup="$keyMode" />
+      <Label layoutX="368.0" layoutY="53.0" prefHeight="17.0" prefWidth="77.0" text="USE KEY AS:" />
+      <RadioButton fx:id="useAsKeyA" layoutX="451.0" layoutY="53.0" mnemonicParsing="false" selected="true" text="KEY A">
+         <toggleGroup>
+            <ToggleGroup fx:id="keyType" />
+         </toggleGroup>
+      </RadioButton>
+      <RadioButton layoutX="529.0" layoutY="53.0" mnemonicParsing="false" text="KEY B" toggleGroup="$keyType" />
+      <TabPane layoutX="188.0" layoutY="100.0" prefHeight="713.0" prefWidth="784.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="89.0">
+        <tabs>
+          <Tab text="READ / WRITE">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="dataTable" editable="true" layoutX="334.0" layoutY="14.0" prefHeight="652.0" prefWidth="675.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="334.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
 
+                        </TableView>
+                        <Spinner fx:id="fromSector" layoutX="23.0" layoutY="46.0" prefHeight="27.0" prefWidth="297.0" />
+                        <Label layoutX="23.0" layoutY="23.0" text="From Sector:" />
+                        <Button layoutX="153.0" layoutY="158.0" mnemonicParsing="false" onAction="#readSectors" prefHeight="27.0" prefWidth="167.0" text="READ" />
+                        <Label layoutX="23.0" layoutY="91.0" text="To Sector:" />
+                        <Spinner fx:id="toSector" layoutX="23.0" layoutY="108.0" prefHeight="27.0" prefWidth="297.0" />
+                        <Button layoutX="24.0" layoutY="158.0" mnemonicParsing="false" onAction="#selectAllSectors" text="Entire Card" />
+                        <Button layoutX="153.0" layoutY="218.0" mnemonicParsing="false" onAction="#writeSectors" prefHeight="27.0" prefWidth="167.0" text="WRITE" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+            <Tab text="SECURITY">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+      <Button layoutX="854.0" layoutY="48.0" mnemonicParsing="false" onAction="#loadDefaultFactoryKey" text="Load Default Factory Key" AnchorPane.rightAnchor="14.0" />
+   </children>
 </AnchorPane>

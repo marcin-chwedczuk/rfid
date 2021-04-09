@@ -180,4 +180,12 @@ public class AcrCard {
             throw new AcrException("Cannot read block.", e);
         }
     }
+
+    public void disconnect() {
+        try {
+            card.disconnect(true);
+        } catch (CardException e) {
+            throw new AcrException(e);
+        }
+    }
 }
