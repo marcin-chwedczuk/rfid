@@ -49,7 +49,7 @@
                         <Button layoutX="15.0" layoutY="214.0" mnemonicParsing="false" onAction="#selectAllSectors" text="Entire Card" />
                         <Button layoutX="144.0" layoutY="274.0" mnemonicParsing="false" onAction="#writeSectors" prefHeight="27.0" prefWidth="167.0" text="WRITE" />
                         <Label layoutX="14.0" layoutY="20.0" text="Display Data As:" />
-                        <RadioButton layoutX="15.0" layoutY="44.0" mnemonicParsing="false" selected="true" text="HEX">
+                        <RadioButton fx:id="displayHex" layoutX="15.0" layoutY="44.0" mnemonicParsing="false" selected="true" text="HEX">
                            <toggleGroup>
                               <ToggleGroup fx:id="displayMode" />
                            </toggleGroup>

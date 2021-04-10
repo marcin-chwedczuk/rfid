@@ -64,17 +64,13 @@ public class AcrCard {
         }
     }
 
-    public void loadKeyToRegister(byte[] key, int register) {
+    public void loadKeyToRegister(byte[] key, KeyRegister register) {
         if (key.length != 6) {
             throw new IllegalArgumentException("Invalid key length (key should be 6 bytes long).");
         }
 
-        if (register != 0 && register != 1) {
-            throw new IllegalArgumentException("Terminal supports only registers 0 and 1.");
-        }
-
         byte[] commandBytes = new byte[] {
-                (byte)0xFF, (byte)0x82, 0x00, (byte)register, 0x06,
+                (byte)0xFF, (byte)0x82, 0x00, (byte)register.index(), 0x06,
                 key[0], key[1], key[2], key[3], key[4], key[5]
         };
         try {
@@ -94,19 +90,16 @@ public class AcrCard {
         }
     }
 
-    public void authenticate(SectorBlock sector, KeyType keyType, int registerWithKey) {
+    public void authenticate(SectorBlock sector, KeyType keyType, KeyRegister registerWithKey) {
         if (keyType == null) {
             throw new NullPointerException("keyType");
-        }
-        if (registerWithKey != 0 && registerWithKey != 1) {
-            throw new IllegalArgumentException("Terminal supports only registers 0 and 1.");
         }
 
         byte[] commandBytes = new byte[] {
                 (byte)0xFF, (byte)0x86, 0x00, 0x00, 0x05,
                 0x01, 0x00, (byte)sector.blockNumber(),
                 (byte)(keyType == KeyType.KEY_A ? 0x60 : 0x61),
-                (byte)registerWithKey
+                (byte)registerWithKey.index()
         };
 
         try {

@@ -12,7 +12,9 @@ import java.io.StringWriter;
 import java.util.Optional;
 
 public class DialogBoxes {
-    public boolean ask(String question) {
+    private DialogBoxes() { }
+
+    public static boolean ask(String question) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Question");
         alert.setHeaderText(null);
@@ -22,7 +24,7 @@ public class DialogBoxes {
         return result.get() == ButtonType.OK;
     }
 
-    public void info(String text) {
+    public static void info(String text) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Info");
         alert.setHeaderText(null);
@@ -31,7 +33,7 @@ public class DialogBoxes {
         alert.showAndWait();
     }
 
-    public void error(String title, String body) {
+    public static void error(String title, String body) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Info");
         alert.setHeaderText(title);
@@ -40,7 +42,7 @@ public class DialogBoxes {
         alert.showAndWait();
     }
 
-    public void exception(Throwable ex) {
+    public static void exception(Throwable ex) {
         // from: https://code.makery.ch/blog/javafx-dialogs-official/
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Exception Dialog");

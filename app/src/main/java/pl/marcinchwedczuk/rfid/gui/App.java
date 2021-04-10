@@ -13,7 +13,7 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
-            new DialogBoxes().exception(e);
+            DialogBoxes.exception(e);
         });
 
         Parent root = FXMLLoader.load(

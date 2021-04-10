@@ -1,6 +1,31 @@
 package pl.marcinchwedczuk.rfid.lib;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
+
 public class ByteUtils {
+    public static byte[] fromHexString(String s, String separator) throws NumberFormatException {
+        // Remove separators
+        String withoutSeparator = s.replaceAll(Pattern.quote(separator), "");
+
+        if ((withoutSeparator.length() % 2) != 0) {
+            throw new NumberFormatException("Cannot parse hex string to array of bytes.");
+        }
+
+        List<Byte> bytes = new ArrayList<>();
+
+        for (int i = 0; i <= withoutSeparator.length() - 2; i += 2) {
+            byte b = (byte)Integer.parseInt(withoutSeparator.substring(i, i + 2), 16);
+            bytes.add(b);
+        }
+
+        byte[] result = new byte[bytes.size()];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = bytes.get(i);
+        }
+        return result;
+    }
 
     public static String asHexString(byte[] bytes, String separator) {
         if (bytes.length == 0) {
