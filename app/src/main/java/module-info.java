@@ -5,4 +5,7 @@ module pl.marcinchwedczuk {
     requires org.apache.logging.log4j;
 
     exports pl.marcinchwedczuk.rfid.gui;
+
+    // Allow @FXML injection to private fields.
+    opens pl.marcinchwedczuk.rfid.gui to javafx.fxml;
 }

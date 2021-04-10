@@ -21,6 +21,9 @@ import pl.marcinchwedczuk.rfid.lib.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 
 import static pl.marcinchwedczuk.rfid.lib.KeyRegister.REGISTER_0;
 import static pl.marcinchwedczuk.rfid.lib.KeyType.KEY_A;
@@ -28,20 +31,29 @@ import static pl.marcinchwedczuk.rfid.lib.KeyType.KEY_A;
 public class CardWindow {
     private static Logger logger = LogManager.getLogger(CardWindow.class);
 
-    @FXML public TextField cardId;
-    @FXML public TextField cardStandard;
+    @FXML
+    public TextField cardId;
+    @FXML
+    public TextField cardStandard;
 
-    @FXML public TextField key;
-    @FXML public RadioButton hexKey;
-    @FXML public RadioButton useAsKeyA;
+    @FXML
+    public TextField key;
+    @FXML
+    public RadioButton hexKey;
+    @FXML
+    public RadioButton useAsKeyA;
 
     private final SimpleBooleanProperty displayDataAsHex = new SimpleBooleanProperty(true);
-    @FXML public RadioButton displayHex;
+    @FXML
+    public RadioButton displayHex;
 
-    @FXML public Spinner<Integer> fromSector;
-    @FXML public Spinner<Integer> toSector;
+    @FXML
+    public Spinner<Integer> fromSector;
+    @FXML
+    public Spinner<Integer> toSector;
 
-    @FXML public TableView<DataRow> dataTable;
+    @FXML
+    public TableView<DataRow> dataTable;
 
     private final TableColumn<DataRow, String> sectorColumn = new TableColumn<>("SECTOR");
     private final TableColumn<DataRow, String> blockColumn = new TableColumn<>("BLOCK");
@@ -96,7 +108,7 @@ public class CardWindow {
 
                 SimpleObjectProperty<Byte> byteProp = new SimpleObjectProperty<Byte>(dataRow.bytes[index]);
                 byteProp.addListener((unused, oldValue, newValue) -> {
-                    dataRow.bytes[index] = (byte)(int)newValue;
+                    dataRow.bytes[index] = (byte) (int) newValue;
                 });
 
                 return byteProp;
@@ -122,15 +134,35 @@ public class CardWindow {
             return;
         }
 
-        rows.clear();
-
         try {
             card.loadKeyToRegister(keyBytes, REGISTER_0);
+        } catch (AcrException e) {
+            DialogBoxes.error("Cannot read data from card!", e.getMessage());
+            return;
+        }
 
-            int from = fromSector.getValue();
-            int to = toSector.getValue();
+        int from = fromSector.getValue();
+        int to = toSector.getValue();
 
-            for (int sector = from; sector < to; sector++) {
+        AtomicBoolean cancel = new AtomicBoolean(false);
+        AtomicReference<ProgressDialog> progressDialog = new AtomicReference<>();
+
+        Runnable before = () -> {
+            rows.clear();
+
+            progressDialog.set(ProgressDialog.show(
+                    hexKey.getScene(),
+                    "Reading sectors from card...",
+                    () -> cancel.set(true)));
+        };
+
+        Runnable after = () -> {
+            progressDialog.get().done();
+            dataTable.refresh();
+        };
+
+        Function<Integer, Boolean> work = (sector) -> {
+            try {
                 card.authenticate(SectorBlock.firstBlockOfSector(sector), KEY_A, REGISTER_0);
 
                 for (int block = 0; block < 4; block++) {
@@ -139,14 +171,16 @@ public class CardWindow {
                     logger.info("Read row: {}", dataRow.toDebugString());
                     rows.add(dataRow);
                 }
-
+            } catch (Exception e) {
+                DialogBoxes.error("Problem while reading sectors...", e.getMessage());
+                return false;
             }
 
-            dataTable.refresh();
+            progressDialog.get().setProgress((sector * 100) / to);
+            return !cancel.get();
+        };
 
-        } catch (AcrException e) {
-            DialogBoxes.error("Cannot read data from card!", e.getMessage());
-        }
+        new PoorManBackgroundTask(from, to, work, before, after).start();
     }
 
     private byte[] getKeyBytes() {
@@ -180,7 +214,7 @@ public class CardWindow {
     public void writeSectors(ActionEvent actionEvent) {
         StringBuilder sb = new StringBuilder();
 
-        for (var row: rows) {
+        for (var row : rows) {
             sb.append(row.toDebugString()).append(System.lineSeparator());
         }
 
