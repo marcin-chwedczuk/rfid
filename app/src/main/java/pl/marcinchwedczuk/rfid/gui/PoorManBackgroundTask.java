@@ -20,6 +20,7 @@ public class PoorManBackgroundTask {
         this.work = work;
         this.before = before;
         this.after = after;
+        this.current = from - 1;
     }
 
     public void start() {

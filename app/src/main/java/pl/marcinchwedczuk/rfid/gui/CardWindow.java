@@ -1,25 +1,22 @@
 package pl.marcinchwedczuk.rfid.gui;
 
-import javafx.beans.property.*;
-import javafx.beans.value.ObservableIntegerValue;
-import javafx.beans.value.ObservableValueBase;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldListCell;
-import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.util.StringConverter;
+import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.marcinchwedczuk.rfid.lib.*;
 
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -27,33 +24,27 @@ import java.util.function.Function;
 
 import static pl.marcinchwedczuk.rfid.lib.KeyRegister.REGISTER_0;
 import static pl.marcinchwedczuk.rfid.lib.KeyType.KEY_A;
+import static pl.marcinchwedczuk.rfid.lib.KeyType.KEY_B;
 
 public class CardWindow {
     private static Logger logger = LogManager.getLogger(CardWindow.class);
 
-    @FXML
-    public TextField cardId;
-    @FXML
-    public TextField cardStandard;
+    private final FileChooser fileChooser = new FileChooser();
 
-    @FXML
-    public TextField key;
-    @FXML
-    public RadioButton hexKey;
-    @FXML
-    public RadioButton useAsKeyA;
+    @FXML private TextField cardId;
+    @FXML private TextField cardStandard;
+
+    @FXML private TextField key;
+    @FXML private RadioButton hexKey;
+    @FXML private RadioButton useAsKeyA;
 
     private final SimpleBooleanProperty displayDataAsHex = new SimpleBooleanProperty(true);
-    @FXML
-    public RadioButton displayHex;
+    @FXML private RadioButton displayHex;
 
-    @FXML
-    public Spinner<Integer> fromSector;
-    @FXML
-    public Spinner<Integer> toSector;
+    @FXML private Spinner<Integer> fromSector;
+    @FXML private Spinner<Integer> toSector;
 
-    @FXML
-    public TableView<DataRow> dataTable;
+    @FXML private TableView<DataRow> dataTable;
 
     private final TableColumn<DataRow, String> sectorColumn = new TableColumn<>("SECTOR");
     private final TableColumn<DataRow, String> blockColumn = new TableColumn<>("BLOCK");
@@ -79,6 +70,14 @@ public class CardWindow {
         int maxSector = getCardMaxSector();
         fromSector.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, maxSector, 0));
         toSector.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, maxSector, 1));
+
+        // Configure file dialog
+        fileChooser.setInitialDirectory(
+                new File(System.getProperty("user.home")));
+        fileChooser.getExtensionFilters().clear();
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("All Files", "*.*"),
+                new FileChooser.ExtensionFilter("XML Files", "*.xml"));
     }
 
     private int getCardMaxSector() {
@@ -163,7 +162,8 @@ public class CardWindow {
 
         Function<Integer, Boolean> work = (sector) -> {
             try {
-                card.authenticate(SectorBlock.firstBlockOfSector(sector), KEY_A, REGISTER_0);
+                card.authenticate(SectorBlock.firstBlockOfSector(sector),
+                        useAsKeyA.isSelected() ? KEY_A : KEY_B, REGISTER_0);
 
                 for (int block = 0; block < 4; block++) {
                     byte[] data = card.readBinaryBlock(SectorBlock.fromSectorAndBlock(sector, block), 16);
@@ -212,17 +212,93 @@ public class CardWindow {
     }
 
     public void writeSectors(ActionEvent actionEvent) {
-        StringBuilder sb = new StringBuilder();
-
-        for (var row : rows) {
-            sb.append(row.toDebugString()).append(System.lineSeparator());
+        byte[] keyBytes = getKeyBytes();
+        if (keyBytes == null) {
+            return;
         }
 
-        DialogBoxes.info(sb.toString());
+        try {
+            card.loadKeyToRegister(keyBytes, REGISTER_0);
+        } catch (AcrException e) {
+            DialogBoxes.error("Cannot read data from card!", e.getMessage());
+            return;
+        }
+
+        DataRow[] rows = this.rows.toArray(new DataRow[0]);
+        int from = fromSector.getValue();
+        int to = toSector.getValue();
+
+        // Validate has data
+        if (rows.length == 0) {
+            DialogBoxes.error("Error", "No data to write!");
+            return;
+        }
+        if (rows[0].sector != from || rows[rows.length-1].sector != to-1) {
+            DialogBoxes.error("Error",
+                    "Number of sectors in the data grid is different then " +
+                    "number of sectors to be written to the card. " +
+                    "Please read the requested number of sectors first, before writing them to the card.");
+            return;
+        }
+
+        AtomicBoolean cancel = new AtomicBoolean(false);
+        AtomicReference<ProgressDialog> progressDialog = new AtomicReference<>();
+
+        Runnable before = () -> {
+            progressDialog.set(ProgressDialog.show(
+                    hexKey.getScene(),
+                    "Writing sectors to card...",
+                    () -> cancel.set(true)));
+        };
+
+        Runnable after = () -> {
+            progressDialog.get().done();
+        };
+
+        Function<Integer, Boolean> work = (sector) -> {
+            try {
+                card.authenticate(SectorBlock.firstBlockOfSector(sector),
+                        useAsKeyA.isSelected() ? KEY_A : KEY_B, REGISTER_0);
+
+                // 4th block (which contains keys and permissions) is not writable by this method
+                for (int block = 0; block < 3; block++) {
+                    DataRow row = rows[(sector - from)*4 + block];
+                    card.writeBinaryBlock(SectorBlock.fromSectorAndBlock(sector, block), row.bytes);
+
+                    // Verify write
+                    /*
+                    byte[] data = card.readBinaryBlock(SectorBlock.fromSectorAndBlock(sector, block), 16);
+                    if (!Arrays.equals(data, row.bytes)) {
+                        throw new RuntimeException(String.format(
+                                "Write failed for sector %d and block %d.", sector, block));
+                    }
+
+                     */
+                }
+            } catch (Exception e) {
+                DialogBoxes.error("Problem while writing sectors to card...", e.getMessage());
+                return false;
+            }
+
+            progressDialog.get().setProgress((sector * 100) / to);
+            return !cancel.get();
+        };
+
+        new PoorManBackgroundTask(from, to, work, before, after).start();
     }
 
     public void loadDefaultFactoryKey(ActionEvent actionEvent) {
         hexKey.setSelected(true);
         key.setText("FF:FF:FF:FF:FF:FF");
+    }
+
+    public void exportToXml(ActionEvent actionEvent) {
+        fileChooser.setTitle("Export cart data to XML file...");
+        fileChooser.showOpenDialog(hexKey.getScene().getWindow());
+    }
+
+    public void importFromXml(ActionEvent actionEvent) {
+        fileChooser.setTitle("Import cart data from XML file...");
+        fileChooser.showOpenDialog(hexKey.getScene().getWindow());
     }
 }

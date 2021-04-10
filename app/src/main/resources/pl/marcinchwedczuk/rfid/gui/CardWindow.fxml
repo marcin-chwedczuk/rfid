@@ -11,14 +11,14 @@
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane minHeight="400.0" minWidth="800.0" prefHeight="802.0" prefWidth="1023.0" stylesheets="@CardWindow.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.marcinchwedczuk.rfid.gui.CardWindow">
+<AnchorPane stylesheets="@CardWindow.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.marcinchwedczuk.rfid.gui.CardWindow">
    <children>
       <Label layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="54.0" text="Card ID:" />
       <TextField fx:id="cardId" disable="true" editable="false" layoutX="68.0" layoutY="9.0" prefHeight="27.0" prefWidth="155.0" text="AA:BB:CC:DD:EE:FF" />
       <Label layoutX="248.0" layoutY="14.0" prefHeight="17.0" prefWidth="54.0" text="Standard:" />
       <TextField fx:id="cardStandard" disable="true" editable="false" layoutX="312.0" layoutY="9.0" prefHeight="27.0" prefWidth="699.0" AnchorPane.leftAnchor="312.0" AnchorPane.rightAnchor="12.0" />
       <Label layoutX="14.0" layoutY="53.0" prefHeight="17.0" prefWidth="54.0" text="KEY:" />
-      <TextField fx:id="key" editable="false" layoutX="68.0" layoutY="48.0" prefHeight="27.0" prefWidth="155.0" text="AA:BB:CC:DD:EE:FF" />
+      <TextField fx:id="key" editable="false" layoutX="68.0" layoutY="48.0" prefHeight="27.0" prefWidth="155.0" text="FF:FF:FF:FF:FF:FF" />
       <RadioButton fx:id="hexKey" layoutX="229.0" layoutY="53.0" mnemonicParsing="false" selected="true" text="HEX">
          <toggleGroup>
             <ToggleGroup fx:id="keyMode" />
@@ -55,6 +55,8 @@
                            </toggleGroup>
                         </RadioButton>
                         <RadioButton layoutX="84.0" layoutY="44.0" mnemonicParsing="false" text="ASCII" toggleGroup="$displayMode" />
+                        <Button layoutX="19.0" layoutY="592.0" mnemonicParsing="false" onAction="#exportToXml" prefHeight="27.0" prefWidth="167.0" text="EXPORT DATA TO XML" AnchorPane.bottomAnchor="61.0" AnchorPane.leftAnchor="19.0" />
+                        <Button layoutX="19.0" layoutY="631.0" mnemonicParsing="false" onAction="#importFromXml" prefHeight="27.0" prefWidth="167.0" text="IMPORT DATA FROM XML" AnchorPane.bottomAnchor="22.0" AnchorPane.leftAnchor="19.0" />
                      </children>
                   </AnchorPane>
             </content>

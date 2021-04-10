@@ -163,14 +163,14 @@ public class AcrCard {
 
             int sw = response.getSW();
             if (sw == 0x6300) {
-                throw new AcrException("Reading block failed.");
+                throw new AcrException(String.format("Writing sector %d, block %d failed.", block.sector, block.block));
             }
             if (sw != 0x9000) {
-                throw new AcrException(String.format("Unknown SW code 0x%04x.", sw));
+                throw new AcrException(String.format("Unknown SW response code 0x%04x.", sw));
             }
             // Success
         } catch (CardException e) {
-            throw new AcrException("Cannot read block.", e);
+            throw new AcrException("Cannot write block: " + e.getMessage(), e);
         }
     }
 
