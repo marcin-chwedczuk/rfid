@@ -1,5 +1,6 @@
 package pl.marcinchwedczuk.rfid.gui;
 
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.css.PseudoClass;
 import javafx.scene.control.TableRow;
@@ -51,6 +52,45 @@ public class DataRowByteTableCell extends TextFieldTableCell<DataRow, Byte> {
         pseudoClassStateChanged(cssInvalidCell, pattern == null);
         if (pattern != null) {
             super.commitEdit(pattern);
+            editNextCell();
         }
+    }
+
+    private void editNextCell() {
+        DataRow row = this.getTableRow().getItem();
+        var items = this.getTableView().getItems();
+
+        if (row == null || items == null) return;
+
+        // Find index
+        int rowIndex = -1;
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i) == row) {
+                rowIndex = i;
+                break;
+            }
+        }
+
+        var thisColumn = this.getTableColumn();
+        var allColumns = this.getTableView().getColumns();
+        int columnIndex = -1;
+        for (int i = 0; i < allColumns.size(); i++) {
+            if (allColumns.get(i) == thisColumn) {
+                columnIndex = i;
+                break;
+            }
+        }
+
+        if (rowIndex == -1 || columnIndex == -1 )
+            return;
+
+        columnIndex += 1; // Select next column
+        if (columnIndex >= allColumns.size()-1)
+            return;
+
+        int finalRowIndex = rowIndex, finalColumnIndex = columnIndex;
+        Platform.runLater(() -> {
+            this.getTableView().edit(finalRowIndex, allColumns.get(finalColumnIndex));
+        });
     }
 }
