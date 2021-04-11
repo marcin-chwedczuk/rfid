@@ -171,7 +171,7 @@ public class CardWindow {
                 for (int block = 0; block < 4; block++) {
                     byte[] data = card.readBinaryBlock(SectorBlock.fromSectorAndBlock(sector, block), 16);
                     DataRow dataRow = new DataRow(sector, block, data, block == 3);
-                    logger.info("Read row: {}", dataRow.toDebugString());
+                    logger.info("Read row: {}", dataRow.toString());
                     rows.add(dataRow);
                 }
             } catch (Exception e) {

@@ -1,10 +1,15 @@
 package pl.marcinchwedczuk.rfid.xml;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.util.DefaultIndenter;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import pl.marcinchwedczuk.rfid.gui.DataRow;
 
 import java.util.ArrayList;
@@ -20,7 +25,7 @@ public class XmlCardData {
     @JacksonXmlProperty(localName = "row")
     public List<XmlDataRow> rows;
 
-    public XmlCardData() {
+    XmlCardData() {
         this.rows = new ArrayList<>();
     }
 
@@ -30,12 +35,43 @@ public class XmlCardData {
                 .collect(toList());
     }
 
+    public List<DataRow> toDataRows() {
+        return rows.stream()
+                .map(row -> new DataRow(row.sector, row.block, toArrayOfBytes(row.bytes), (row.block == 3)))
+                .collect(toList());
+    }
+
+    private byte[] toArrayOfBytes(List<XmlByte> bytes) {
+        byte[] result = new byte[bytes.size()];
+        for (int i = 0; i < bytes.size(); i++) {
+            result[i] = bytes.get(i).toByte();
+        }
+        return result;
+    }
+
     public String toXml() {
+        XmlMapper xmlMapper = createMapper();
+
         try {
-            XmlMapper xmlMapper = new XmlMapper();
             return xmlMapper.writeValueAsString(this);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Serialization failed.", e);
         }
+    }
+
+    public static XmlCardData fromXml(String xml) {
+        XmlMapper xmlMapper = createMapper();
+        try {
+            return xmlMapper.readValue(xml, XmlCardData.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Deserialization failed.", e);
+        }
+    }
+
+    private static XmlMapper createMapper() {
+        XmlMapper xmlMapper = new XmlMapper();
+        xmlMapper.configure(ToXmlGenerator.Feature.WRITE_XML_DECLARATION, true);
+        xmlMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        return xmlMapper;
     }
 }

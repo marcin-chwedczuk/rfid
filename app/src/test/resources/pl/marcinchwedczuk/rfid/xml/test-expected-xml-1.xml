@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<cardData>
+    <row sector="2" block="0">
+        <byte>00</byte>
+        <byte>01</byte>
+        <byte>02</byte>
+        <byte>03</byte>
+        <byte>04</byte>
+        <byte>05</byte>
+        <byte>06</byte>
+        <byte>07</byte>
+        <byte>08</byte>
+        <byte>09</byte>
+        <byte>0A</byte>
+        <byte>0B</byte>
+        <byte>0C</byte>
+        <byte>0D</byte>
+        <byte>0E</byte>
+        <byte>0F</byte>
+    </row>
+    <row sector="2" block="3">
+        <byte>F0</byte>
+        <byte>F1</byte>
+        <byte>F2</byte>
+        <byte>F3</byte>
+        <byte>F4</byte>
+        <byte>F5</byte>
+        <byte>F6</byte>
+        <byte>F7</byte>
+        <byte>F8</byte>
+        <byte>F9</byte>
+        <byte>FA</byte>
+        <byte>FB</byte>
+        <byte>FC</byte>
+        <byte>FD</byte>
+        <byte>FE</byte>
+        <byte>FF</byte>
+    </row>
+</cardData>

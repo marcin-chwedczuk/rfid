@@ -16,8 +16,12 @@ public class XmlByte {
         this.hexByte = String.format("%02X", ((int)b & 0xFF));
     }
 
+    public byte toByte() {
+        return (byte)Integer.parseInt(hexByte, 16);
+    }
+
     @JsonValue
-    public String foo() {
+    public String toXmlValue() {
         return hexByte;
     }
 }
