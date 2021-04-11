@@ -16,6 +16,9 @@ import pl.marcinchwedczuk.rfid.xml.XmlCardData;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.OpenOption;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -77,8 +80,8 @@ public class CardWindow {
                 new File(System.getProperty("user.home")));
         fileChooser.getExtensionFilters().clear();
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("All Files", "*.*"),
-                new FileChooser.ExtensionFilter("XML Files", "*.xml"));
+                new FileChooser.ExtensionFilter("XML Files", "*.xml"),
+                new FileChooser.ExtensionFilter("All Files", "*.*"));
     }
 
     private int getCardMaxSector() {
@@ -296,14 +299,24 @@ public class CardWindow {
     }
 
     public void exportToXml(ActionEvent actionEvent) {
-        DialogBoxes.info(new XmlCardData(rows.stream()).toXml());
-
-        //fileChooser.setTitle("Export cart data to XML file...");
-        //fileChooser.showOpenDialog(hexKey.getScene().getWindow());
+        fileChooser.setTitle("Export cart data to XML file...");
+        File target = fileChooser.showSaveDialog(hexKey.getScene().getWindow());
+        if (target != null) {
+            try {
+                String xml = new XmlCardData(rows.stream()).toXml();
+                // Writes using UTF-8
+                Files.writeString(target.toPath(), xml,
+                        StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
+            } catch (Exception e) {
+                DialogBoxes.error("Exporting data failed.", e.getMessage());
+            }
+        }
     }
 
     public void importFromXml(ActionEvent actionEvent) {
         fileChooser.setTitle("Import cart data from XML file...");
         fileChooser.showOpenDialog(hexKey.getScene().getWindow());
+
+        DialogBoxes.error("TODO", "Not implemented yet!");
     }
 }
