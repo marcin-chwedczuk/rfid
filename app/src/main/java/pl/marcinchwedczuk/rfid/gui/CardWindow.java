@@ -12,6 +12,7 @@ import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.marcinchwedczuk.rfid.lib.*;
+import pl.marcinchwedczuk.rfid.xml.XmlCardData;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -295,8 +296,10 @@ public class CardWindow {
     }
 
     public void exportToXml(ActionEvent actionEvent) {
-        fileChooser.setTitle("Export cart data to XML file...");
-        fileChooser.showOpenDialog(hexKey.getScene().getWindow());
+        DialogBoxes.info(new XmlCardData(rows.stream()).toXml());
+
+        //fileChooser.setTitle("Export cart data to XML file...");
+        //fileChooser.showOpenDialog(hexKey.getScene().getWindow());
     }
 
     public void importFromXml(ActionEvent actionEvent) {
