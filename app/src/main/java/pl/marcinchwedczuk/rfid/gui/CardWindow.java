@@ -46,8 +46,8 @@ public class CardWindow {
 
     @FXML private TableView<DataRow> dataTable;
 
-    private final TableColumn<DataRow, String> sectorColumn = new TableColumn<>("SECTOR");
-    private final TableColumn<DataRow, String> blockColumn = new TableColumn<>("BLOCK");
+    private final TableColumn<DataRow, Integer> sectorColumn = new TableColumn<>("SECTOR");
+    private final TableColumn<DataRow, Integer> blockColumn = new TableColumn<>("BLOCK");
     private final List<TableColumn<DataRow, Byte>> dataColumns = new ArrayList<>();
 
     private final ObservableList<DataRow> rows = FXCollections.observableArrayList();
@@ -87,13 +87,15 @@ public class CardWindow {
     }
 
     private void initializeTableView() {
-        sectorColumn.setCellValueFactory(new PropertyValueFactory<DataRow, String>("sector"));
+        sectorColumn.setCellValueFactory(new PropertyValueFactory<DataRow, Integer>("sector"));
         sectorColumn.setEditable(false);
         sectorColumn.setSortable(false);
+        sectorColumn.setCellFactory(l -> new DataRowSectorBlockTableCell());
 
-        blockColumn.setCellValueFactory(new PropertyValueFactory<DataRow, String>("block"));
+        blockColumn.setCellValueFactory(new PropertyValueFactory<DataRow, Integer>("block"));
         blockColumn.setEditable(false);
         blockColumn.setSortable(false);
+        blockColumn.setCellFactory(l -> new DataRowSectorBlockTableCell());
 
         dataTable.getColumns().add(sectorColumn);
         dataTable.getColumns().add(blockColumn);

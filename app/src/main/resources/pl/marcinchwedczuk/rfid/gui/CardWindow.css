@@ -9,10 +9,25 @@
 }
 
 .table-cell:readonly-table-cell {
-    -fx-background-color: #aaaaaa;
+    -fx-background-color: #dedede;
 }
 
 .table-cell {
     -fx-font-family: monospace;
     -fx-font-weight: bold;
+}
+
+.table-cell:manufacturer-block-table-cell {
+    -fx-background-color: #f7ffb8;
+}
+
+/* disable highlighting of the selected row */
+.table-row-cell:filled:selected {
+  -fx-background: -fx-control-inner-background ;
+  -fx-background-color: -fx-table-cell-border-color, -fx-background ;
+  -fx-background-insets: 0, 0 0 1 0 ;
+  -fx-table-cell-border-color: derive(-fx-color, 5%);
+}
+.table-row-cell:odd:filled:selected {
+  -fx-background: -fx-control-inner-background-alt ;
 }

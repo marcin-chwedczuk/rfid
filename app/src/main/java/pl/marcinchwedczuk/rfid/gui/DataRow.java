@@ -15,6 +15,10 @@ public class DataRow {
         this.isSectorTrailer = isSectorTrailer;
     }
 
+    public boolean isManufacturerDataBlock() {
+        return sector == 0 && block == 0;
+    }
+
     public int getSector() {
         return sector;
     }

@@ -11,46 +11,25 @@ import org.apache.logging.log4j.Logger;
 public class DataRowByteTableCell extends TextFieldTableCell<DataRow, Byte> {
     private static final Logger logger = LogManager.getLogger(DataRowByteTableCell.class);
 
-    private final PseudoClass cssReadOnlyCell = PseudoClass.getPseudoClass("readonly-table-cell");
-    private final PseudoClass cssInvalidCell = PseudoClass.getPseudoClass("invalid-table-cell");
+    private final DataRowTableCellStylist stylist = new DataRowTableCellStylist();
 
     public DataRowByteTableCell(ReadOnlyBooleanProperty hexMode) {
         super(new DataRowByteStringConverter(hexMode));
-
-        /*
-        super.itemProperty().addListener((prop, oldValue, newValue) -> {
-            try {
-
-            } catch (Exception e) {
-                logger.error("ITEM PROPERTY", e);
-            }
-        });*/
     }
 
     @Override
     public void updateItem(Byte item, boolean empty) {
         super.updateItem(item, empty);
-
-        if (empty) {
-            this.setEditable(true);
-            this.pseudoClassStateChanged(cssReadOnlyCell, false);
-            return;
-        }
-
-        TableRow<DataRow> row = this.getTableRow();
-
-        boolean editable = row.getItem() != null &&
-                !row.getItem().isSectorTrailer;
-
-        this.setEditable(editable);
-        this.pseudoClassStateChanged(cssReadOnlyCell, !editable);
+        stylist.styleCellOnUpdate(this, empty);
     }
 
     @Override
     public void commitEdit(Byte pattern) {
         if (!isEditing()) return;
-        pseudoClassStateChanged(cssInvalidCell, pattern == null);
-        if (pattern != null) {
+
+        boolean validValue = (pattern != null);
+        stylist.styleOnEditCommit(this, validValue);
+        if (validValue) {
             super.commitEdit(pattern);
             editNextCell();
         }
