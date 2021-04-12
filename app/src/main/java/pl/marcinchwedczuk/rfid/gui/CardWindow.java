@@ -49,6 +49,7 @@ public class CardWindow {
     @FXML private TableView<DataRow> dataTable;
 
     @FXML private TableView<DataAccessInfoTable.DataAccessInfoBean> dataAccessInfo;
+    @FXML private TableView<SectorTrailerAccessInfoTable.SectorTrailerAccessInfoBean> trailerAccessInfo;
 
     private final TableColumn<DataRow, Integer> sectorColumn = new TableColumn<>("SECTOR");
     private final TableColumn<DataRow, Integer> blockColumn = new TableColumn<>("BLOCK");
@@ -84,6 +85,7 @@ public class CardWindow {
                 new FileChooser.ExtensionFilter("All Files", "*.*"));
 
         new DataAccessInfoTable(dataAccessInfo).setup();
+        new SectorTrailerAccessInfoTable(trailerAccessInfo).setup();
     }
 
     private int getCardMaxSector() {

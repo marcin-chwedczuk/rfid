@@ -38,7 +38,6 @@ public class DataAccessInfoTable {
                 new DataAccessInfoBean("0", "1", "1", "key B", "key B", "never", "never", "read/write block"),
                 new DataAccessInfoBean("1", "0", "1", "key B", "never", "never", "never", "read/write block"),
                 new DataAccessInfoBean("1", "1", "1", "never", "never", "never", "never", "read/write block")
-
         );
     }
 
