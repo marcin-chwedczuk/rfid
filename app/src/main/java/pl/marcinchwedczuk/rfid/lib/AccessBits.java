@@ -8,6 +8,8 @@ public class AccessBits {
     public final SectorTrailerAccess sectorTrailerAccess;
 
     public AccessBits(byte[] accessBits) {
+        // See docs/mifare_classic.pdf, page 11
+
         byte b6 = accessBits[0];
         byte b7 = accessBits[1];
         byte b8 = accessBits[2];

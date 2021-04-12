@@ -17,10 +17,8 @@ import pl.marcinchwedczuk.rfid.xml.XmlCardData;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.OpenOption;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -49,6 +47,8 @@ public class CardWindow {
     @FXML private Spinner<Integer> toSector;
 
     @FXML private TableView<DataRow> dataTable;
+
+    @FXML private TableView<DataAccessInfoTable.DataAccessInfoBean> dataAccessInfo;
 
     private final TableColumn<DataRow, Integer> sectorColumn = new TableColumn<>("SECTOR");
     private final TableColumn<DataRow, Integer> blockColumn = new TableColumn<>("BLOCK");
@@ -82,6 +82,8 @@ public class CardWindow {
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("XML Files", "*.xml"),
                 new FileChooser.ExtensionFilter("All Files", "*.*"));
+
+        new DataAccessInfoTable(dataAccessInfo).setup();
     }
 
     private int getCardMaxSector() {

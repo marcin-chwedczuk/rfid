@@ -11,7 +11,7 @@
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane stylesheets="@CardWindow.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.marcinchwedczuk.rfid.gui.CardWindow">
+<AnchorPane prefHeight="929.0" prefWidth="1265.0" stylesheets="@CardWindow.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.marcinchwedczuk.rfid.gui.CardWindow">
    <children>
       <Label layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="54.0" text="Card ID:" />
       <TextField fx:id="cardId" disable="true" editable="false" layoutX="68.0" layoutY="9.0" prefHeight="27.0" prefWidth="155.0" text="AA:BB:CC:DD:EE:FF" />
@@ -63,7 +63,11 @@
           </Tab>
             <Tab text="SECURITY">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="dataAccessInfo" layoutX="462.0" layoutY="28.0" prefHeight="295.0" prefWidth="783.0" AnchorPane.leftAnchor="462.0" AnchorPane.rightAnchor="20.0" />
+                        <TableView fx:id="trailerAccessInfo" layoutX="525.0" layoutY="450.0" prefHeight="200.0" prefWidth="200.0" />
+                     </children></AnchorPane>
               </content>
             </Tab>
         </tabs>
