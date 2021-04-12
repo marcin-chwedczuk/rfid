@@ -5,6 +5,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.IOException;
 
@@ -17,6 +18,7 @@ public class App extends Application {
         System.setProperty("prism.lcdtext", "false");
 
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
+            LogManager.getLogger().error("Unhandled exception", e);
             DialogBoxes.exception(e);
         });
 

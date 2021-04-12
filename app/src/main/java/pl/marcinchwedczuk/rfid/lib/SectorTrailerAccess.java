@@ -1,6 +1,8 @@
 package pl.marcinchwedczuk.rfid.lib;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static pl.marcinchwedczuk.rfid.lib.AccessCond.*;
@@ -59,7 +61,7 @@ public class SectorTrailerAccess {
         return "????";
     }
 
-    private static Map<Integer, SectorTrailerAccess> accessMap = new HashMap<>() {{
+    private static Map<String, SectorTrailerAccess> accessMap = new HashMap<>() {{
         //    KEY A     |   ACCESS BITS    |    KEY B     |
         // READ | WRITE |   READ | WRITE   | READ | WRITE |
         put(cbits(0, 0, 0), new SectorTrailerAccess(NEVER, KEY_A, KEY_A, NEVER, KEY_A, KEY_A));
@@ -73,8 +75,12 @@ public class SectorTrailerAccess {
         put(cbits(1, 1, 1), new SectorTrailerAccess(NEVER, NEVER, KEY_A_OR_B, NEVER, NEVER, NEVER));
     }};
 
-    private static int cbits(int c1, int c2, int c3) {
-        return c1*4 + c2*2 + c3;
+    private static String cbits(int c1, int c2, int c3) {
+        return String.format("%d, %d, %d", c1, c2, c3);
+    }
+
+    public static List<String> validCBits() {
+        return new ArrayList<>(accessMap.keySet());
     }
 
     public static SectorTrailerAccess fromBits(int c1, int c2, int c3) {

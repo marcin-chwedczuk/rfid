@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.stage.Modality;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -78,7 +79,6 @@ public class DialogBoxes {
         alert.getDialogPane().setExpandableContent(expContent);
 
         alert.showAndWait();
-
     }
 }
 

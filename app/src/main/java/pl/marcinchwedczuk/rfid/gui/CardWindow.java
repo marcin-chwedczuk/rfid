@@ -57,6 +57,13 @@ public class CardWindow {
 
     private final ObservableList<DataRow> rows = FXCollections.observableArrayList();
 
+    @FXML private ChoiceBox<String> secBlock0Perms;
+    @FXML private ChoiceBox<String> secBlock1Perms;
+    @FXML private ChoiceBox<String> secBlock2Perms;
+    @FXML private ChoiceBox<String> secTrailerPerms;
+
+    @FXML private MaskedTextField secSector;
+
     private AcrCard card;
 
     public void setCard(AcrCard card) {
@@ -86,6 +93,17 @@ public class CardWindow {
 
         new DataAccessInfoTable(dataAccessInfo).setup();
         new SectorTrailerAccessInfoTable(trailerAccessInfo).setup();
+
+        setupChoiceBox(secBlock0Perms, DataBlockAccess.validCBits());
+        setupChoiceBox(secBlock1Perms, DataBlockAccess.validCBits());
+        setupChoiceBox(secBlock2Perms, DataBlockAccess.validCBits());
+        setupChoiceBox(secTrailerPerms, SectorTrailerAccess.validCBits());
+    }
+
+    private void setupChoiceBox(ChoiceBox<String> choiceBox, List<String> items) {
+        choiceBox.setValue(null);
+        choiceBox.getItems().clear();
+        choiceBox.getItems().addAll(items);
     }
 
     private int getCardMaxSector() {
@@ -325,6 +343,31 @@ public class CardWindow {
     }
 
     public void secReadPermissions(ActionEvent actionEvent) {
+        int sector = Integer.parseInt(secSector.getPlainText());
+
+        byte[] keyBytes = getKeyBytes();
+        if (keyBytes == null) {
+            return;
+        }
+
+        try {
+            card.loadKeyToRegister(keyBytes, REGISTER_0);
+        } catch (AcrException e) {
+            DialogBoxes.error("Cannot read data from card!", e.getMessage());
+            return;
+        }
+
+        card.authenticate(SectorBlock.firstBlockOfSector(sector),
+                useAsKeyA.isSelected() ? KEY_A : KEY_B, REGISTER_0);
+
+        byte[] data = card.readBinaryBlock(SectorBlock.trailerOfSector(sector), 16);
+
+
+        AccessBits accessBits = new TrailerBlock(data).accessBits;
+
+        secBlock0Perms.setValue(accessBits.dataBlockAccesses.get(0).cbits);
+        secBlock1Perms.setValue(accessBits.dataBlockAccesses.get(1).cbits);
+        secBlock2Perms.setValue(accessBits.dataBlockAccesses.get(2).cbits);
 
     }
 

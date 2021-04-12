@@ -27,4 +27,8 @@ public class SectorBlock {
     public static SectorBlock firstBlockOfSector(int sector) {
         return fromSectorAndBlock(sector, 0);
     }
+
+    public static SectorBlock trailerOfSector(int sector) {
+        return fromSectorAndBlock(sector, 3);
+    }
 }

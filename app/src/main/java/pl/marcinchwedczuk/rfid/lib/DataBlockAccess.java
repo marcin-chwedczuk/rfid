@@ -1,11 +1,14 @@
 package pl.marcinchwedczuk.rfid.lib;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static pl.marcinchwedczuk.rfid.lib.AccessCond.*;
 
 public class DataBlockAccess {
+    public final String cbits;
     public final AccessCond read;
     public final AccessCond write;
     public final AccessCond increment;
@@ -15,7 +18,9 @@ public class DataBlockAccess {
      */
     public final AccessCond other;
 
-    private DataBlockAccess(AccessCond read, AccessCond write, AccessCond increment, AccessCond other) {
+    private DataBlockAccess(String cbits,
+                            AccessCond read, AccessCond write, AccessCond increment, AccessCond other) {
+        this.cbits = cbits;
         this.read = read;
         this.write = write;
         this.increment = increment;
@@ -43,23 +48,32 @@ public class DataBlockAccess {
         return "????";
     }
 
-    private static Map<Integer, DataBlockAccess> accessMap = new HashMap<>() {{
-        // READ | WRITE | INCREMENT | OTHER
+    private static Map<String, DataBlockAccess> accessMap = createMap(
+        //                  CBITS |         READ |      WRITE |     INCREMENT | OTHER
+        new DataBlockAccess(cbits(0, 0, 0), KEY_A_OR_B, KEY_A_OR_B, KEY_A_OR_B, KEY_A_OR_B),
+        new DataBlockAccess(cbits(0, 1, 0), KEY_A_OR_B, NEVER, NEVER, NEVER),
+        new DataBlockAccess(cbits(1, 0, 0), KEY_A_OR_B, KEY_B, NEVER, NEVER),
+        new DataBlockAccess(cbits(1, 1, 0), KEY_A_OR_B, KEY_B, KEY_B, KEY_A_OR_B),
+        new DataBlockAccess(cbits(0, 0, 1), KEY_A_OR_B, NEVER, NEVER, KEY_A_OR_B),
+        new DataBlockAccess(cbits(0, 1, 1), KEY_B, KEY_B, NEVER, NEVER),
+        new DataBlockAccess(cbits(1, 0, 1), KEY_B, NEVER, NEVER, NEVER),
+        new DataBlockAccess(cbits(1, 1, 1), NEVER, NEVER, NEVER, NEVER)
+    );
 
-        // transport (think new card) configuration
-        put(cbits(0, 0, 0), new DataBlockAccess(KEY_A_OR_B, KEY_A_OR_B, KEY_A_OR_B, KEY_A_OR_B));
+    private static Map<String, DataBlockAccess> createMap(DataBlockAccess... accesses) {
+        Map<String, DataBlockAccess> map = new HashMap<>();
+        for (DataBlockAccess dba: accesses) {
+            map.put(dba.cbits, dba);
+        }
+        return map;
+    }
 
-        put(cbits(0, 1, 0), new DataBlockAccess(KEY_A_OR_B, NEVER, NEVER, NEVER));
-        put(cbits(1, 0, 0), new DataBlockAccess(KEY_A_OR_B, KEY_B, NEVER, NEVER));
-        put(cbits(1, 1, 0), new DataBlockAccess(KEY_A_OR_B, KEY_B, KEY_B, KEY_A_OR_B));
-        put(cbits(0, 0, 1), new DataBlockAccess(KEY_A_OR_B, NEVER, NEVER, KEY_A_OR_B));
-        put(cbits(0, 1, 1), new DataBlockAccess(KEY_B, KEY_B, NEVER, NEVER));
-        put(cbits(1, 0, 1), new DataBlockAccess(KEY_B, NEVER, NEVER, NEVER));
-        put(cbits(1, 1, 1), new DataBlockAccess(NEVER, NEVER, NEVER, NEVER));
-    }};
+    private static String cbits(int c1, int c2, int c3) {
+        return String.format("%d, %d, %d", c1, c2, c3);
+    }
 
-    private static int cbits(int c1, int c2, int c3) {
-        return c1*4 + c2*2 + c3;
+    public static List<String> validCBits() {
+        return new ArrayList<>(accessMap.keySet());
     }
 
     public static DataBlockAccess fromBits(int c1, int c2, int c3) {
