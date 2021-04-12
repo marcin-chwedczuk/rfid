@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import pl.marcinchwedczuk.rfid.gui.MaskedTextField?>
 
-<AnchorPane prefHeight="929.0" prefWidth="1265.0" stylesheets="@CardWindow.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.marcinchwedczuk.rfid.gui.CardWindow">
+<AnchorPane prefHeight="929.0" prefWidth="1265.0" stylesheets="@CardWindow.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.marcinchwedczuk.rfid.gui.CardWindow">
    <children>
       <Label layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="54.0" text="Card ID:" />
       <TextField fx:id="cardId" disable="true" editable="false" layoutX="68.0" layoutY="9.0" prefHeight="27.0" prefWidth="155.0" text="AA:BB:CC:DD:EE:FF" />
@@ -65,8 +73,51 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TableView fx:id="dataAccessInfo" layoutX="462.0" layoutY="28.0" prefHeight="295.0" prefWidth="783.0" AnchorPane.leftAnchor="462.0" AnchorPane.rightAnchor="20.0" />
-                        <TableView fx:id="trailerAccessInfo" layoutX="380.0" layoutY="391.0" prefHeight="392.0" prefWidth="870.0" />
+                        <HBox layoutX="22.0" layoutY="14.0" prefHeight="662.0" prefWidth="1094.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <Pane prefHeight="662.0" prefWidth="77.0" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <Label layoutX="28.0" layoutY="150.0" text="Data Block 0:" />
+                                    <ChoiceBox fx:id="secBlock0Perms" layoutX="126.0" layoutY="145.0" prefWidth="150.0" />
+                                    <Label layoutX="28.0" layoutY="184.0" text="Data Block 1:" />
+                                    <ChoiceBox fx:id="secBlock1Perms" layoutX="126.0" layoutY="179.0" prefWidth="150.0" />
+                                    <Label layoutX="28.0" layoutY="220.0" text="Data Block 2:" />
+                                    <ChoiceBox fx:id="secBlock2Perms" layoutX="126.0" layoutY="215.0" prefWidth="150.0" />
+                                    <Label layoutX="28.0" layoutY="264.0" text="Sector Trailer:" />
+                                    <ChoiceBox fx:id="secTrailerPerms" layoutX="126.0" layoutY="260.0" prefWidth="150.0" />
+                                    <Label layoutX="28.0" layoutY="33.0" text="Sector:" />
+                                    <MaskedTextField fx:id="secSector" layoutX="75.0" layoutY="29.0" mask="##" prefHeight="26.0" prefWidth="203.0" promptText="Sector" />
+                                    <Button layoutX="124.0" layoutY="74.0" mnemonicParsing="false" onAction="#secReadPermissions" prefHeight="26.0" prefWidth="154.0" text="Read Permissions" />
+                                    <Button layoutX="29.0" layoutY="413.0" mnemonicParsing="false" onAction="#secWriteForSector" text="Write for Selected Sector" />
+                                    <TextArea editable="false" layoutX="29.0" layoutY="304.0" prefHeight="75.0" prefWidth="333.0" style="-fx-text-fill: red;" text="WARNING:&#10;Setting these values incorrectly&#10;may make your card unusable.">
+                                       <font>
+                                          <Font name="Monospaced Regular" size="16.0" />
+                                       </font>
+                                    </TextArea>
+                                    <Button layoutX="234.0" layoutY="413.0" mnemonicParsing="false" onAction="#secWriteForEntireCard" text="Write for Entire Card" />
+                                 </children>
+                              </Pane>
+                              <VBox maxWidth="-Infinity" minWidth="-Infinity" prefHeight="807.0" prefWidth="699.0" HBox.hgrow="NEVER">
+                                 <children>
+                                    <Label alignment="CENTER" text="Access conditions for data  blocks:" textAlignment="CENTER">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                    </Label>
+                                    <TableView fx:id="dataAccessInfo" prefHeight="364.0" prefWidth="811.0" VBox.vgrow="ALWAYS" />
+                                    <Label text="Access conditions for the sector trailer:&#10;" VBox.vgrow="ALWAYS">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <TableView fx:id="trailerAccessInfo" prefHeight="348.0" prefWidth="811.0" VBox.vgrow="ALWAYS" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
                      </children></AnchorPane>
               </content>
             </Tab>

@@ -323,4 +323,16 @@ public class CardWindow {
 
         DialogBoxes.error("TODO", "Not implemented yet!");
     }
+
+    public void secReadPermissions(ActionEvent actionEvent) {
+
+    }
+
+    public void secWriteForSector(ActionEvent actionEvent) {
+
+    }
+
+    public void secWriteForEntireCard(ActionEvent actionEvent) {
+
+    }
 }

@@ -12,6 +12,10 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
+        // Is this placebo? Maybe, but monospaces fonts look better with this
+        // ...or so I think.
+        System.setProperty("prism.lcdtext", "false");
+
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
             DialogBoxes.exception(e);
         });
@@ -21,7 +25,7 @@ public class App extends Application {
 
         Scene scene = new Scene(root);
 
-        primaryStage.setTitle("XOX MiniMax");
+        primaryStage.setTitle("Mifare Tag Editor");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();
