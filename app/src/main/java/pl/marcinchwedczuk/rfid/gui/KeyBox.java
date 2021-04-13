@@ -1,13 +1,12 @@
 package pl.marcinchwedczuk.rfid.gui;
 
+import javafx.application.Platform;
+import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 
 import java.io.IOException;
@@ -17,11 +16,11 @@ import java.util.ResourceBundle;
 public class KeyBox extends HBox implements Initializable {
     private static final String HEX = "HEX";
     private static final String ASCII = "ASCII";
+    private final PseudoClass cssInvalid = PseudoClass.getPseudoClass("invalid");
 
     @FXML private MaskedTextField keyTextField;
     @FXML private MenuButton modeMenu;
-
-    private Tooltip validationTooltip;
+    @FXML private Tooltip validationTooltip;
 
     public KeyBox() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("KeyBox.fxml"));
@@ -44,14 +43,35 @@ public class KeyBox extends HBox implements Initializable {
         modeMenu.getItems().clear();
         modeMenu.getItems().addAll(
                 new MenuItem(HEX),
-                new MenuItem(ASCII));
+                new MenuItem(ASCII),
+                new SeparatorMenuItem());
+
         for (var item: modeMenu.getItems()) {
+            if (item instanceof SeparatorMenuItem) continue;
             String text = item.getText();
             item.setOnAction((e) -> modeChanged(e, text));
         }
-        modeChanged(null, HEX);
 
+        modeChanged(null, HEX);
         keyTextField.setTooltip(null);
+
+        keyTextField.focusedProperty().addListener((prop, oldValue, hasFocus) -> {
+            if (!hasFocus) {
+                Platform.runLater(this::validate);
+            }
+        });
+    }
+
+    public boolean validate() {
+        boolean isValid = !keyTextField.getText().contains("_");
+        keyTextField.pseudoClassStateChanged(cssInvalid, !isValid);
+        if (!isValid) {
+            validationTooltip.setText("Provide proper value for this field!");
+            keyTextField.setTooltip(validationTooltip);
+        } else {
+            keyTextField.setTooltip(null);
+        }
+        return isValid;
     }
 
     private void modeChanged(ActionEvent e, String text) {

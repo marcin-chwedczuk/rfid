@@ -1,0 +1,9 @@
+
+
+.keyField:invalid {
+    -fx-border-color: red;
+}
+
+.validationTooltip {
+    -fx-background-color:	linear-gradient(orange, red);
+}

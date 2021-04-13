@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.HBox?>
 <?import pl.marcinchwedczuk.rfid.gui.MaskedTextField?>
 
-<fx:root type="javafx.scene.layout.HBox" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
-   <MaskedTextField fx:id="keyTextField" />
-   <MenuButton fx:id="modeMenu" minWidth="-Infinity" mnemonicParsing="false">
+<fx:root stylesheets="@KeyBox.css" type="javafx.scene.layout.HBox" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+   <MaskedTextField fx:id="keyTextField" styleClass="keyField">
+      <tooltip>
+         <Tooltip fx:id="validationTooltip" autoHide="true" styleClass="validationTooltip" text="Empty Tooltip" />
+      </tooltip></MaskedTextField>
+   <MenuButton fx:id="modeMenu" minWidth="-Infinity" mnemonicParsing="false" styleClass="modeField">
    </MenuButton>
 </fx:root>
