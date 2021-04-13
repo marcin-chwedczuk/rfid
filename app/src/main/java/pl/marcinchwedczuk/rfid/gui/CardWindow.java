@@ -362,13 +362,11 @@ public class CardWindow {
 
         byte[] data = card.readBinaryBlock(SectorBlock.trailerOfSector(sector), 16);
 
-
         AccessBits accessBits = new TrailerBlock(data).accessBits;
-
         secBlock0Perms.setValue(accessBits.dataBlockAccesses.get(0).cbits);
         secBlock1Perms.setValue(accessBits.dataBlockAccesses.get(1).cbits);
         secBlock2Perms.setValue(accessBits.dataBlockAccesses.get(2).cbits);
-
+        secTrailerPerms.setValue(accessBits.sectorTrailerAccess.cbits);
     }
 
     public void secWriteForSector(ActionEvent actionEvent) {

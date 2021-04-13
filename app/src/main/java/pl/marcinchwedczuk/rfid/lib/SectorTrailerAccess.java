@@ -15,6 +15,8 @@ import static pl.marcinchwedczuk.rfid.lib.AccessCond.*;
  * See docs/mifare_classic.pdf, page 12 for details.
  */
 public class SectorTrailerAccess {
+    public final String cbits;
+
     /**
      * This is always {@code NEVER}.
      */
@@ -27,9 +29,11 @@ public class SectorTrailerAccess {
     public final AccessCond readKeyB;
     public final AccessCond writeKeyB;
 
-    public SectorTrailerAccess(AccessCond readKeyA, AccessCond writeKeyA,
+    private SectorTrailerAccess(String cbits,
+                               AccessCond readKeyA, AccessCond writeKeyA,
                                AccessCond accessBitsRead, AccessCond accessBitsWrite,
                                AccessCond readKeyB, AccessCond writeKeyB) {
+        this.cbits = cbits;
         this.readKeyA = readKeyA;
         this.writeKeyA = writeKeyA;
         this.accessBitsRead = accessBitsRead;
@@ -61,19 +65,26 @@ public class SectorTrailerAccess {
         return "????";
     }
 
-    private static Map<String, SectorTrailerAccess> accessMap = new HashMap<>() {{
-        //    KEY A     |   ACCESS BITS    |    KEY B     |
-        // READ | WRITE |   READ | WRITE   | READ | WRITE |
-        put(cbits(0, 0, 0), new SectorTrailerAccess(NEVER, KEY_A, KEY_A, NEVER, KEY_A, KEY_A));
-        put(cbits(0, 1, 0), new SectorTrailerAccess(NEVER, NEVER, KEY_A, NEVER, KEY_A, NEVER));
-        put(cbits(1, 0, 0), new SectorTrailerAccess(NEVER, KEY_B, KEY_A_OR_B, NEVER, NEVER, KEY_B));
-        put(cbits(1, 1, 0), new SectorTrailerAccess(NEVER, NEVER, KEY_A_OR_B, NEVER, NEVER, NEVER));
+    private static Map<String, SectorTrailerAccess> accessMap = createMap(
+        // |  CBITS   |    KEY A     |   ACCESS BITS    |    KEY B     |
+        // | C1 C2 C3 | READ | WRITE |   READ | WRITE   | READ | WRITE |
+        new SectorTrailerAccess(cbits(0, 0, 0), NEVER, KEY_A, KEY_A, NEVER, KEY_A, KEY_A),
+        new SectorTrailerAccess(cbits(0, 1, 0), NEVER, NEVER, KEY_A, NEVER, KEY_A, NEVER),
+        new SectorTrailerAccess(cbits(1, 0, 0), NEVER, KEY_B, KEY_A_OR_B, NEVER, NEVER, KEY_B),
+        new SectorTrailerAccess(cbits(1, 1, 0), NEVER, NEVER, KEY_A_OR_B, NEVER, NEVER, NEVER),
         // transport configuration
-        put(cbits(0, 0, 1), new SectorTrailerAccess(NEVER, KEY_A, KEY_A, KEY_A, KEY_A, KEY_A));
-        put(cbits(0, 1, 1), new SectorTrailerAccess(NEVER, KEY_B, KEY_A_OR_B, KEY_B, NEVER, KEY_B));
-        put(cbits(1, 0, 1), new SectorTrailerAccess(NEVER, NEVER, KEY_A_OR_B, KEY_B, NEVER, NEVER));
-        put(cbits(1, 1, 1), new SectorTrailerAccess(NEVER, NEVER, KEY_A_OR_B, NEVER, NEVER, NEVER));
-    }};
+        new SectorTrailerAccess(cbits(0, 0, 1), NEVER, KEY_A, KEY_A, KEY_A, KEY_A, KEY_A),
+        new SectorTrailerAccess(cbits(0, 1, 1), NEVER, KEY_B, KEY_A_OR_B, KEY_B, NEVER, KEY_B),
+        new SectorTrailerAccess(cbits(1, 0, 1), NEVER, NEVER, KEY_A_OR_B, KEY_B, NEVER, NEVER),
+        new SectorTrailerAccess(cbits(1, 1, 1), NEVER, NEVER, KEY_A_OR_B, NEVER, NEVER, NEVER));
+
+    private static Map<String, SectorTrailerAccess> createMap(SectorTrailerAccess... accesses) {
+        Map<String, SectorTrailerAccess> map = new HashMap<>();
+        for (SectorTrailerAccess dba: accesses) {
+            map.put(dba.cbits, dba);
+        }
+        return map;
+    }
 
     private static String cbits(int c1, int c2, int c3) {
         return String.format("%d, %d, %d", c1, c2, c3);
@@ -83,7 +94,7 @@ public class SectorTrailerAccess {
         return new ArrayList<>(accessMap.keySet());
     }
 
-    public static SectorTrailerAccess fromBits(int c1, int c2, int c3) {
+    public static SectorTrailerAccess fromCBits(int c1, int c2, int c3) {
         SectorTrailerAccess dataBlockAccess = accessMap.get(cbits(c1, c2, c3));
         if (dataBlockAccess == null) {
             throw new IllegalArgumentException("Invalid C bits value: " + cbits(c1, c2, c3));

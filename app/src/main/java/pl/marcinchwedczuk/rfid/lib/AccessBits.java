@@ -42,7 +42,7 @@ public class AccessBits {
                 dataBlockAccesses.add(DataBlockAccess.fromBits(block_c1, block_c2, block_c3));
             }
             else {
-                tmp = SectorTrailerAccess.fromBits(block_c1, block_c2, block_c3);
+                tmp = SectorTrailerAccess.fromCBits(block_c1, block_c2, block_c3);
             }
         }
 

@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
@@ -19,6 +20,7 @@
 <?import javafx.scene.text.Font?>
 <?import pl.marcinchwedczuk.rfid.gui.MaskedTextField?>
 
+<?import pl.marcinchwedczuk.rfid.gui.KeyBox?>
 <AnchorPane prefHeight="929.0" prefWidth="1265.0" stylesheets="@CardWindow.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.marcinchwedczuk.rfid.gui.CardWindow">
    <children>
       <Label layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="54.0" text="Card ID:" />
@@ -77,24 +79,32 @@
                            <children>
                               <Pane prefHeight="662.0" prefWidth="77.0" HBox.hgrow="ALWAYS">
                                  <children>
-                                    <Label layoutX="28.0" layoutY="150.0" text="Data Block 0:" />
-                                    <ChoiceBox fx:id="secBlock0Perms" layoutX="126.0" layoutY="145.0" prefWidth="150.0" />
-                                    <Label layoutX="28.0" layoutY="184.0" text="Data Block 1:" />
-                                    <ChoiceBox fx:id="secBlock1Perms" layoutX="126.0" layoutY="179.0" prefWidth="150.0" />
-                                    <Label layoutX="28.0" layoutY="220.0" text="Data Block 2:" />
-                                    <ChoiceBox fx:id="secBlock2Perms" layoutX="126.0" layoutY="215.0" prefWidth="150.0" />
-                                    <Label layoutX="28.0" layoutY="264.0" text="Sector Trailer:" />
-                                    <ChoiceBox fx:id="secTrailerPerms" layoutX="126.0" layoutY="260.0" prefWidth="150.0" />
-                                    <Label layoutX="28.0" layoutY="33.0" text="Sector:" />
-                                    <MaskedTextField fx:id="secSector" layoutX="75.0" layoutY="29.0" mask="##" prefHeight="26.0" prefWidth="203.0" promptText="Sector" />
-                                    <Button layoutX="124.0" layoutY="74.0" mnemonicParsing="false" onAction="#secReadPermissions" prefHeight="26.0" prefWidth="154.0" text="Read Permissions" />
-                                    <Button layoutX="29.0" layoutY="413.0" mnemonicParsing="false" onAction="#secWriteForSector" text="Write for Selected Sector" />
-                                    <TextArea editable="false" layoutX="29.0" layoutY="304.0" prefHeight="75.0" prefWidth="333.0" style="-fx-text-fill: red;" text="WARNING:&#10;Setting these values incorrectly&#10;may make your card unusable.">
+                                    <Label layoutX="27.0" layoutY="285.0" text="Data Block 0:" />
+                                    <ChoiceBox fx:id="secBlock0Perms" layoutX="125.0" layoutY="280.0" prefWidth="150.0" />
+                                    <Label layoutX="27.0" layoutY="319.0" text="Data Block 1:" />
+                                    <ChoiceBox fx:id="secBlock1Perms" layoutX="125.0" layoutY="314.0" prefWidth="150.0" />
+                                    <Label layoutX="27.0" layoutY="355.0" text="Data Block 2:" />
+                                    <ChoiceBox fx:id="secBlock2Perms" layoutX="125.0" layoutY="350.0" prefWidth="150.0" />
+                                    <Label layoutX="27.0" layoutY="399.0" text="Sector Trailer:" />
+                                    <ChoiceBox fx:id="secTrailerPerms" layoutX="125.0" layoutY="395.0" prefWidth="150.0" />
+                                    <Label layoutX="30.0" layoutY="27.0" text="Sector:" />
+                                    <MaskedTextField fx:id="secSector" layoutX="77.0" layoutY="23.0" mask="##" prefHeight="26.0" prefWidth="203.0" promptText="Sector" />
+                                    <Button layoutX="30.0" layoutY="62.0" mnemonicParsing="false" onAction="#secReadPermissions" prefHeight="26.0" prefWidth="250.0" text="Read Keys &amp; Permissions" />
+                                    <Button layoutX="26.0" layoutY="535.0" mnemonicParsing="false" onAction="#secWriteForSector" text="Write Permissions for Selected Sector" />
+                                    <TextArea editable="false" layoutX="28.0" layoutY="439.0" prefHeight="75.0" prefWidth="436.0" style="-fx-text-fill: red;" text="WARNING: Setting these values incorrectly&#10;may make your card unusable.">
                                        <font>
                                           <Font name="Monospaced Regular" size="16.0" />
                                        </font>
                                     </TextArea>
-                                    <Button layoutX="234.0" layoutY="413.0" mnemonicParsing="false" onAction="#secWriteForEntireCard" text="Write for Entire Card" />
+                                    <Button layoutX="263.0" layoutY="535.0" mnemonicParsing="false" onAction="#secWriteForEntireCard" text="Write Permissions for Entire Card" />
+                                    <Label layoutX="34.0" layoutY="102.0" text="NOTE: Not readable key will be read as 6 zero bytes.&#10;" />
+                                    <KeyBox layoutX="83.0" layoutY="142.0" prefHeight="26.0" prefWidth="202.0" />
+                                    <Label layoutX="34.0" layoutY="147.0" text="Key A:" />
+                                    <KeyBox layoutX="83.0" layoutY="175.0" prefHeight="26.0" prefWidth="202.0" />
+                                    <Label layoutX="34.0" layoutY="180.0" text="Key B:" />
+                                    <Button layoutX="27.0" layoutY="225.0" mnemonicParsing="false" onAction="#secWriteForSector" text="Change Keys for Selected Sector" />
+                                    <Button layoutX="236.0" layoutY="225.0" mnemonicParsing="false" onAction="#secWriteForSector" text="Change Keys for Entire Card" />
+                                    <CheckBox layoutX="29.0" layoutY="651.0" mnemonicParsing="false" text="Ignore sectors that cannot be changed" />
                                  </children>
                               </Pane>
                               <VBox maxWidth="-Infinity" minWidth="-Infinity" prefHeight="807.0" prefWidth="699.0" HBox.hgrow="NEVER">
