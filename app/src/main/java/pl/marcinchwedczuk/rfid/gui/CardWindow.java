@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
@@ -15,11 +16,13 @@ import pl.marcinchwedczuk.rfid.lib.*;
 import pl.marcinchwedczuk.rfid.xml.XmlCardData;
 
 import java.io.File;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
@@ -28,7 +31,7 @@ import static pl.marcinchwedczuk.rfid.lib.KeyRegister.REGISTER_0;
 import static pl.marcinchwedczuk.rfid.lib.KeyType.KEY_A;
 import static pl.marcinchwedczuk.rfid.lib.KeyType.KEY_B;
 
-public class CardWindow {
+public class CardWindow implements Initializable {
     private static Logger logger = LogManager.getLogger(CardWindow.class);
 
     private final FileChooser fileChooser = new FileChooser();
@@ -36,12 +39,11 @@ public class CardWindow {
     @FXML private TextField cardId;
     @FXML private TextField cardStandard;
 
-    @FXML private TextField key;
-    @FXML private RadioButton hexKey;
-    @FXML private RadioButton useAsKeyA;
+    @FXML private KeyBox key;
+    @FXML private ChoiceBox<KeyType> useAsKeyChoiceBox;
 
     private final SimpleBooleanProperty displayDataAsHex = new SimpleBooleanProperty(true);
-    @FXML private RadioButton displayHex;
+    @FXML private ChoiceBox<Encoding> displayAsSelect;
 
     @FXML private Spinner<Integer> fromSector;
     @FXML private Spinner<Integer> toSector;
@@ -66,6 +68,17 @@ public class CardWindow {
 
     private AcrCard card;
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        useAsKeyChoiceBox.getItems().setAll(KeyType.values());
+        useAsKeyChoiceBox.getSelectionModel().select(KEY_A);
+
+        displayAsSelect.getItems().setAll(Encoding.values());
+        displayAsSelect.getSelectionModel().select(Encoding.Hex);
+
+        key.loadKey("FF:FF:FF:FF:FF:FF", Encoding.Hex);
+    }
+
     public void setCard(AcrCard card) {
         this.card = card;
 
@@ -74,8 +87,9 @@ public class CardWindow {
 
         initializeTableView();
 
-        displayHex.selectedProperty().addListener((prop, oldValue, newValue) -> {
-            displayDataAsHex.set(newValue);
+        displayAsSelect.setOnAction(event -> {
+            Encoding current = displayAsSelect.getValue();
+            displayDataAsHex.set(current == Encoding.Hex);
             dataTable.refresh();
         });
 
@@ -203,7 +217,7 @@ public class CardWindow {
             rows.clear();
 
             progressDialog.set(ProgressDialog.show(
-                    hexKey.getScene(),
+                    cardId.getScene(),
                     "Reading sectors from card...",
                     () -> cancel.set(true)));
         };
@@ -216,7 +230,7 @@ public class CardWindow {
         Function<Integer, Boolean> work = (sector) -> {
             try {
                 card.authenticate(SectorBlock.firstBlockOfSector(sector),
-                        useAsKeyA.isSelected() ? KEY_A : KEY_B, REGISTER_0);
+                        useAsKeyChoiceBox.getValue(), REGISTER_0);
 
                 for (int block = 0; block < 4; block++) {
                     byte[] data = card.readBinaryBlock(SectorBlock.fromSectorAndBlock(sector, block), 16);
@@ -237,11 +251,11 @@ public class CardWindow {
     }
 
     private byte[] getKeyBytes() {
-        String keyString = key.getText();
-        boolean isHex = hexKey.isSelected();
+        String keyString = key.getKey();
+        Encoding encoding = key.getEncoding();
 
         try {
-            byte[] keyBytes = isHex
+            byte[] keyBytes = encoding == Encoding.Hex
                     ? ByteUtils.fromHexString(keyString, ":")
                     : keyString.getBytes(StandardCharsets.US_ASCII);
 
@@ -299,7 +313,7 @@ public class CardWindow {
 
         Runnable before = () -> {
             progressDialog.set(ProgressDialog.show(
-                    hexKey.getScene(),
+                    cardId.getScene(),
                     "Writing sectors to card...",
                     () -> cancel.set(true)));
         };
@@ -311,7 +325,7 @@ public class CardWindow {
         Function<Integer, Boolean> work = (sector) -> {
             try {
                 card.authenticate(SectorBlock.firstBlockOfSector(sector),
-                        useAsKeyA.isSelected() ? KEY_A : KEY_B, REGISTER_0);
+                        useAsKeyChoiceBox.getValue(), REGISTER_0);
 
                 // 4th block (which contains keys and permissions) is not writable by this method
                 for (int block = 0; block < 3; block++) {
@@ -341,13 +355,12 @@ public class CardWindow {
     }
 
     public void loadDefaultFactoryKey(ActionEvent actionEvent) {
-        hexKey.setSelected(true);
-        key.setText("FF:FF:FF:FF:FF:FF");
+        key.loadKey("FF:FF:FF:FF:FF:FF", Encoding.Hex);
     }
 
     public void exportToXml(ActionEvent actionEvent) {
         fileChooser.setTitle("Export cart data to XML file...");
-        File target = fileChooser.showSaveDialog(hexKey.getScene().getWindow());
+        File target = fileChooser.showSaveDialog(cardId.getScene().getWindow());
         if (target != null) {
             try {
                 String xml = new XmlCardData(rows.stream()).toXml();
@@ -362,7 +375,7 @@ public class CardWindow {
 
     public void importFromXml(ActionEvent actionEvent) {
         fileChooser.setTitle("Import cart data from XML file...");
-        fileChooser.showOpenDialog(hexKey.getScene().getWindow());
+        fileChooser.showOpenDialog(cardId.getScene().getWindow());
 
         DialogBoxes.error("TODO", "Not implemented yet!");
     }
@@ -383,15 +396,18 @@ public class CardWindow {
         }
 
         card.authenticate(SectorBlock.firstBlockOfSector(sector),
-                useAsKeyA.isSelected() ? KEY_A : KEY_B, REGISTER_0);
+                useAsKeyChoiceBox.getValue(), REGISTER_0);
 
         byte[] data = card.readBinaryBlock(SectorBlock.trailerOfSector(sector), 16);
 
-        AccessBits accessBits = new TrailerBlock(data).accessBits;
+        TrailerBlock trailerBlock = new TrailerBlock(data);
+        AccessBits accessBits = trailerBlock.accessBits;
         secBlock0Perms.setValue(accessBits.dataBlockAccesses.get(0).cbits);
         secBlock1Perms.setValue(accessBits.dataBlockAccesses.get(1).cbits);
         secBlock2Perms.setValue(accessBits.dataBlockAccesses.get(2).cbits);
         secTrailerPerms.setValue(accessBits.sectorTrailerAccess.cbits);
+
+
     }
 
     public void secWriteForSector(ActionEvent actionEvent) {
@@ -399,6 +415,14 @@ public class CardWindow {
     }
 
     public void secWriteForEntireCard(ActionEvent actionEvent) {
+
+    }
+
+    public void secWriteKeysForSector(ActionEvent actionEvent) {
+
+    }
+
+    public void secWriteKeysForEntireCard(ActionEvent actionEvent) {
 
     }
 }

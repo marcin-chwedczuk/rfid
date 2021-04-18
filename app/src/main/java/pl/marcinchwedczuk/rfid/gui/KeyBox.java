@@ -14,12 +14,10 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class KeyBox extends HBox implements Initializable {
-    private static final String HEX = "HEX";
-    private static final String ASCII = "ASCII";
     private final PseudoClass cssInvalid = PseudoClass.getPseudoClass("invalid");
 
     @FXML private MaskedTextField keyTextField;
-    @FXML private MenuButton modeMenu;
+    @FXML private ChoiceBox<Encoding> modeMenu;
     @FXML private Tooltip validationTooltip;
 
     public KeyBox() {
@@ -40,21 +38,16 @@ public class KeyBox extends HBox implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        modeMenu.getItems().clear();
-        modeMenu.getItems().addAll(
-                new MenuItem(HEX),
-                new MenuItem(ASCII),
-                new SeparatorMenuItem());
+        modeMenu.getItems().setAll(Encoding.values());
 
-        for (var item: modeMenu.getItems()) {
-            if (item instanceof SeparatorMenuItem) continue;
-            String text = item.getText();
-            item.setOnAction((e) -> modeChanged(e, text));
-        }
+        modeMenu.setOnAction(event -> {
+            Encoding current = modeMenu.getValue();
+            modeChanged(current);
+        });
 
-        modeChanged(null, HEX);
+        modeMenu.getSelectionModel().select(0);
+
         keyTextField.setTooltip(null);
-
         keyTextField.focusedProperty().addListener((prop, oldValue, hasFocus) -> {
             if (!hasFocus) {
                 Platform.runLater(this::validate);
@@ -74,22 +67,34 @@ public class KeyBox extends HBox implements Initializable {
         return isValid;
     }
 
-    private void modeChanged(ActionEvent e, String text) {
+    public String getKey() {
+        if (!validate()) return null;
+        return keyTextField.getPlainText();
+    }
+
+    public Encoding getEncoding() {
+        return Encoding.Hex;
+    }
+
+    public void loadKey(String key, Encoding encoding) {
+        modeMenu.getSelectionModel().select(encoding);
+        keyTextField.setPlainText(key);
+        Platform.runLater(this::validate);
+    }
+
+    private void modeChanged(Encoding text) {
         // TODO: Attempt to convert text
         switch (text) {
-            case HEX:
+            case Hex:
                 keyTextField.setMask("HH:HH:HH:HH:HH:HH");
                 break;
 
-            case ASCII:
+            case Ascii:
                 keyTextField.setMask("LLLLLL");
                 break;
 
             default:
                 throw new RuntimeException("Invalid key mode: " + text);
         }
-
-        //keyTextField.setPlainText("");
-        modeMenu.setText(text);
     }
 }
