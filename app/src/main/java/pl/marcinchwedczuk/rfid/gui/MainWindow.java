@@ -68,11 +68,11 @@ public class MainWindow {
 
             Stage childWindow = new Stage();
             childWindow.setTitle("MIFARE 1K Tag Editor");
-            childWindow.setScene(new Scene(loader.load(), 800, 1024));
+            childWindow.setScene(new Scene(loader.load(), 1500, 1024));
             childWindow.initModality(Modality.APPLICATION_MODAL);
             childWindow.initOwner(terminalsList.getScene().getWindow());
-            childWindow.setMinWidth(1000);
-            childWindow.setMinHeight(640);
+            //childWindow.setMinWidth(1000);
+            //childWindow.setMinHeight(640);
 
             childWindow.setOnCloseRequest(we -> card.disconnect());
             ((CardWindow)loader.getController()).setCard(card);

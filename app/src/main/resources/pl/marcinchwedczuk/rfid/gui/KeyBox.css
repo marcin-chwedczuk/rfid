@@ -1,4 +1,7 @@
 
+.keyField {
+    -fx-font-family: monospace;
+}
 
 .keyField:invalid {
     -fx-border-color: red;

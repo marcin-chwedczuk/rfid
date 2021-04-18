@@ -19,4 +19,12 @@ public class TrailerBlock {
 
         accessBits = new AccessBits(Arrays.copyOfRange(data, 6, 10));
     }
+
+    public String keyAHexString() {
+        return ByteUtils.asHexString(keyA, ":");
+    }
+
+    public String keyBHexString() {
+        return ByteUtils.asHexString(keyB, ":");
+    }
 }

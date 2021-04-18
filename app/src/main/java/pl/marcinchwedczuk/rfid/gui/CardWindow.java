@@ -66,6 +66,9 @@ public class CardWindow implements Initializable {
 
     @FXML private MaskedTextField secSector;
 
+    @FXML private KeyBox secKeyA;
+    @FXML private KeyBox secKeyB;
+
     private AcrCard card;
 
     @Override
@@ -77,6 +80,7 @@ public class CardWindow implements Initializable {
         displayAsSelect.getSelectionModel().select(Encoding.Hex);
 
         key.loadKey("FF:FF:FF:FF:FF:FF", Encoding.Hex);
+        secSector.setPlainText("0");
     }
 
     public void setCard(AcrCard card) {
@@ -356,6 +360,7 @@ public class CardWindow implements Initializable {
 
     public void loadDefaultFactoryKey(ActionEvent actionEvent) {
         key.loadKey("FF:FF:FF:FF:FF:FF", Encoding.Hex);
+        useAsKeyChoiceBox.setValue(KEY_A);
     }
 
     public void exportToXml(ActionEvent actionEvent) {
@@ -407,7 +412,13 @@ public class CardWindow implements Initializable {
         secBlock2Perms.setValue(accessBits.dataBlockAccesses.get(2).cbits);
         secTrailerPerms.setValue(accessBits.sectorTrailerAccess.cbits);
 
-
+        if (useAsKeyChoiceBox.getValue() == KEY_A) {
+            secKeyA.loadKey(key.getKey(), key.getEncoding());
+            secKeyB.loadKey(trailerBlock.keyBHexString(), Encoding.Hex);
+        } else {
+            secKeyA.loadKey(trailerBlock.keyAHexString(), Encoding.Hex);
+            secKeyB.loadKey(key.getKey(), key.getEncoding());
+        }
     }
 
     public void secWriteForSector(ActionEvent actionEvent) {
