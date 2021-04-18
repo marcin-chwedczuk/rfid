@@ -35,3 +35,29 @@
 .cbits.choice-box {
     -fx-font-family: monospace;
 }
+
+#writeCardData {
+    -fx-background-image: url("img/mail-receive.png");
+    -fx-background-size: 32 32;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: 4px 50%;
+}
+
+#readCardData {
+    -fx-background-image: url("img/mail-folder-outbox.png");
+    -fx-background-size: 32 32;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: 4px 50%;
+}
+
+.permWarningText {
+    -fx-background-image: url("img/dialog-warning.png");
+    -fx-background-size: 32 32;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: 4px 50%;
+    -fx-padding: 0 0 0 42px;
+
+    -fx-text-fill: red;
+    -fx-font-family: monospace;
+    -fx-font-weight: bold;
+}
