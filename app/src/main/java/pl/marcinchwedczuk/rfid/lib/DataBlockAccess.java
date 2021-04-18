@@ -1,9 +1,7 @@
 package pl.marcinchwedczuk.rfid.lib;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Pattern;
 
 import static pl.marcinchwedczuk.rfid.lib.AccessCond.*;
 
@@ -25,6 +23,16 @@ public class DataBlockAccess {
         this.write = write;
         this.increment = increment;
         this.other = other;
+    }
+
+    /**
+     * @return Array { 0, c1, c2, c3 }
+     */
+    public int[] getCBits() {
+        String cbitsWithFakeFirstElement = "0, " + cbits;
+        return Arrays.stream(cbitsWithFakeFirstElement.split(Pattern.quote(", ")))
+                .mapToInt(Integer::parseInt)
+                .toArray();
     }
 
     public String asTable() {

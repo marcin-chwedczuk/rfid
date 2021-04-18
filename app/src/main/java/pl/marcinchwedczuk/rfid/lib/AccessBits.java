@@ -49,6 +49,55 @@ public class AccessBits {
         this.sectorTrailerAccess = tmp;
     }
 
+    public byte[] toBytes() {
+        int[] block0 = dataBlockAccesses.get(0).getCBits();
+        int[] block0_neg = negate(block0);
+
+        int[] block1 = dataBlockAccesses.get(1).getCBits();
+        int[] block1_neg = negate(block1);
+
+        int[] block2 = dataBlockAccesses.get(2).getCBits();
+        int[] block2_neg = negate(block2);
+
+        int[] block3 = sectorTrailerAccess.getCBits();
+        int[] block3_neg = negate(block3);
+
+        // see: docs/mifare_classic.pdf, Figure 10, page 11.
+        byte byte_6 = fromBits(block3_neg[2], block2_neg[2], block1_neg[2], block0_neg[2],
+                block3_neg[1], block2_neg[1], block1_neg[1], block0_neg[1]);
+
+        byte byte_7 = fromBits(block3[1], block2[1], block1[1], block0[1],
+                block3_neg[3], block2_neg[3], block1_neg[3], block0_neg[3]);
+
+        byte byte_8 = fromBits(block3[3], block2[3], block1[3], block0[3],
+                block3[2], block2[2], block1[2], block0[2]);
+
+        byte byte_9 = 0x69; // Lol
+
+        return new byte[] { byte_6, byte_7, byte_8, byte_9 };
+    }
+
+    private byte fromBits(int msb, int b6, int b5, int b4, int b3, int b2, int b1, int lsb) {
+        return (byte)(
+            ((msb & 1) << 7) |
+            ((b6 & 1) << 6) |
+            ((b5 & 1) << 5) |
+            ((b4 & 1) << 4) |
+            ((b3 & 1) << 3) |
+            ((b2 & 1) << 2) |
+            ((b1 & 1) << 1) |
+            ((lsb & 1) << 0)
+        );
+    }
+
+    private int[] negate(int[] bytes) {
+        int[] result = new int[bytes.length];
+        for (int i = 0; i < bytes.length; i++) {
+            result[i] = 1 - (bytes[i] & 1);
+        }
+        return result;
+    }
+
     public String asTable() {
         StringBuilder sb = new StringBuilder();
 

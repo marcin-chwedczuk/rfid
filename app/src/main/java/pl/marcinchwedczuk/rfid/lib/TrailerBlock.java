@@ -27,4 +27,31 @@ public class TrailerBlock {
     public String keyBHexString() {
         return ByteUtils.asHexString(keyB, ":");
     }
+
+    public void setKeyA(byte[] key) {
+        validateKey(key);
+        keyA = key.clone();
+    }
+
+    public void setKeyB(byte[] key) {
+        validateKey(key);
+        keyB = key.clone();
+    }
+
+    public byte[] toBytes() {
+        byte[] result = new byte[16];
+
+        System.arraycopy(keyA, 0, result, 0, 6);
+        System.arraycopy(keyB, 0, result, 10, 6);
+
+        byte[] accessBytes = accessBits.toBytes();
+        System.arraycopy(accessBytes, 0, result, 6, 4);
+
+        return result;
+    }
+
+    private void validateKey(byte[] key) {
+        if (key == null || key.length != 6)
+            throw new IllegalArgumentException("Invalid key!");
+    }
 }
