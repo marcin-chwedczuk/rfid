@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AccessBits {
-    public final List<DataBlockAccess> dataBlockAccesses = new ArrayList<>();
-    public final SectorTrailerAccess sectorTrailerAccess;
+    public List<DataBlockAccess> dataBlockAccesses = new ArrayList<>();
+    public SectorTrailerAccess sectorTrailerAccess;
 
     public AccessBits(byte[] accessBits) {
         // See docs/mifare_classic.pdf, page 11
@@ -96,6 +96,14 @@ public class AccessBits {
             result[i] = 1 - (bytes[i] & 1);
         }
         return result;
+    }
+
+    public void setSectorTrailerAccess(String cbits) {
+        this.sectorTrailerAccess = SectorTrailerAccess.fromCBits(cbits);
+    }
+
+    public void setDataBlockAccess(int block, String cbits) {
+        this.dataBlockAccesses.set(block, DataBlockAccess.fromCBits(cbits));
     }
 
     public String asTable() {

@@ -91,4 +91,12 @@ public class DataBlockAccess {
         }
         return dataBlockAccess;
     }
+
+    public static DataBlockAccess fromCBits(String cbits) {
+        DataBlockAccess tmp = accessMap.get(cbits);
+        if (tmp == null) {
+            throw new IllegalArgumentException("cbits");
+        }
+        return tmp;
+    }
 }

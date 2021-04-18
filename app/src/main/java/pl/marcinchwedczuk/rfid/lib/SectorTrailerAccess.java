@@ -109,4 +109,12 @@ public class SectorTrailerAccess {
         }
         return dataBlockAccess;
     }
+
+    public static SectorTrailerAccess fromCBits(String cbits) {
+        SectorTrailerAccess tmp = accessMap.get(cbits);
+        if (tmp == null) {
+            throw new IllegalArgumentException("cbits");
+        }
+        return tmp;
+    }
 }

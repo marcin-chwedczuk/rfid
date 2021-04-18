@@ -422,7 +422,37 @@ public class CardWindow implements Initializable {
     }
 
     public void secWriteForSector(ActionEvent actionEvent) {
+        int sector = Integer.parseInt(secSector.getPlainText());
 
+        byte[] keyBytes = getKeyBytes();
+        if (keyBytes == null) {
+            return;
+        }
+
+        try {
+            card.loadKeyToRegister(keyBytes, REGISTER_0);
+        } catch (AcrException e) {
+            DialogBoxes.error("Cannot read data from card!", e.getMessage());
+            return;
+        }
+
+        card.authenticate(SectorBlock.firstBlockOfSector(sector),
+                useAsKeyChoiceBox.getValue(), REGISTER_0);
+
+        // Read data
+        byte[] data = card.readBinaryBlock(SectorBlock.trailerOfSector(sector), 16);
+
+        TrailerBlock trailerBlock = new TrailerBlock(data);
+
+        // TODO: Set permissions
+        trailerBlock.accessBits.setDataBlockAccess(0, secBlock0Perms.getValue());
+        trailerBlock.accessBits.setDataBlockAccess(1, secBlock1Perms.getValue());
+        trailerBlock.accessBits.setDataBlockAccess(2, secBlock2Perms.getValue());
+        trailerBlock.accessBits.setSectorTrailerAccess(secTrailerPerms.getValue());
+
+        card.writeBinaryBlock(SectorBlock.trailerOfSector(sector), trailerBlock.toBytes());
+
+        DialogBoxes.info("DONE");
     }
 
     public void secWriteForEntireCard(ActionEvent actionEvent) {
