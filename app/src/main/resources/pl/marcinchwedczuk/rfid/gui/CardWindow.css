@@ -2,7 +2,7 @@
     -fx-control-inner-background-alt: -fx-control-inner-background ;
 }
 
-.table-cell:invalid-table-cell .text-field {
+.data-table .table-cell:invalid-table-cell .text-field {
     -fx-focus-color: red;
     -fx-control-inner-background: #ffc0c0;
     -fx-accent: red;
@@ -17,17 +17,21 @@
     -fx-font-weight: bold;
 }
 
-.table-cell:manufacturer-block-table-cell {
+.data-table .table-cell:manufacturer-block-table-cell {
     -fx-background-color: #f7ffb8;
 }
 
 /* disable highlighting of the selected row */
-.table-row-cell:filled:selected {
+.data-table .table-row-cell:filled:selected {
   -fx-background: -fx-control-inner-background ;
   -fx-background-color: -fx-table-cell-border-color, -fx-background ;
   -fx-background-insets: 0, 0 0 1 0 ;
   -fx-table-cell-border-color: derive(-fx-color, 5%);
 }
-.table-row-cell:odd:filled:selected {
+.data-table .table-row-cell:odd:filled:selected {
   -fx-background: -fx-control-inner-background-alt ;
+}
+
+.cbits.choice-box {
+    -fx-font-family: monospace;
 }

@@ -1,17 +1,22 @@
 package pl.marcinchwedczuk.rfid.gui;
 
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.event.ActionEvent;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+
+import java.util.function.Consumer;
 
 public class DataAccessInfoTable {
     private final TableView<DataAccessInfoBean> tableView;
+    private ContextMenu rowContextMenu;
 
     public DataAccessInfoTable(TableView<DataAccessInfoBean> tableView) {
         this.tableView = tableView;
     }
 
-    public void setup() {
+    public DataAccessInfoTable setup() {
+        rowContextMenu = new ContextMenu();
+
         TableColumn<DataAccessInfoBean, String> accessBits = new TableColumn<>("ACCESS BITS");
         TableColumn<DataAccessInfoBean, String> c1 = dataColumn("C1", "c1");
         TableColumn<DataAccessInfoBean, String> c2 = dataColumn("C2", "c2");
@@ -39,6 +44,23 @@ public class DataAccessInfoTable {
                 new DataAccessInfoBean("1", "0", "1", "key B", "never", "never", "never", "read/write block"),
                 new DataAccessInfoBean("1", "1", "1", "never", "never", "never", "never", "read/write block")
         );
+
+        tableView.setContextMenu(rowContextMenu);
+
+        return this;
+    }
+
+    public DataAccessInfoTable addRowMenuEntry(String caption, Consumer<DataAccessInfoBean> action) {
+        MenuItem menuItem = new MenuItem(caption);
+        menuItem.setOnAction((ActionEvent event) -> {
+            DataAccessInfoBean item = tableView.getSelectionModel().getSelectedItem();
+            if (item != null) {
+                action.accept(item);
+            }
+        });
+
+        rowContextMenu.getItems().add(menuItem);
+        return this;
     }
 
     private TableColumn<DataAccessInfoBean, String> dataColumn(String name, String property) {
@@ -72,6 +94,10 @@ public class DataAccessInfoTable {
             this.increment = increment;
             this.other = other;
             this.application = application;
+        }
+
+        public String getCBits() {
+            return String.format("%s, %s, %s", c1, c2, c3);
         }
 
         public String getC1() {

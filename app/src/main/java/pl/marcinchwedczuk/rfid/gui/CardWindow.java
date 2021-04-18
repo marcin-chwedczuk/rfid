@@ -91,13 +91,38 @@ public class CardWindow {
                 new FileChooser.ExtensionFilter("XML Files", "*.xml"),
                 new FileChooser.ExtensionFilter("All Files", "*.*"));
 
-        new DataAccessInfoTable(dataAccessInfo).setup();
-        new SectorTrailerAccessInfoTable(trailerAccessInfo).setup();
-
         setupChoiceBox(secBlock0Perms, DataBlockAccess.validCBits());
         setupChoiceBox(secBlock1Perms, DataBlockAccess.validCBits());
         setupChoiceBox(secBlock2Perms, DataBlockAccess.validCBits());
         setupChoiceBox(secTrailerPerms, SectorTrailerAccess.validCBits());
+
+        new DataAccessInfoTable(dataAccessInfo)
+                .setup()
+                .addRowMenuEntry("Select for Block 0", info -> selectAccessForBlock(List.of(0), info.getCBits()))
+                .addRowMenuEntry("Select for Block 1", info -> selectAccessForBlock(List.of(1), info.getCBits()))
+                .addRowMenuEntry("Select for Block 2", info -> selectAccessForBlock(List.of(2), info.getCBits()))
+                .addRowMenuEntry("Select for all Blocks", info -> selectAccessForBlock(List.of(0, 1, 2), info.getCBits()));
+
+        new SectorTrailerAccessInfoTable(trailerAccessInfo)
+                .setup()
+                .addRowMenuEntry("Select", info -> {
+                    String cbits = info.getCBits();
+                    secTrailerPerms.getSelectionModel().select(cbits);
+                });
+    }
+
+    private void selectAccessForBlock(List<Integer> blocks, String cbits) {
+        if (blocks.contains(0)) {
+            secBlock0Perms.getSelectionModel().select(cbits);
+        }
+
+        if (blocks.contains(1)) {
+            secBlock1Perms.getSelectionModel().select(cbits);
+        }
+
+        if (blocks.contains(2)) {
+            secBlock2Perms.getSelectionModel().select(cbits);
+        }
     }
 
     private void setupChoiceBox(ChoiceBox<String> choiceBox, List<String> items) {

@@ -1,19 +1,25 @@
 package pl.marcinchwedczuk.rfid.gui;
 
+import javafx.event.ActionEvent;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import java.util.stream.Stream;
+import java.util.function.Consumer;
 
 public class SectorTrailerAccessInfoTable {
+    private ContextMenu rowContextMenu;
     private final TableView<SectorTrailerAccessInfoBean> tableView;
 
     public SectorTrailerAccessInfoTable(TableView<SectorTrailerAccessInfoBean> tableView) {
         this.tableView = tableView;
     }
 
-    public void setup() {
+    public SectorTrailerAccessInfoTable setup() {
+        rowContextMenu = new ContextMenu();
+
         TableColumn<SectorTrailerAccessInfoBean, String> accessBits = containerColumn("ACCESS BITS",
                 dataColumn("C1", "c1"),
                 dataColumn("C2", "c2"),
@@ -33,8 +39,9 @@ public class SectorTrailerAccessInfoTable {
 
 
         TableColumn<SectorTrailerAccessInfoBean, String> remark = dataColumn("REMARK", "remark");
-
         tableView.getColumns().addAll(accessBits, accessCondition, remark);
+
+        tableView.setContextMenu(rowContextMenu);
 
         tableView.getItems().addAll(
                 new SectorTrailerAccessInfoBean("0", "0", "0", "never", "key A", "key A", "never", "key A", "key A", "key B may be read"),
@@ -46,6 +53,21 @@ public class SectorTrailerAccessInfoTable {
                 new SectorTrailerAccessInfoBean("1", "0", "1", "never", "never", "key A|B", "key B", "never", "never", ""),
                 new SectorTrailerAccessInfoBean("1", "1", "1", "never", "never", "key A|B", "never", "never", "never", "")
         );
+
+        return this;
+    }
+
+    public SectorTrailerAccessInfoTable addRowMenuEntry(String caption, Consumer<SectorTrailerAccessInfoBean> action) {
+        MenuItem menuItem = new MenuItem(caption);
+        menuItem.setOnAction((ActionEvent event) -> {
+            SectorTrailerAccessInfoBean item = tableView.getSelectionModel().getSelectedItem();
+            if (item != null) {
+                action.accept(item);
+            }
+        });
+
+        rowContextMenu.getItems().add(menuItem);
+        return this;
     }
 
     private TableColumn<SectorTrailerAccessInfoBean, String> containerColumn(
@@ -92,6 +114,10 @@ public class SectorTrailerAccessInfoTable {
             this.keyBRead = keyBRead;
             this.keyBWrite = keyBWrite;
             this.remark = remark;
+        }
+
+        public String getCBits() {
+            return String.format("%s, %s, %s", getC1(), getC2(), getC3());
         }
 
         public String getC1() {
