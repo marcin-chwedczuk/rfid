@@ -4,6 +4,8 @@ import javax.smartcardio.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+import static pl.marcinchwedczuk.rfid.lib.Block.BLOCK_0;
+
 public class AcrCard {
     private final AcrTerminal terminal;
     private final Card card;
@@ -90,14 +92,14 @@ public class AcrCard {
         }
     }
 
-    public void authenticate(SectorBlock sector, KeyType keyType, KeyRegister registerWithKey) {
+    public void authenticateSector(Sector sector, KeyType keyType, KeyRegister registerWithKey) {
         if (keyType == null) {
             throw new NullPointerException("keyType");
         }
 
         byte[] commandBytes = new byte[] {
                 (byte)0xFF, (byte)0x86, 0x00, 0x00, 0x05,
-                0x01, 0x00, (byte)sector.blockNumber(),
+                0x01, 0x00, (byte)SectorBlock.of(sector, BLOCK_0).blockNumber(),
                 (byte)(keyType == KeyType.KEY_A ? 0x60 : 0x61),
                 (byte)registerWithKey.index()
         };

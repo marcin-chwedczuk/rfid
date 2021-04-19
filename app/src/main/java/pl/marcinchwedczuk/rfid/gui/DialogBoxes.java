@@ -34,6 +34,10 @@ public class DialogBoxes {
         alert.showAndWait();
     }
 
+    public static void error(String body) {
+        error("Error", body);
+    }
+
     public static void error(String title, String body) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Info");

@@ -40,11 +40,11 @@
                         </TableView>
                         <Spinner fx:id="fromSector" layoutX="14.0" layoutY="87.0" prefHeight="27.0" prefWidth="297.0" />
                         <Label layoutX="14.0" layoutY="64.0" text="From Sector:" />
-                        <Button fx:id="readCardData" layoutX="167.0" layoutY="259.0" mnemonicParsing="false" onAction="#readSectors" prefHeight="40.0" prefWidth="144.0" text="READ" />
+                        <Button fx:id="readCardData" layoutX="167.0" layoutY="259.0" mnemonicParsing="false" onAction="#readSectors" prefHeight="40.0" prefWidth="144.0" styleClass="read-button" text="READ" />
                         <Label layoutX="14.0" layoutY="132.0" text="To Sector:" />
                         <Spinner fx:id="toSector" layoutX="14.0" layoutY="149.0" prefHeight="27.0" prefWidth="297.0" />
                         <Button layoutX="15.0" layoutY="199.0" mnemonicParsing="false" onAction="#selectAllSectors" text="Entire Card" />
-                        <Button fx:id="writeCardData" layoutX="14.0" layoutY="259.0" mnemonicParsing="false" onAction="#writeSectors" prefHeight="40.0" prefWidth="135.0" text="WRITE" />
+                        <Button fx:id="writeCardData" layoutX="14.0" layoutY="259.0" mnemonicParsing="false" onAction="#writeSectors" prefHeight="40.0" prefWidth="135.0" styleClass="write-button" text="WRITE" />
                         <Label layoutX="16.0" layoutY="24.0" text="Display Data As:" />
                         <Button layoutX="19.0" layoutY="592.0" mnemonicParsing="false" onAction="#exportToXml" prefHeight="27.0" prefWidth="167.0" text="EXPORT DATA TO XML" AnchorPane.bottomAnchor="61.0" AnchorPane.leftAnchor="19.0" />
                         <Button layoutX="19.0" layoutY="631.0" mnemonicParsing="false" onAction="#importFromXml" prefHeight="27.0" prefWidth="167.0" text="IMPORT DATA FROM XML" AnchorPane.bottomAnchor="22.0" AnchorPane.leftAnchor="19.0" />
@@ -69,23 +69,20 @@
                                     <Label layoutX="21.0" layoutY="28.0" text="Sector:" />
                                     <MaskedTextField fx:id="secSector" layoutX="71.0" layoutY="23.0" mask="##" prefHeight="26.0" prefWidth="203.0" promptText="Sector" />
                                     <Button layoutX="288.0" layoutY="23.0" mnemonicParsing="false" onAction="#secReadPermissions" prefHeight="26.0" prefWidth="250.0" text="Read Keys &amp; Permissions" />
-                                    <CheckBox layoutX="21.0" layoutY="655.0" mnemonicParsing="false" text="Ignore sectors that cannot be changed" />
-                                    <TitledPane animated="false" collapsible="false" layoutX="19.0" layoutY="67.0" prefHeight="212.0" prefWidth="521.0" text="KEYS">
+                                    <TitledPane animated="false" collapsible="false" layoutX="20.0" layoutY="71.0" prefHeight="159.0" prefWidth="521.0" text="KEYS">
                                       <content>
-                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="456.0" prefWidth="493.0">
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="151.0" prefWidth="519.0">
                                              <children>
                                                 <Label layoutX="12.0" layoutY="14.0" text="NOTE: Not readable key will be read as 6 zero bytes.&#10;" />
                                                 <KeyBox fx:id="secKeyA" layoutX="64.0" layoutY="52.0" prefHeight="26.0" prefWidth="224.0" />
                                                 <Label layoutX="15.0" layoutY="56.0" text="Key A:" />
                                                 <KeyBox fx:id="secKeyB" layoutX="64.0" layoutY="89.0" prefHeight="26.0" prefWidth="224.0" />
                                                 <Label layoutX="15.0" layoutY="94.0" text="Key B:" />
-                                                <Button layoutX="196.0" layoutY="145.0" mnemonicParsing="false" onAction="#secWriteKeysForSector" text="Change Keys for Selected Sector" />
-                                                <Button layoutX="15.0" layoutY="145.0" mnemonicParsing="false" onAction="#secWriteKeysForEntireCard" text="Change Keys for Entire Card" />
                                              </children>
                                           </AnchorPane>
                                       </content>
                                     </TitledPane>
-                                    <TitledPane animated="false" collapsible="false" layoutX="20.0" layoutY="288.0" prefHeight="355.0" prefWidth="520.0" text="PERMISSIONS">
+                                    <TitledPane animated="false" collapsible="false" layoutX="21.0" layoutY="243.0" prefHeight="293.0" prefWidth="520.0" text="PERMISSIONS">
                                       <content>
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="319.0" prefWidth="519.0">
                                              <children>
@@ -97,9 +94,18 @@
                                                 <ChoiceBox fx:id="secBlock2Perms" layoutX="99.0" layoutY="173.0" prefWidth="150.0" styleClass="cbits" />
                                                 <Label layoutX="15.0" layoutY="228.0" text="Sector Trailer:" />
                                                 <ChoiceBox fx:id="secTrailerPerms" layoutX="99.0" layoutY="224.0" prefWidth="150.0" styleClass="cbits" />
-                                                <Button layoutX="223.0" layoutY="288.0" mnemonicParsing="false" onAction="#secWriteForSector" text="Write Permissions for Selected Sector" />
-                                                <Button layoutX="15.0" layoutY="288.0" mnemonicParsing="false" onAction="#secWriteForEntireCard" text="Write Permissions for Entire Card" />
                                                 <Label layoutX="15.0" layoutY="14.0" prefHeight="63.0" prefWidth="495.0" styleClass="permWarningText" text="Setting these values incorrectly may make your card unusable." wrapText="true" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0" />
+                                             </children>
+                                          </AnchorPane>
+                                      </content>
+                                    </TitledPane>
+                                    <Button alignment="CENTER" layoutX="21.0" layoutY="660.0" mnemonicParsing="false" onAction="#secWriteForEntireCard" prefHeight="50.0" prefWidth="239.0" styleClass="write-button" text="Write Permissions for &#10;Entire Card" />
+                                    <Button alignment="CENTER" layoutX="267.0" layoutY="660.0" mnemonicParsing="false" onAction="#secWriteForSector" prefHeight="50.0" prefWidth="271.0" styleClass="write-button" text="Write Permissions for &#10;Selected Sector Only" />
+                                    <TitledPane animated="false" collapsible="false" layoutX="21.0" layoutY="551.0" prefHeight="86.0" prefWidth="521.0" text="SETTINGS">
+                                      <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="90.0" prefWidth="512.0">
+                                             <children>
+                                                <CheckBox layoutX="14.0" layoutY="21.0" mnemonicParsing="false" text="Ignore sectors that cannot be changed" />
                                              </children>
                                           </AnchorPane>
                                       </content>

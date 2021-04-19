@@ -32,7 +32,7 @@ public class ProgressDialog {
         });
     }
 
-    public void setProgress(int percentage) {
+    public void setProgress(double percentage) {
         percentage = Math.max(0, Math.min(100, percentage));
         progressBar.setProgress(percentage / 100.0);
     }

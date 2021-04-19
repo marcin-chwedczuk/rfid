@@ -1,6 +1,5 @@
 package pl.marcinchwedczuk.rfid.gui;
 
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,9 +26,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
+import static pl.marcinchwedczuk.rfid.lib.Block.BLOCK_0;
+import static pl.marcinchwedczuk.rfid.lib.Block.TRAILER;
 import static pl.marcinchwedczuk.rfid.lib.KeyRegister.REGISTER_0;
 import static pl.marcinchwedczuk.rfid.lib.KeyType.KEY_A;
-import static pl.marcinchwedczuk.rfid.lib.KeyType.KEY_B;
 
 public class CardWindow implements Initializable {
     private static Logger logger = LogManager.getLogger(CardWindow.class);
@@ -229,14 +229,17 @@ public class CardWindow implements Initializable {
             dataTable.refresh();
         };
 
-        Function<Integer, Boolean> work = (sector) -> {
+        Function<Integer, Boolean> work = (sectorIndex) -> {
             try {
-                card.authenticate(SectorBlock.firstBlockOfSector(sector),
-                        useAsKeyChoiceBox.getValue(), REGISTER_0);
+                Sector sector = Sector.of(sectorIndex);
+                card.authenticateSector(
+                        sector,
+                        useAsKeyChoiceBox.getValue(),
+                        REGISTER_0);
 
-                for (int block = 0; block < 4; block++) {
-                    byte[] data = card.readBinaryBlock(SectorBlock.fromSectorAndBlock(sector, block), 16);
-                    DataRow dataRow = new DataRow(sector, block, data, block == 3);
+                for (int blockIndex = 0; blockIndex < 4; blockIndex++) {
+                    byte[] data = card.readBinaryBlock(SectorBlock.of(sector, Block.of(blockIndex)), 16);
+                    DataRow dataRow = new DataRow(sectorIndex, blockIndex, data, blockIndex == 3);
                     logger.info("Read row: {}", dataRow.toString());
                     rows.add(dataRow);
                 }
@@ -245,7 +248,7 @@ public class CardWindow implements Initializable {
                 return false;
             }
 
-            progressDialog.get().setProgress((sector * 100) / to);
+            progressDialog.get().setProgress((sectorIndex * 100) / to);
             return !cancel.get();
         };
 
@@ -324,15 +327,17 @@ public class CardWindow implements Initializable {
             progressDialog.get().done();
         };
 
-        Function<Integer, Boolean> work = (sector) -> {
+        Function<Integer, Boolean> work = (sectorIndex) -> {
             try {
-                card.authenticate(SectorBlock.firstBlockOfSector(sector),
+                Sector sector = Sector.of(sectorIndex);
+
+                card.authenticateSector(sector,
                         useAsKeyChoiceBox.getValue(), REGISTER_0);
 
                 // 4th block (which contains keys and permissions) is not writable by this method
-                for (int block = 0; block < 3; block++) {
-                    DataRow row = rows[(sector - from)*4 + block];
-                    card.writeBinaryBlock(SectorBlock.fromSectorAndBlock(sector, block), row.bytes);
+                for (int blockIndex = 0; blockIndex < 3; blockIndex++) {
+                    DataRow row = rows[(sectorIndex - from)*4 + blockIndex];
+                    card.writeBinaryBlock(SectorBlock.of(sector, Block.of(blockIndex)), row.bytes);
 
                     // Verify write
                     /*
@@ -349,7 +354,7 @@ public class CardWindow implements Initializable {
                 return false;
             }
 
-            progressDialog.get().setProgress((sector * 100) / to);
+            progressDialog.get().setProgress((sectorIndex * 100) / to);
             return !cancel.get();
         };
 
@@ -384,7 +389,7 @@ public class CardWindow implements Initializable {
     }
 
     public void secReadPermissions(ActionEvent actionEvent) {
-        int sector = Integer.parseInt(secSector.getPlainText());
+        Sector sector = Sector.of(Integer.parseInt(secSector.getPlainText()));
 
         byte[] keyBytes = getKeyBytes();
         if (keyBytes == null) {
@@ -398,10 +403,10 @@ public class CardWindow implements Initializable {
             return;
         }
 
-        card.authenticate(SectorBlock.firstBlockOfSector(sector),
+        card.authenticateSector(sector,
                 useAsKeyChoiceBox.getValue(), REGISTER_0);
 
-        byte[] data = card.readBinaryBlock(SectorBlock.trailerOfSector(sector), 16);
+        byte[] data = card.readBinaryBlock(SectorBlock.of(sector, TRAILER), 16);
 
         TrailerBlock trailerBlock = new TrailerBlock(data);
         AccessBits accessBits = trailerBlock.accessBits;
@@ -420,7 +425,7 @@ public class CardWindow implements Initializable {
     }
 
     public void secWriteForSector(ActionEvent actionEvent) {
-        int sector = Integer.parseInt(secSector.getPlainText());
+        Sector sector = Sector.of(Integer.parseInt(secSector.getPlainText()));
 
         byte[] keyBytes = getKeyBytes();
         if (keyBytes == null) {
@@ -434,49 +439,11 @@ public class CardWindow implements Initializable {
             return;
         }
 
-        card.authenticate(SectorBlock.firstBlockOfSector(sector),
+        card.authenticateSector(sector,
                 useAsKeyChoiceBox.getValue(), REGISTER_0);
 
         // Read data
-        byte[] data = card.readBinaryBlock(SectorBlock.trailerOfSector(sector), 16);
-
-        TrailerBlock trailerBlock = new TrailerBlock(data);
-
-        // TODO: Set permissions
-        trailerBlock.accessBits.setDataBlockAccess(0, secBlock0Perms.getValue());
-        trailerBlock.accessBits.setDataBlockAccess(1, secBlock1Perms.getValue());
-        trailerBlock.accessBits.setDataBlockAccess(2, secBlock2Perms.getValue());
-        trailerBlock.accessBits.setSectorTrailerAccess(secTrailerPerms.getValue());
-
-        card.writeBinaryBlock(SectorBlock.trailerOfSector(sector), trailerBlock.toBytes());
-
-        DialogBoxes.info("DONE");
-    }
-
-    public void secWriteForEntireCard(ActionEvent actionEvent) {
-
-    }
-
-    public void secWriteKeysForSector(ActionEvent actionEvent) {
-        int sector = Integer.parseInt(secSector.getPlainText());
-
-        byte[] keyBytes = getKeyBytes();
-        if (keyBytes == null) {
-            return;
-        }
-
-        try {
-            card.loadKeyToRegister(keyBytes, REGISTER_0);
-        } catch (AcrException e) {
-            DialogBoxes.error("Cannot read data from card!", e.getMessage());
-            return;
-        }
-
-        card.authenticate(SectorBlock.firstBlockOfSector(sector),
-                useAsKeyChoiceBox.getValue(), REGISTER_0);
-
-        // Read data
-        byte[] data = card.readBinaryBlock(SectorBlock.trailerOfSector(sector), 16);
+        byte[] data = card.readBinaryBlock(SectorBlock.of(sector, TRAILER), 16);
 
         TrailerBlock trailerBlock = new TrailerBlock(data);
 
@@ -487,12 +454,17 @@ public class CardWindow implements Initializable {
         trailerBlock.setKeyA(keyA);
         trailerBlock.setKeyB(keyB);
 
-        card.writeBinaryBlock(SectorBlock.trailerOfSector(sector), trailerBlock.toBytes());
+        trailerBlock.accessBits.setDataBlockAccess(0, secBlock0Perms.getValue());
+        trailerBlock.accessBits.setDataBlockAccess(1, secBlock1Perms.getValue());
+        trailerBlock.accessBits.setDataBlockAccess(2, secBlock2Perms.getValue());
+        trailerBlock.accessBits.setSectorTrailerAccess(secTrailerPerms.getValue());
+
+        card.writeBinaryBlock(SectorBlock.of(sector, TRAILER), trailerBlock.toBytes());
 
         DialogBoxes.info("DONE");
     }
 
-    public void secWriteKeysForEntireCard(ActionEvent actionEvent) {
+    public void secWriteForEntireCard(ActionEvent actionEvent) {
 
     }
 }

@@ -36,14 +36,14 @@
     -fx-font-family: monospace;
 }
 
-#writeCardData {
+.write-button {
     -fx-background-image: url("img/mail-receive.png");
     -fx-background-size: 32 32;
     -fx-background-repeat: no-repeat;
     -fx-background-position: 4px 50%;
 }
 
-#readCardData {
+.read-button {
     -fx-background-image: url("img/mail-folder-outbox.png");
     -fx-background-size: 32 32;
     -fx-background-repeat: no-repeat;
@@ -61,3 +61,4 @@
     -fx-font-family: monospace;
     -fx-font-weight: bold;
 }
+
