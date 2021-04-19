@@ -10,6 +10,8 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -19,12 +21,12 @@
 <?import pl.marcinchwedczuk.rfid.gui.KeyBox?>
 <?import pl.marcinchwedczuk.rfid.gui.MaskedTextField?>
 
-<AnchorPane stylesheets="@CardWindow.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.marcinchwedczuk.rfid.gui.CardWindow">
+<AnchorPane prefHeight="977.0" prefWidth="1280.0" stylesheets="@CardWindow.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.marcinchwedczuk.rfid.gui.CardWindow">
    <children>
-      <Label layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="54.0" text="Card ID:" />
-      <TextField fx:id="cardId" disable="true" editable="false" layoutX="68.0" layoutY="9.0" prefHeight="27.0" prefWidth="155.0" text="AA:BB:CC:DD:EE:FF" />
+      <Label layoutX="10.0" layoutY="14.0" prefHeight="17.0" prefWidth="68.0" text="Card Name:" />
+      <TextField fx:id="cardId" disable="true" editable="false" layoutX="82.0" layoutY="9.0" prefHeight="27.0" prefWidth="155.0" text="AA:BB:CC:DD:EE:FF" />
       <Label layoutX="248.0" layoutY="14.0" prefHeight="17.0" prefWidth="54.0" text="Standard:" />
-      <TextField fx:id="cardStandard" disable="true" editable="false" layoutX="312.0" layoutY="9.0" prefHeight="27.0" prefWidth="699.0" AnchorPane.leftAnchor="312.0" AnchorPane.rightAnchor="12.0" />
+      <TextField fx:id="cardStandard" disable="true" editable="false" layoutX="308.0" layoutY="9.0" prefHeight="27.0" prefWidth="703.0" AnchorPane.leftAnchor="308.0" AnchorPane.rightAnchor="12.0" />
       <Label layoutX="44.0" layoutY="54.0" prefHeight="17.0" prefWidth="28.0" text="Key:" />
       <Label layoutX="312.0" layoutY="54.0" prefHeight="17.0" prefWidth="68.0" text="Use Key As:" />
       <TabPane layoutX="188.0" layoutY="100.0" prefHeight="713.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="89.0">
@@ -46,7 +48,12 @@
                         <Label layoutX="16.0" layoutY="24.0" text="Display Data As:" />
                         <Button layoutX="19.0" layoutY="592.0" mnemonicParsing="false" onAction="#exportToXml" prefHeight="27.0" prefWidth="167.0" text="EXPORT DATA TO XML" AnchorPane.bottomAnchor="61.0" AnchorPane.leftAnchor="19.0" />
                         <Button layoutX="19.0" layoutY="631.0" mnemonicParsing="false" onAction="#importFromXml" prefHeight="27.0" prefWidth="167.0" text="IMPORT DATA FROM XML" AnchorPane.bottomAnchor="22.0" AnchorPane.leftAnchor="19.0" />
-                        <ChoiceBox fx:id="displayAsSelect" layoutX="113.0" layoutY="20.0" prefHeight="26.0" prefWidth="197.0" />
+                        <ToggleButton fx:id="displayDataAsHex" layoutX="117.0" layoutY="20.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="68.0" selected="true" text="HEX">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="displayDataAs" />
+                           </toggleGroup>
+                        </ToggleButton>
+                        <ToggleButton layoutX="195.0" layoutY="20.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="68.0" text="ASCII" toggleGroup="$displayDataAs" />
                      </children>
                   </AnchorPane>
             </content>

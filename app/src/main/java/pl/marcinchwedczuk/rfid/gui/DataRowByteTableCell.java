@@ -2,6 +2,7 @@ package pl.marcinchwedczuk.rfid.gui;
 
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.css.PseudoClass;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -13,8 +14,8 @@ public class DataRowByteTableCell extends TextFieldTableCell<DataRow, Byte> {
 
     private final DataRowTableCellStylist stylist = new DataRowTableCellStylist();
 
-    public DataRowByteTableCell(ReadOnlyBooleanProperty hexMode) {
-        super(new DataRowByteStringConverter(hexMode));
+    public DataRowByteTableCell(ReadOnlyObjectProperty<Encoding> encoding) {
+        super(new DataRowByteStringConverter(encoding));
     }
 
     @Override

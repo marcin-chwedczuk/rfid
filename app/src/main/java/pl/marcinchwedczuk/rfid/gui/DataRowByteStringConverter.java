@@ -1,16 +1,15 @@
 package pl.marcinchwedczuk.rfid.gui;
 
-import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.value.ObservableBooleanValue;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.util.StringConverter;
 
 class DataRowByteStringConverter extends StringConverter<Byte> {
     private static final String NON_PRINTABLE_CHARACTER_PLACEHOLDER = "\uFFFD";
 
-    private final ReadOnlyBooleanProperty hexMode;
+    private final ReadOnlyObjectProperty<Encoding> encoding;
 
-    DataRowByteStringConverter(ReadOnlyBooleanProperty hexMode) {
-        this.hexMode = hexMode;
+    DataRowByteStringConverter(ReadOnlyObjectProperty<Encoding> encoding) {
+        this.encoding = encoding;
     }
 
     @Override
@@ -19,7 +18,9 @@ class DataRowByteStringConverter extends StringConverter<Byte> {
             return "";
         }
 
-        return hexMode.get() ? byteToHex(b) : byteToPrintableAscii(b);
+        return encoding.get() == Encoding.Hex
+                ? byteToHex(b)
+                : byteToPrintableAscii(b);
     }
 
     @Override
@@ -28,7 +29,9 @@ class DataRowByteStringConverter extends StringConverter<Byte> {
             return null;
         }
 
-        return hexMode.get() ? hexToByte(string) : characterToByte(string);
+        return encoding.get() == Encoding.Hex
+                ? hexToByte(string)
+                : characterToByte(string);
     }
 
     private Byte hexToByte(String string) {

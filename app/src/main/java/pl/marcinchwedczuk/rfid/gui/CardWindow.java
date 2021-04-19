@@ -42,8 +42,8 @@ public class CardWindow implements Initializable {
     @FXML private KeyBox key;
     @FXML private ChoiceBox<KeyType> useAsKeyChoiceBox;
 
-    private final SimpleBooleanProperty displayDataAsHex = new SimpleBooleanProperty(true);
-    @FXML private ChoiceBox<Encoding> displayAsSelect;
+    private final SimpleObjectProperty<Encoding> displayDataEncoding = new SimpleObjectProperty<>(Encoding.Hex);
+    @FXML private ToggleButton displayDataAsHex;
 
     @FXML private Spinner<Integer> fromSector;
     @FXML private Spinner<Integer> toSector;
@@ -76,9 +76,6 @@ public class CardWindow implements Initializable {
         useAsKeyChoiceBox.getItems().setAll(KeyType.values());
         useAsKeyChoiceBox.getSelectionModel().select(KEY_A);
 
-        displayAsSelect.getItems().setAll(Encoding.values());
-        displayAsSelect.getSelectionModel().select(Encoding.Hex);
-
         key.loadKey("FF:FF:FF:FF:FF:FF", Encoding.Hex);
         secSector.setPlainText("0");
     }
@@ -91,11 +88,12 @@ public class CardWindow implements Initializable {
 
         initializeTableView();
 
-        displayAsSelect.setOnAction(event -> {
-            Encoding current = displayAsSelect.getValue();
-            displayDataAsHex.set(current == Encoding.Hex);
+        displayDataAsHex.selectedProperty().addListener((prop, oldValue, newValue) -> {
+            Encoding current = displayDataAsHex.isSelected() ? Encoding.Hex : Encoding.Ascii;
+            displayDataEncoding.setValue(current);
             dataTable.refresh();
         });
+
 
         int maxSector = getCardMaxSector();
         fromSector.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, maxSector, 0));
@@ -189,7 +187,7 @@ public class CardWindow implements Initializable {
             dataColumn.setSortable(false);
             dataColumn.setMaxWidth(60.0);
             dataColumn.setMinWidth(60.0);
-            dataColumn.setCellFactory(l -> new DataRowByteTableCell(displayDataAsHex));
+            dataColumn.setCellFactory(l -> new DataRowByteTableCell(displayDataEncoding));
 
             dataColumns.add(dataColumn);
         }
