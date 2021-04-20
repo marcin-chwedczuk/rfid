@@ -68,7 +68,7 @@ public class ReadDataCommand extends BaseUiCommand<Sector> {
         for (Block block: Block.blocksInSector()) {
             try {
                 byte[] data = card.readBinaryBlock(SectorBlock.of(sector, block), 16);
-                DataRow dataRow = new DataRow(sector.index, block.index, data, block.isTrailer());
+                DataRow dataRow = new DataRow(sector, block, data);
                 resultContainer.add(dataRow);
             } catch (Exception e) {
                 failWith("Reading block %s of sector %s failed: %s", block, sector, e.getMessage());

@@ -1,6 +1,8 @@
 package pl.marcinchwedczuk.rfid.gui;
 
+import pl.marcinchwedczuk.rfid.lib.Block;
 import pl.marcinchwedczuk.rfid.lib.ByteUtils;
+import pl.marcinchwedczuk.rfid.lib.Sector;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -11,11 +13,11 @@ public class DataRow {
     public final byte[] bytes;
     public final boolean isSectorTrailer;
 
-    public DataRow(int sector, int block, byte[] bytes, boolean isSectorTrailer) {
-        this.sector = sector;
-        this.block = block;
+    public DataRow(Sector sector, Block block, byte[] bytes) {
+        this.sector = sector.index;
+        this.block = block.index;
         this.bytes = bytes;
-        this.isSectorTrailer = isSectorTrailer;
+        this.isSectorTrailer = block.isTrailer();
     }
 
     public boolean isManufacturerDataBlock() {

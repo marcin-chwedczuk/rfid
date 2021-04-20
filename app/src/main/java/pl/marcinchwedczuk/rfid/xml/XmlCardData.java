@@ -11,6 +11,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import pl.marcinchwedczuk.rfid.gui.DataRow;
+import pl.marcinchwedczuk.rfid.lib.Block;
+import pl.marcinchwedczuk.rfid.lib.Sector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +39,10 @@ public class XmlCardData {
 
     public List<DataRow> toDataRows() {
         return rows.stream()
-                .map(row -> new DataRow(row.sector, row.block, toArrayOfBytes(row.bytes), (row.block == 3)))
+                .map(row -> new DataRow(
+                        Sector.of(row.sector),
+                        Block.of(row.block),
+                        toArrayOfBytes(row.bytes)))
                 .collect(toList());
     }
 
