@@ -6,11 +6,14 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import pl.marcinchwedczuk.rfid.gui.commands.ReadDataCommand;
+import pl.marcinchwedczuk.rfid.gui.commands.UiServices;
 import pl.marcinchwedczuk.rfid.lib.*;
 import pl.marcinchwedczuk.rfid.xml.XmlCardData;
 
@@ -26,7 +29,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
-import static pl.marcinchwedczuk.rfid.lib.Block.BLOCK_0;
 import static pl.marcinchwedczuk.rfid.lib.Block.TRAILER;
 import static pl.marcinchwedczuk.rfid.lib.KeyRegister.REGISTER_0;
 import static pl.marcinchwedczuk.rfid.lib.KeyType.KEY_A;
@@ -70,6 +72,7 @@ public class CardWindow implements Initializable {
     @FXML private KeyBox secKeyB;
 
     private AcrCard card;
+    private UiServices uiServices;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -78,9 +81,16 @@ public class CardWindow implements Initializable {
 
         key.loadKey("FF:FF:FF:FF:FF:FF", Encoding.Hex);
         secSector.setPlainText("0");
+
+
+    }
+
+    private Scene getScene() {
+        return cardId.getScene();
     }
 
     public void setCard(AcrCard card) {
+        uiServices = new UiServices(getScene());
         this.card = card;
 
         cardId.setText(card.atrInfo().cardName.readableName());
@@ -202,57 +212,15 @@ public class CardWindow implements Initializable {
             return;
         }
 
-        try {
-            card.loadKeyToRegister(keyBytes, REGISTER_0);
-        } catch (AcrException e) {
-            DialogBoxes.error("Cannot read data from card!", e.getMessage());
-            return;
-        }
-
         int from = fromSector.getValue();
         int to = toSector.getValue();
 
-        AtomicBoolean cancel = new AtomicBoolean(false);
-        AtomicReference<ProgressDialog> progressDialog = new AtomicReference<>();
-
-        Runnable before = () -> {
-            rows.clear();
-
-            progressDialog.set(ProgressDialog.show(
-                    cardId.getScene(),
-                    "Reading sectors from card...",
-                    () -> cancel.set(true)));
-        };
-
-        Runnable after = () -> {
-            progressDialog.get().done();
-            dataTable.refresh();
-        };
-
-        Function<Integer, Boolean> work = (sectorIndex) -> {
-            try {
-                Sector sector = Sector.of(sectorIndex);
-                card.authenticateSector(
-                        sector,
-                        useAsKeyChoiceBox.getValue(),
-                        REGISTER_0);
-
-                for (int blockIndex = 0; blockIndex < 4; blockIndex++) {
-                    byte[] data = card.readBinaryBlock(SectorBlock.of(sector, Block.of(blockIndex)), 16);
-                    DataRow dataRow = new DataRow(sectorIndex, blockIndex, data, blockIndex == 3);
-                    logger.info("Read row: {}", dataRow.toString());
-                    rows.add(dataRow);
-                }
-            } catch (Exception e) {
-                DialogBoxes.error("Problem while reading sectors...", e.getMessage());
-                return false;
-            }
-
-            progressDialog.get().setProgress((sectorIndex * 100) / to);
-            return !cancel.get();
-        };
-
-        new PoorManBackgroundTask(from, to, work, before, after).start();
+        new ReadDataCommand(uiServices,
+                card,
+                keyBytes, useAsKeyChoiceBox.getValue(),
+                from, to,
+                rows
+        ).runCommandAsync();
     }
 
     private byte[] getKeyBytes() {
@@ -265,13 +233,13 @@ public class CardWindow implements Initializable {
                     : keyString.getBytes(StandardCharsets.US_ASCII);
 
             if (keyBytes.length != 6) {
-                DialogBoxes.error("Invalid key!", "Key must consists of 6 bytes!");
+                FxDialogBoxes.error("Invalid key!", "Key must consists of 6 bytes!");
                 return null;
             }
 
             return keyBytes;
         } catch (NumberFormatException e) {
-            DialogBoxes.error("Invalid key!", e.getMessage());
+            FxDialogBoxes.error("Invalid key!", e.getMessage());
             return null;
         }
     }
@@ -292,7 +260,7 @@ public class CardWindow implements Initializable {
         try {
             card.loadKeyToRegister(keyBytes, REGISTER_0);
         } catch (AcrException e) {
-            DialogBoxes.error("Cannot read data from card!", e.getMessage());
+            FxDialogBoxes.error("Cannot read data from card!", e.getMessage());
             return;
         }
 
@@ -302,11 +270,11 @@ public class CardWindow implements Initializable {
 
         // Validate has data
         if (rows.length == 0) {
-            DialogBoxes.error("Error", "No data to write!");
+            FxDialogBoxes.error("Error", "No data to write!");
             return;
         }
         if (rows[0].sector != from || rows[rows.length-1].sector != to-1) {
-            DialogBoxes.error("Error",
+            FxDialogBoxes.error("Error",
                     "Number of sectors in the data grid is different then " +
                     "number of sectors to be written to the card. " +
                     "Please read the requested number of sectors first, before writing them to the card.");
@@ -314,17 +282,17 @@ public class CardWindow implements Initializable {
         }
 
         AtomicBoolean cancel = new AtomicBoolean(false);
-        AtomicReference<ProgressDialog> progressDialog = new AtomicReference<>();
+        AtomicReference<FxProgressDialog> progressDialog = new AtomicReference<>();
 
         Runnable before = () -> {
-            progressDialog.set(ProgressDialog.show(
+            progressDialog.set(FxProgressDialog.show(
                     cardId.getScene(),
                     "Writing sectors to card...",
                     () -> cancel.set(true)));
         };
 
         Runnable after = () -> {
-            progressDialog.get().done();
+            progressDialog.get().close();
         };
 
         Function<Integer, Boolean> work = (sectorIndex) -> {
@@ -350,11 +318,11 @@ public class CardWindow implements Initializable {
                      */
                 }
             } catch (Exception e) {
-                DialogBoxes.error("Problem while writing sectors to card...", e.getMessage());
+                FxDialogBoxes.error("Problem while writing sectors to card...", e.getMessage());
                 return false;
             }
 
-            progressDialog.get().setProgress((sectorIndex * 100) / to);
+            progressDialog.get().updateProgress((sectorIndex * 100) / to);
             return !cancel.get();
         };
 
@@ -376,7 +344,7 @@ public class CardWindow implements Initializable {
                 Files.writeString(target.toPath(), xml,
                         StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
             } catch (Exception e) {
-                DialogBoxes.error("Exporting data failed.", e.getMessage());
+                FxDialogBoxes.error("Exporting data failed.", e.getMessage());
             }
         }
     }
@@ -385,7 +353,7 @@ public class CardWindow implements Initializable {
         fileChooser.setTitle("Import cart data from XML file...");
         fileChooser.showOpenDialog(cardId.getScene().getWindow());
 
-        DialogBoxes.error("TODO", "Not implemented yet!");
+        FxDialogBoxes.error("TODO", "Not implemented yet!");
     }
 
     public void secReadPermissions(ActionEvent actionEvent) {
@@ -399,7 +367,7 @@ public class CardWindow implements Initializable {
         try {
             card.loadKeyToRegister(keyBytes, REGISTER_0);
         } catch (AcrException e) {
-            DialogBoxes.error("Cannot read data from card!", e.getMessage());
+            FxDialogBoxes.error("Cannot read data from card!", e.getMessage());
             return;
         }
 
@@ -435,7 +403,7 @@ public class CardWindow implements Initializable {
         try {
             card.loadKeyToRegister(keyBytes, REGISTER_0);
         } catch (AcrException e) {
-            DialogBoxes.error("Cannot read data from card!", e.getMessage());
+            FxDialogBoxes.error("Cannot read data from card!", e.getMessage());
             return;
         }
 
@@ -461,7 +429,7 @@ public class CardWindow implements Initializable {
 
         card.writeBinaryBlock(SectorBlock.of(sector, TRAILER), trailerBlock.toBytes());
 
-        DialogBoxes.info("DONE");
+        FxDialogBoxes.info("DONE");
     }
 
     public void secWriteForEntireCard(ActionEvent actionEvent) {

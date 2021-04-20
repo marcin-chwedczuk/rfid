@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 
-<AnchorPane prefHeight="160.0" prefWidth="578.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.marcinchwedczuk.rfid.gui.ProgressDialog">
+<AnchorPane prefHeight="160.0" prefWidth="578.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.marcinchwedczuk.rfid.gui.FxProgressDialog">
    <children>
       <ProgressBar fx:id="progressBar" layoutX="35.0" layoutY="54.0" prefHeight="20.0" prefWidth="506.0" progress="0.0" />
       <Label fx:id="operationName" layoutX="35.0" layoutY="25.0" text="OpertionName" />

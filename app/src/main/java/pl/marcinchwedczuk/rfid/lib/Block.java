@@ -18,11 +18,16 @@ public class Block {
         return index == 3;
     }
 
+    @Override
+    public String toString() {
+        return Integer.toString(index);
+    }
+
     public static Block of(int number) {
         return new Block(number);
     }
 
-    public static List<Block> all() {
+    public static List<Block> blocksInSector() {
         return List.of(BLOCK_0, BLOCK_1, BLOCK_2, BLOCK_3);
     }
 

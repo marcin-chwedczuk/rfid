@@ -19,7 +19,7 @@ public class App extends Application {
 
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
             LogManager.getLogger().error("Unhandled exception", e);
-            DialogBoxes.exception(e);
+            FxDialogBoxes.exception(e);
         });
 
         Parent root = FXMLLoader.load(

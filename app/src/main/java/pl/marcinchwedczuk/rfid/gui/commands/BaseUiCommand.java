@@ -1,28 +1,28 @@
 package pl.marcinchwedczuk.rfid.gui.commands;
 
 import javafx.application.Platform;
-import javafx.scene.Scene;
-import pl.marcinchwedczuk.rfid.gui.ProgressDialog;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BaseUiCommand<W> {
-    private final Scene ownerWindow;
+    private final UiServices uiServices;
 
     private final List<W> workItems = new ArrayList<>();
     private int currentItem = 0;
 
     private boolean canceled = false;
     private Exception error = null;
-    private ProgressDialog progressDialog = null;
+    private UiServices.ProgressDialog progressDialog = null;
 
-    protected BaseUiCommand(Scene ownerWindow) {
-        this.ownerWindow = ownerWindow;
+    protected BaseUiCommand(UiServices uiServices) {
+        this.uiServices = uiServices;
     }
 
     protected boolean wasCanceled() { return canceled; }
     protected Exception error() { return error; }
+
+    protected UiServices uiServices() { return uiServices; }
 
     protected abstract String operationName();
     protected abstract List<W> defineWorkItems();
@@ -43,7 +43,8 @@ public abstract class BaseUiCommand<W> {
     }
 
     private void runBefore() {
-        progressDialog = ProgressDialog.show(ownerWindow, operationName(), this::cancel);
+        progressDialog = uiServices.showProgressDialog(
+                operationName(), this::cancel);
 
         try {
             before();
@@ -65,8 +66,8 @@ public abstract class BaseUiCommand<W> {
             return;
         }
 
-        double progress = (currentItem * 100.0 / workItems.size());
-        progressDialog.setProgress(progress);
+        double progress = ((currentItem + 1) * 100.0 / workItems.size());
+        progressDialog.updateProgress(progress);
 
         try {
             W item = workItems.get(currentItem);
@@ -84,12 +85,16 @@ public abstract class BaseUiCommand<W> {
     }
 
     private void runAfter() {
-        progressDialog.done();
+        progressDialog.close();
 
-        runAfter();
+        after();
     }
 
     public void cancel() {
         this.canceled = true;
+    }
+
+    protected void failWith(String format, Object... args) {
+        throw new UiCommandFailedException(String.format(format, args));
     }
 }

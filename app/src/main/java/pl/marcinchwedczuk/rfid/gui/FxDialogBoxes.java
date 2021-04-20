@@ -12,8 +12,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Optional;
 
-public class DialogBoxes {
-    private DialogBoxes() { }
+public class FxDialogBoxes {
+    private FxDialogBoxes() { }
 
     public static boolean ask(String question) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);

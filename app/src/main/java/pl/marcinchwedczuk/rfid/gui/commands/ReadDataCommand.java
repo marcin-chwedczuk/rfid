@@ -9,7 +9,6 @@ import pl.marcinchwedczuk.rfid.lib.*;
 
 import java.util.List;
 
-import static pl.marcinchwedczuk.rfid.lib.Block.BLOCK_0;
 import static pl.marcinchwedczuk.rfid.lib.KeyRegister.REGISTER_0;
 
 public class ReadDataCommand extends BaseUiCommand<Sector> {
@@ -22,12 +21,12 @@ public class ReadDataCommand extends BaseUiCommand<Sector> {
     private final int toSector;
     private final ObservableList<DataRow> resultContainer;
 
-    public ReadDataCommand(Scene ownerWindow,
+    public ReadDataCommand(UiServices uiServices,
                            AcrCard card,
                            byte[] key, KeyType keyType,
                            int fromSector, int toSector,
                            ObservableList<DataRow> resultContainer) {
-        super(ownerWindow);
+        super(uiServices);
 
         this.card = card;
         this.key = key.clone();
@@ -62,23 +61,25 @@ public class ReadDataCommand extends BaseUiCommand<Sector> {
     protected void doWork(Sector sector) {
         try {
             card.authenticateSector(sector, keyType, REGISTER_0);
+        } catch (Exception e) {
+            failWith("Cannot authenticate to sector %s: %s", sector, e.getMessage());
+        }
 
-            for (Block block: Block.all()) {
+        for (Block block: Block.blocksInSector()) {
+            try {
                 byte[] data = card.readBinaryBlock(SectorBlock.of(sector, block), 16);
-
                 DataRow dataRow = new DataRow(sector.index, block.index, data, block.isTrailer());
                 resultContainer.add(dataRow);
+            } catch (Exception e) {
+                failWith("Reading block %s of sector %s failed: %s", block, sector, e.getMessage());
             }
-        } catch (Exception e) {
-            throw new UiCommandFailedException(
-                    String.format("Reading sector %s failed: %s", sector, e.getMessage()));
         }
     }
 
     @Override
     protected void after() {
         if (error() != null) {
-            DialogBoxes.error(error().getMessage());
+            FxDialogBoxes.error(error().getMessage());
         }
     }
 }

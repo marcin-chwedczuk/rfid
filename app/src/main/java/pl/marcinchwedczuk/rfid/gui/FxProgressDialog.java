@@ -8,10 +8,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import pl.marcinchwedczuk.rfid.gui.commands.UiServices;
 
 import java.io.IOException;
 
-public class ProgressDialog {
+public class FxProgressDialog implements UiServices.ProgressDialog {
     private Stage window;
     private boolean cancelled = false;
 
@@ -32,19 +33,19 @@ public class ProgressDialog {
         });
     }
 
-    public void setProgress(double percentage) {
+    public void updateProgress(double percentage) {
         percentage = Math.max(0, Math.min(100, percentage));
         progressBar.setProgress(percentage / 100.0);
     }
 
-    public void done() {
+    public void close() {
         window.close();
     }
 
-    public static ProgressDialog show(Scene owner, String description, Runnable onCancel) {
+    public static FxProgressDialog show(Scene owner, String description, Runnable onCancel) {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    ProgressDialog.class.getResource("/pl/marcinchwedczuk/rfid/gui/ProgressDialog.fxml"));
+                    FxProgressDialog.class.getResource("/pl/marcinchwedczuk/rfid/gui/ProgressDialog.fxml"));
 
             Stage childWindow = new Stage();
             childWindow.setTitle("Operation in progress...");
@@ -53,7 +54,7 @@ public class ProgressDialog {
             childWindow.initOwner(owner.getWindow());
             childWindow.setResizable(false);
 
-            ProgressDialog controller = loader.getController();
+            FxProgressDialog controller = loader.getController();
             controller.init(childWindow, description, onCancel);
 
             childWindow.show();
