@@ -5,9 +5,19 @@ import java.util.Arrays;
 import java.util.List;
 
 public class TrailerBlock {
+    private static final byte FF = (byte)0xff;
+
     public byte[] keyA;
     public byte[] keyB;
     public AccessBits accessBits;
+
+    public TrailerBlock() {
+        this(new byte[] {
+                FF, FF, FF, FF, FF, FF,
+                FF, 0x07, (byte)0x80, 0x69,
+                FF, FF, FF, FF, FF, FF,
+        });
+    }
 
     public TrailerBlock(byte[] data) {
         if (data.length != 16) {

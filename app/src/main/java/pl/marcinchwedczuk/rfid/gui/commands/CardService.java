@@ -58,6 +58,7 @@ public class CardService {
     }
 
     static void failWith(Throwable e, String format, Object... args) {
+        logger.error("Unexpected failure", e);
         throw new OperationFailedException(String.format(format, args), e);
     }
 }

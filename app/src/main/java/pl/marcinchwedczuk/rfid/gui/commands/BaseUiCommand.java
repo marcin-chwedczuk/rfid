@@ -1,11 +1,15 @@
 package pl.marcinchwedczuk.rfid.gui.commands;
 
 import javafx.application.Platform;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BaseUiCommand<W> {
+    private static Logger logger = LogManager.getLogger(BaseUiCommand.class);
+
     private final UiServices uiServices;
 
     private final List<W> workItems = new ArrayList<>();
@@ -105,6 +109,7 @@ public abstract class BaseUiCommand<W> {
     }
 
     static void failWith(Throwable e, String format, Object... args) {
+        logger.error("Unexpected failure", e);
         throw new OperationFailedException(String.format(format, args), e);
     }
 }

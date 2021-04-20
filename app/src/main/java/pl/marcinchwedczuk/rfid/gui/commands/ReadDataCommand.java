@@ -35,7 +35,7 @@ public class ReadDataCommand extends BaseUiCommand<Sector> {
 
     @Override
     protected String operationName() {
-        return String.format("Reading data from card sectors %d - %d...", fromSector, toSector);
+        return String.format("Reading data from card sectors %d - %d...", fromSector, toSector - 1);
     }
 
     @Override

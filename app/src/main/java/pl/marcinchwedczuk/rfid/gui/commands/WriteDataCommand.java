@@ -38,7 +38,7 @@ public class WriteDataCommand extends BaseUiCommand<DataRow> {
 
     @Override
     protected String operationName() {
-        return String.format("Writing data to card sectors %d - %d...", fromSector, toSector);
+        return String.format("Writing data to card sectors %d - %d...", fromSector, toSector - 1);
     }
 
     @Override

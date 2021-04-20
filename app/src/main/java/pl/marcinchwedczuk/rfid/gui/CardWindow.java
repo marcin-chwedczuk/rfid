@@ -12,9 +12,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import pl.marcinchwedczuk.rfid.gui.commands.ReadDataCommand;
-import pl.marcinchwedczuk.rfid.gui.commands.UiServices;
-import pl.marcinchwedczuk.rfid.gui.commands.WriteDataCommand;
+import pl.marcinchwedczuk.rfid.gui.commands.*;
 import pl.marcinchwedczuk.rfid.lib.*;
 import pl.marcinchwedczuk.rfid.xml.XmlCardData;
 
@@ -301,27 +299,18 @@ public class CardWindow implements Initializable {
         FxDialogBoxes.error("TODO", "Not implemented yet!");
     }
 
-    public void secReadPermissions(ActionEvent actionEvent) {
+    public void secReadPermissions(ActionEvent unused) {
         Sector sector = Sector.of(Integer.parseInt(secSector.getPlainText()));
 
-        byte[] keyBytes = getKeyBytes();
-        if (keyBytes == null) {
-            return;
-        }
+        new ReadPermissionsCommand(uiServices, card,
+                key.getKeyBytes(),
+                useAsKeyChoiceBox.getValue(),
+                sector,
+                this::permissionsReadCallback)
+                .runCommandAsync();
+    }
 
-        try {
-            card.loadKeyToRegister(keyBytes, REGISTER_0);
-        } catch (AcrException e) {
-            FxDialogBoxes.error("Cannot read data from card!", e.getMessage());
-            return;
-        }
-
-        card.authenticateSector(sector,
-                useAsKeyChoiceBox.getValue(), REGISTER_0);
-
-        byte[] data = card.readBinaryBlock(DataAddress.of(sector, TRAILER), 16);
-
-        TrailerBlock trailerBlock = new TrailerBlock(data);
+    private void permissionsReadCallback(TrailerBlock trailerBlock) {
         AccessBits accessBits = trailerBlock.accessBits;
         secBlock0Perms.setValue(accessBits.dataBlockAccesses.get(0).cbits);
         secBlock1Perms.setValue(accessBits.dataBlockAccesses.get(1).cbits);
@@ -337,28 +326,10 @@ public class CardWindow implements Initializable {
         }
     }
 
-    public void secWriteForSector(ActionEvent actionEvent) {
-        Sector sector = Sector.of(Integer.parseInt(secSector.getPlainText()));
+    public void secWriteForSector(ActionEvent unused) {
+        int sectorIndex = Integer.parseInt(secSector.getPlainText());
 
-        byte[] keyBytes = getKeyBytes();
-        if (keyBytes == null) {
-            return;
-        }
-
-        try {
-            card.loadKeyToRegister(keyBytes, REGISTER_0);
-        } catch (AcrException e) {
-            FxDialogBoxes.error("Cannot read data from card!", e.getMessage());
-            return;
-        }
-
-        card.authenticateSector(sector,
-                useAsKeyChoiceBox.getValue(), REGISTER_0);
-
-        // Read data
-        byte[] data = card.readBinaryBlock(DataAddress.of(sector, TRAILER), 16);
-
-        TrailerBlock trailerBlock = new TrailerBlock(data);
+        TrailerBlock trailerBlock = new TrailerBlock();
 
         byte[] keyA = secKeyA.getKeyBytes();
         byte[] keyB = secKeyB.getKeyBytes();
@@ -372,9 +343,13 @@ public class CardWindow implements Initializable {
         trailerBlock.accessBits.setDataBlockAccess(2, secBlock2Perms.getValue());
         trailerBlock.accessBits.setSectorTrailerAccess(secTrailerPerms.getValue());
 
-        card.writeBinaryBlock(DataAddress.of(sector, TRAILER), trailerBlock.toBytes());
-
-        FxDialogBoxes.info("DONE");
+        new WritePermissionsCommand(
+                uiServices,
+                card,
+                key.getKeyBytes(), useAsKeyChoiceBox.getValue(),
+                sectorIndex, sectorIndex+1,
+                trailerBlock
+            ).runCommandAsync();
     }
 
     public void secWriteForEntireCard(ActionEvent actionEvent) {
