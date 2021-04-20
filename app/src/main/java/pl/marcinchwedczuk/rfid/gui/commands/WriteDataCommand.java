@@ -7,7 +7,6 @@ import pl.marcinchwedczuk.rfid.lib.*;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static pl.marcinchwedczuk.rfid.lib.KeyRegister.REGISTER_0;
@@ -15,23 +14,23 @@ import static pl.marcinchwedczuk.rfid.lib.KeyRegister.REGISTER_0;
 public class WriteDataCommand extends BaseUiCommand<DataRow> {
     private static Logger logger = LogManager.getLogger(WriteDataCommand.class);
 
-    private final AcrCard card;
+    private final CardService cardService;
     private final byte[] key;
-    private final KeyType keyType;
+    private final SelectedKey selectedKey;
     private final int fromSector;
     private final int toSector;
     private final DataRow[] data;
 
     public WriteDataCommand(UiServices uiServices,
                             AcrCard card,
-                            byte[] key, KeyType keyType,
+                            byte[] key, SelectedKey selectedKey,
                             int fromSector, int toSector,
                             DataRow[] data) {
         super(uiServices);
 
-        this.card = card;
+        this.cardService = new CardService(card);
         this.key = key.clone();
-        this.keyType = keyType;
+        this.selectedKey = selectedKey;
         this.fromSector = fromSector;
         this.toSector = toSector;
         this.data = data.clone();
@@ -64,59 +63,36 @@ public class WriteDataCommand extends BaseUiCommand<DataRow> {
                 "Please read the requested number of sectors first, before writing them to the card.");
         }
 
-        try {
-            card.loadKeyToRegister(key, REGISTER_0);
-        } catch (AcrException e) {
-            throw new UiCommandFailedException("Cannot load key to card register: " + e.getMessage());
-        }
+        cardService.loadKey(key);
     }
 
     @Override
     protected void doWork(DataRow dataRow) {
         Sector sector = Sector.of(dataRow.sector);
         Block block = Block.of(dataRow.block);
+        DataAddress dataAddress = DataAddress.of(sector, block);
 
-        authenticateSector(sector);
-        writeDataToBlock(dataRow, sector, block);
+        cardService.authenticateSector(sector, selectedKey);
+        cardService.writeData(dataAddress, dataRow.bytes);
 
-        authenticateSector(sector);
-        verifyWriteSuccessful(dataRow, sector, block);
+        cardService.authenticateSector(sector, selectedKey);
+        byte[] dataOnCard = cardService.readBlockData(dataAddress);
+        verifyWriteSuccessful(dataAddress, dataRow, dataOnCard);
     }
 
-    private void authenticateSector(Sector sector) {
-        try {
-            card.authenticateSector(sector, keyType, REGISTER_0);
-        } catch (Exception e) {
-            failWith("Cannot authenticate to sector %s: %s", sector, e.getMessage());
-        }
-    }
-
-    private void writeDataToBlock(DataRow dataRow, Sector sector, Block block) {
-        try {
-            logger.info("Writing data {} to sector {}, block {}",
-                    dataRow.bytes, sector, block);
-            card.writeBinaryBlock(DataAddress.of(sector, block), dataRow.bytes);
-        } catch (Exception e) {
-            failWith("Writing block %s of sector %s failed: %s", block, sector, e.getMessage());
-        }
-    }
-
-    private void verifyWriteSuccessful(DataRow dataRow, Sector sector, Block block) {
-        try {
-            byte[] dataOnCard = card.readBinaryBlock(DataAddress.of(sector, block), 16);
-            if (!Arrays.equals(dataOnCard, dataRow.bytes)) {
-                failWith("Write data verification failed for sector %s and block %s.", sector, block);
-            }
-        } catch (Exception e) {
-            failWith("Reading data back from card failed for sector %s and block %s: %s",
-                    sector, block, e.getMessage());
+    private void verifyWriteSuccessful(
+            DataAddress dataAddress, DataRow dataRow, byte[] dataOnCard)
+    {
+        if (!Arrays.equals(dataOnCard, dataRow.bytes)) {
+            failWith("Write data verification failed for sector %s and block %s.",
+                    dataAddress.sector, dataAddress.block);
         }
     }
 
     @Override
     protected void after() {
         if (error() != null) {
-            uiServices().showErrorDialog(error().getMessage());
+            displayError(error());
         }
     }
 }

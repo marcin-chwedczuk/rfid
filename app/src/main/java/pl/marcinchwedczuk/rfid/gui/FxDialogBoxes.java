@@ -35,12 +35,12 @@ public class FxDialogBoxes {
     }
 
     public static void error(String body) {
-        error("Error", body);
+        error(body, "");
     }
 
     public static void error(String title, String body) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Info");
+        alert.setTitle("Error");
         alert.setHeaderText(title);
         alert.setContentText(body);
 

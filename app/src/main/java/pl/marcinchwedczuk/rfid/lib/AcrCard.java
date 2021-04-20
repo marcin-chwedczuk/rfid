@@ -91,15 +91,15 @@ public class AcrCard {
         }
     }
 
-    public void authenticateSector(Sector sector, KeyType keyType, KeyRegister registerWithKey) {
-        if (keyType == null) {
+    public void authenticateSector(Sector sector, SelectedKey selectedKey, KeyRegister registerWithKey) {
+        if (selectedKey == null) {
             throw new NullPointerException("keyType");
         }
 
         byte[] commandBytes = new byte[] {
                 (byte)0xFF, (byte)0x86, 0x00, 0x00, 0x05,
                 0x01, 0x00, (byte) DataAddress.of(sector, BLOCK_0).blockNumber(),
-                (byte)(keyType == KeyType.KEY_A ? 0x60 : 0x61),
+                (byte)(selectedKey == SelectedKey.KEY_A ? 0x60 : 0x61),
                 (byte)registerWithKey.index()
         };
 

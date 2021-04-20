@@ -26,13 +26,10 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Function;
 
 import static pl.marcinchwedczuk.rfid.lib.Block.TRAILER;
 import static pl.marcinchwedczuk.rfid.lib.KeyRegister.REGISTER_0;
-import static pl.marcinchwedczuk.rfid.lib.KeyType.KEY_A;
+import static pl.marcinchwedczuk.rfid.lib.SelectedKey.KEY_A;
 
 public class CardWindow implements Initializable {
     private static Logger logger = LogManager.getLogger(CardWindow.class);
@@ -43,7 +40,7 @@ public class CardWindow implements Initializable {
     @FXML private TextField cardStandard;
 
     @FXML private KeyBox key;
-    @FXML private ChoiceBox<KeyType> useAsKeyChoiceBox;
+    @FXML private ChoiceBox<SelectedKey> useAsKeyChoiceBox;
 
     private final SimpleObjectProperty<Encoding> displayDataEncoding = new SimpleObjectProperty<>(Encoding.Hex);
     @FXML private ToggleButton displayDataAsHex;
@@ -77,7 +74,7 @@ public class CardWindow implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        useAsKeyChoiceBox.getItems().setAll(KeyType.values());
+        useAsKeyChoiceBox.getItems().setAll(SelectedKey.values());
         useAsKeyChoiceBox.getSelectionModel().select(KEY_A);
 
         key.loadKey("FF:FF:FF:FF:FF:FF", Encoding.Hex);

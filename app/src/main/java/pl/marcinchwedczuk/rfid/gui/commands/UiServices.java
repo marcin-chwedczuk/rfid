@@ -11,8 +11,8 @@ public class UiServices {
         this.ownerWindow = ownerWindow;
     }
 
-    void showErrorDialog(String message) {
-        FxDialogBoxes.error(message);
+    void showErrorDialog(String message, String details) {
+        FxDialogBoxes.error(message, details);
     }
 
     ProgressDialog showProgressDialog(String message, Runnable cancelCallback) {

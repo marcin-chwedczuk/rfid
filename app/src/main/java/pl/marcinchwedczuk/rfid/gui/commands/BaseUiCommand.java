@@ -94,7 +94,17 @@ public abstract class BaseUiCommand<W> {
         this.canceled = true;
     }
 
-    protected void failWith(String format, Object... args) {
-        throw new UiCommandFailedException(String.format(format, args));
+    protected void displayError(Exception e) {
+        String message = e.getMessage();
+        String details = e.getCause() != null ? e.getCause().getMessage() : "";
+        uiServices().showErrorDialog(message, details);
+    }
+
+    static void failWith(String format, Object... args) {
+        failWith(null, format, args);
+    }
+
+    static void failWith(Throwable e, String format, Object... args) {
+        throw new OperationFailedException(String.format(format, args), e);
     }
 }
