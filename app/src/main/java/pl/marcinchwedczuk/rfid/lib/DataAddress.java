@@ -1,10 +1,10 @@
 package pl.marcinchwedczuk.rfid.lib;
 
-public class SectorBlock {
+public class DataAddress {
     public final Sector sector;
     public final Block block;
 
-    public SectorBlock(Sector sector, Block block) {
+    public DataAddress(Sector sector, Block block) {
         this.sector = sector;
         this.block = block;
     }
@@ -13,7 +13,7 @@ public class SectorBlock {
         return sector.index *4 + block.index;
     }
 
-    public static SectorBlock of(Sector sector, Block block) {
-        return new SectorBlock(sector, block);
+    public static DataAddress of(Sector sector, Block block) {
+        return new DataAddress(sector, block);
     }
 }

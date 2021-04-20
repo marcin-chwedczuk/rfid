@@ -24,6 +24,10 @@ public class DataRow {
         return sector == 0 && block == 0;
     }
 
+    public boolean isSectorTrailer() {
+        return Block.of(block).isTrailer();
+    }
+
     public int getSector() {
         return sector;
     }

@@ -27,8 +27,12 @@ public class Block {
         return new Block(number);
     }
 
-    public static List<Block> blocksInSector() {
+    public static List<Block> allBlocksInSector() {
         return List.of(BLOCK_0, BLOCK_1, BLOCK_2, BLOCK_3);
+    }
+
+    public static List<Block> dataBlocksInSector() {
+        return List.of(BLOCK_0, BLOCK_1, BLOCK_2);
     }
 
     public static final Block BLOCK_0 = new Block(0);

@@ -14,6 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.marcinchwedczuk.rfid.gui.commands.ReadDataCommand;
 import pl.marcinchwedczuk.rfid.gui.commands.UiServices;
+import pl.marcinchwedczuk.rfid.gui.commands.WriteDataCommand;
 import pl.marcinchwedczuk.rfid.lib.*;
 import pl.marcinchwedczuk.rfid.xml.XmlCardData;
 
@@ -206,7 +207,7 @@ public class CardWindow implements Initializable {
         dataTable.setItems(rows);
     }
 
-    public void readSectors(ActionEvent actionEvent) {
+    public void readSectors(ActionEvent unused) {
         byte[] keyBytes = getKeyBytes();
         if (keyBytes == null) {
             return;
@@ -268,65 +269,12 @@ public class CardWindow implements Initializable {
         int from = fromSector.getValue();
         int to = toSector.getValue();
 
-        // Validate has data
-        if (rows.length == 0) {
-            FxDialogBoxes.error("Error", "No data to write!");
-            return;
-        }
-        if (rows[0].sector != from || rows[rows.length-1].sector != to-1) {
-            FxDialogBoxes.error("Error",
-                    "Number of sectors in the data grid is different then " +
-                    "number of sectors to be written to the card. " +
-                    "Please read the requested number of sectors first, before writing them to the card.");
-            return;
-        }
-
-        AtomicBoolean cancel = new AtomicBoolean(false);
-        AtomicReference<FxProgressDialog> progressDialog = new AtomicReference<>();
-
-        Runnable before = () -> {
-            progressDialog.set(FxProgressDialog.show(
-                    cardId.getScene(),
-                    "Writing sectors to card...",
-                    () -> cancel.set(true)));
-        };
-
-        Runnable after = () -> {
-            progressDialog.get().close();
-        };
-
-        Function<Integer, Boolean> work = (sectorIndex) -> {
-            try {
-                Sector sector = Sector.of(sectorIndex);
-
-                card.authenticateSector(sector,
-                        useAsKeyChoiceBox.getValue(), REGISTER_0);
-
-                // 4th block (which contains keys and permissions) is not writable by this method
-                for (int blockIndex = 0; blockIndex < 3; blockIndex++) {
-                    DataRow row = rows[(sectorIndex - from)*4 + blockIndex];
-                    card.writeBinaryBlock(SectorBlock.of(sector, Block.of(blockIndex)), row.bytes);
-
-                    // Verify write
-                    /*
-                    byte[] data = card.readBinaryBlock(SectorBlock.fromSectorAndBlock(sector, block), 16);
-                    if (!Arrays.equals(data, row.bytes)) {
-                        throw new RuntimeException(String.format(
-                                "Write failed for sector %d and block %d.", sector, block));
-                    }
-
-                     */
-                }
-            } catch (Exception e) {
-                FxDialogBoxes.error("Problem while writing sectors to card...", e.getMessage());
-                return false;
-            }
-
-            progressDialog.get().updateProgress((sectorIndex * 100) / to);
-            return !cancel.get();
-        };
-
-        new PoorManBackgroundTask(from, to, work, before, after).start();
+        new WriteDataCommand(uiServices,
+                card,
+                keyBytes, useAsKeyChoiceBox.getValue(),
+                from, to,
+                rows
+        ).runCommandAsync();
     }
 
     public void loadDefaultFactoryKey(ActionEvent actionEvent) {
@@ -374,7 +322,7 @@ public class CardWindow implements Initializable {
         card.authenticateSector(sector,
                 useAsKeyChoiceBox.getValue(), REGISTER_0);
 
-        byte[] data = card.readBinaryBlock(SectorBlock.of(sector, TRAILER), 16);
+        byte[] data = card.readBinaryBlock(DataAddress.of(sector, TRAILER), 16);
 
         TrailerBlock trailerBlock = new TrailerBlock(data);
         AccessBits accessBits = trailerBlock.accessBits;
@@ -411,7 +359,7 @@ public class CardWindow implements Initializable {
                 useAsKeyChoiceBox.getValue(), REGISTER_0);
 
         // Read data
-        byte[] data = card.readBinaryBlock(SectorBlock.of(sector, TRAILER), 16);
+        byte[] data = card.readBinaryBlock(DataAddress.of(sector, TRAILER), 16);
 
         TrailerBlock trailerBlock = new TrailerBlock(data);
 
@@ -427,7 +375,7 @@ public class CardWindow implements Initializable {
         trailerBlock.accessBits.setDataBlockAccess(2, secBlock2Perms.getValue());
         trailerBlock.accessBits.setSectorTrailerAccess(secTrailerPerms.getValue());
 
-        card.writeBinaryBlock(SectorBlock.of(sector, TRAILER), trailerBlock.toBytes());
+        card.writeBinaryBlock(DataAddress.of(sector, TRAILER), trailerBlock.toBytes());
 
         FxDialogBoxes.info("DONE");
     }

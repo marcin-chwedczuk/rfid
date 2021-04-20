@@ -1,7 +1,6 @@
 package pl.marcinchwedczuk.rfid.lib;
 
 import javax.smartcardio.*;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 import static pl.marcinchwedczuk.rfid.lib.Block.BLOCK_0;
@@ -99,7 +98,7 @@ public class AcrCard {
 
         byte[] commandBytes = new byte[] {
                 (byte)0xFF, (byte)0x86, 0x00, 0x00, 0x05,
-                0x01, 0x00, (byte)SectorBlock.of(sector, BLOCK_0).blockNumber(),
+                0x01, 0x00, (byte) DataAddress.of(sector, BLOCK_0).blockNumber(),
                 (byte)(keyType == KeyType.KEY_A ? 0x60 : 0x61),
                 (byte)registerWithKey.index()
         };
@@ -121,7 +120,7 @@ public class AcrCard {
         }
     }
 
-    public byte[] readBinaryBlock(SectorBlock block, int numberOfBytes) {
+    public byte[] readBinaryBlock(DataAddress block, int numberOfBytes) {
         byte[] commandBytes = new byte[] {
                 (byte)0xFF, (byte)0xB0, 0x00, (byte)block.blockNumber(), (byte)numberOfBytes
         };
@@ -145,7 +144,7 @@ public class AcrCard {
         }
     }
 
-    public void writeBinaryBlock(SectorBlock block, byte[] data16) {
+    public void writeBinaryBlock(DataAddress block, byte[] data16) {
         if (data16.length != 16) {
             throw new IllegalArgumentException("Block is 16 bytes long for Mifare 1K/4K.");
         }
@@ -165,7 +164,8 @@ public class AcrCard {
 
             int sw = response.getSW();
             if (sw == 0x6300) {
-                throw new AcrException(String.format("Writing sector %d, block %d failed.", block.sector, block.block));
+                throw new AcrException(String.format(
+                        "Writing sector %s, block %s failed.", block.sector, block.block));
             }
             if (sw != 0x9000) {
                 throw new AcrException(String.format("Unknown SW response code 0x%04x.", sw));

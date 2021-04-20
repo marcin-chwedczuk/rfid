@@ -1,7 +1,6 @@
 package pl.marcinchwedczuk.rfid.gui.commands;
 
 import javafx.collections.ObservableList;
-import javafx.scene.Scene;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.marcinchwedczuk.rfid.gui.*;
@@ -65,9 +64,9 @@ public class ReadDataCommand extends BaseUiCommand<Sector> {
             failWith("Cannot authenticate to sector %s: %s", sector, e.getMessage());
         }
 
-        for (Block block: Block.blocksInSector()) {
+        for (Block block: Block.allBlocksInSector()) {
             try {
-                byte[] data = card.readBinaryBlock(SectorBlock.of(sector, block), 16);
+                byte[] data = card.readBinaryBlock(DataAddress.of(sector, block), 16);
                 DataRow dataRow = new DataRow(sector, block, data);
                 resultContainer.add(dataRow);
             } catch (Exception e) {
@@ -79,7 +78,7 @@ public class ReadDataCommand extends BaseUiCommand<Sector> {
     @Override
     protected void after() {
         if (error() != null) {
-            FxDialogBoxes.error(error().getMessage());
+            uiServices().showErrorDialog(error().getMessage());
         }
     }
 }
