@@ -12,8 +12,8 @@ public class Sector {
     private Sector(int index) {
         if (index < 0) throw new IllegalArgumentException("index");
 
-        if (index > 40) throw new IllegalArgumentException(
-                "Mifare card can have at most 40 sectors (Mifare 4K).");
+        if (index > 0x40) throw new IllegalArgumentException(
+                "Mifare card can have at most 0x40 sectors (Mifare 4K).");
 
         this.index = index;
     }

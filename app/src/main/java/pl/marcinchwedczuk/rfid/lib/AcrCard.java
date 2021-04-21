@@ -14,6 +14,8 @@ public class AcrCard {
         this.card = card;
     }
 
+    public AcrTerminal terminal() { return terminal; }
+
     public AtrInfo atrInfo() {
         ATR atr = card.getATR();
         return AtrInfo.parse(atr.getBytes());

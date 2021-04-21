@@ -355,4 +355,24 @@ public class CardWindow implements Initializable {
     public void secWriteForEntireCard(ActionEvent actionEvent) {
 
     }
+
+    public void showAboutDialog(ActionEvent unused) {
+        AboutWindow.show();
+    }
+
+    public void displayFirmwareVersion(ActionEvent unused) {
+        try {
+            String terminalName = card.terminal().name();
+            String firmware = card.getReaderFirmwareVersion();
+
+            FxDialogBoxes.info(String.format(
+                    "Terminal name: %s" + System.lineSeparator() +
+                    "Firmware version: %s.",
+                    terminalName, firmware));
+        } catch (Exception e) {
+            FxDialogBoxes.error(
+                    "Reading firmware version failed.",
+                    e.getMessage());
+        }
+    }
 }
