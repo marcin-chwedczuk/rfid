@@ -28,7 +28,7 @@ public class CardService {
         try {
             card.authenticateSector(sector, selectedKey, REGISTER_0);
         } catch (Exception e) {
-            failWith(e, "Cannot authenticate in sector %s using provided key.", sector);
+            failWith(e, "Cannot authenticate to sector %s using provided key.", sector);
         }
     }
 

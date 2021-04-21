@@ -32,7 +32,7 @@ public class AcrCard {
 
             return new String(response.getBytes(), StandardCharsets.US_ASCII);
         } catch (CardException e) {
-            throw new AcrException("Cannot get firmware version.", e);
+            throw new AcrException(e);
         }
     }
 
@@ -63,7 +63,7 @@ public class AcrCard {
 
             return response.getData();
         } catch (CardException e) {
-            throw new AcrException("Get Data command failed.", e);
+            throw new AcrException(e);
         }
     }
 
@@ -89,7 +89,7 @@ public class AcrCard {
             }
             // Success
         } catch (CardException e) {
-            throw new AcrException("Cannot load key.", e);
+            throw new AcrException(e);
         }
     }
 
@@ -111,14 +111,14 @@ public class AcrCard {
 
             int sw = response.getSW();
             if (sw == 0x6300) {
-                throw new AcrException("Loading key failed.");
+                throw new AcrException("Authentication failed.");
             }
             if (sw != 0x9000) {
                 throw new AcrException(String.format("Unknown SW code 0x%04x.", sw));
             }
             // Success
         } catch (CardException e) {
-            throw new AcrException("Cannot load key.", e);
+            throw new AcrException(e);
         }
     }
 
@@ -142,7 +142,7 @@ public class AcrCard {
             return response.getData();
 
         } catch (CardException e) {
-            throw new AcrException("Cannot read block.", e);
+            throw new AcrException(e);
         }
     }
 
@@ -174,7 +174,7 @@ public class AcrCard {
             }
             // Success
         } catch (CardException e) {
-            throw new AcrException("Cannot write block: " + e.getMessage(), e);
+            throw toAcrException(e);
         }
     }
 
@@ -184,5 +184,9 @@ public class AcrCard {
         } catch (CardException e) {
             throw new AcrException(e);
         }
+    }
+
+    private static AcrException toAcrException(CardException e) {
+        return new AcrException(e.getMessage(), e);
     }
 }
