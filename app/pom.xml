@@ -88,7 +88,10 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M5</version>
                 <configuration>
-                    <argLine>--add-opens pl.marcinchwedczuk/pl.marcinchwedczuk.rfid.xml=ALL-UNNAMED</argLine>
+                    <argLine>
+                        --add-opens pl.marcinchwedczuk/pl.marcinchwedczuk.rfid.xml=ALL-UNNAMED
+                        --add-opens pl.marcinchwedczuk/pl.marcinchwedczuk.rfid.lib=ALL-UNNAMED
+                    </argLine>
                 </configuration>
                 <dependencies>
                     <dependency>
