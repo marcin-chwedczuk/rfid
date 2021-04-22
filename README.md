@@ -25,7 +25,7 @@ I tested the app with both JDK 11 and JDK 14.
 
 ## MacOS
 On MacOS everything should work out of the box, just plug your ACR122U
-and wait till the LED turns red.
+and wait till the status LED turns red.
 
 ## GNU/Linux
 Quick setup for GNU/Linux, using old `pcsc-lite` library:
@@ -60,6 +60,5 @@ Above process is based on
 although I did not install the ACR drivers.
 
 ## Windows
-The last but not... whatever, I did not use Windows but everything should
-work out of the box there too.
-
+The last but not... whatever, I do not use Windows and thus I cannot
+test my app there, but everything should just work.
