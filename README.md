@@ -1,7 +1,7 @@
 
 # How to run?
 
-If you are a MacOS user, and application reports error (check logs):
+If you are a MacOS user, and the application reports error (check the logs):
 ```
 Caused by: java.io.IOException: No PC/SC library found on this system
 ```
@@ -33,7 +33,8 @@ Quick setup for GNU/Linux, using old `pcsc-lite` library:
 sudo apt install pcsc-tools pcscd
 ```
 
-Then please add `/etc/modprobe.d/blacklist.conf` file with the lines:
+Then please create `/etc/modprobe.d/blacklist.conf` file (if it not exists) and
+add the following lines:
 ```
 install nfc /bin/false
 install pn533 /bin/false
@@ -47,7 +48,7 @@ sudo rmmod pn533_usb
 sudo rmmod pn533
 sudo rmmod nfc
 ```
-and restart `pcscd`:
+and restart `pcscd` service:
 ```
 sudo service pcscd restart
 ```
