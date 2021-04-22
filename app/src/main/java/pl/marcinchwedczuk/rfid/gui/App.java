@@ -8,6 +8,9 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
+import java.util.List;
 
 public class App extends Application {
 
@@ -34,7 +37,15 @@ public class App extends Application {
     }
 
     public static void main(String[] args) {
+        printJvmOptions();
         launch();
     }
 
+    private static void printJvmOptions() {
+        RuntimeMXBean runtimeMxBean = ManagementFactory.getRuntimeMXBean();
+        List<String> arguments = runtimeMxBean.getInputArguments();
+        System.out.println("JVM ARGUMENTS:");
+        System.out.println(String.join(System.lineSeparator(), arguments));
+        System.out.println();
+    }
 }
