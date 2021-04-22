@@ -105,4 +105,21 @@ public class MainWindow {
     public void closeMainWindow(ActionEvent actionEvent) {
         Platform.exit();
     }
+
+    public void showAboutDialog(ActionEvent actionEvent) {
+        AboutWindow.show();
+    }
+
+    public void test(ActionEvent actionEvent) {
+        try {
+            String tmp = currentTerminal().get().getPiccOperatingParameter().toString();
+
+            FxDialogBoxes.info(tmp);
+        } catch (Exception e) {
+            e.printStackTrace();
+            FxDialogBoxes.error(
+                    "FAILURE",
+                    e.getMessage());
+        }
+    }
 }

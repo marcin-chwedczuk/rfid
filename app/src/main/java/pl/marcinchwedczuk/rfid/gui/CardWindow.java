@@ -365,10 +365,13 @@ public class CardWindow implements Initializable {
             String terminalName = card.terminal().name();
             String firmware = card.getReaderFirmwareVersion();
 
+            String tmp = card.terminal().getPiccOperatingParameter().toString();
+
             FxDialogBoxes.info(String.format(
                     "Terminal name: %s" + System.lineSeparator() +
-                    "Firmware version: %s.",
-                    terminalName, firmware));
+                    "Firmware version: %s." +
+                            "\n%s",
+                    terminalName, firmware, tmp));
         } catch (Exception e) {
             FxDialogBoxes.error(
                     "Reading firmware version failed.",

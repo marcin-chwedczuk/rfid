@@ -1,11 +1,15 @@
 package pl.marcinchwedczuk.rfid.lib;
 
+import pl.marcinchwedczuk.rfid.lib.settings.PiccOperatingParameter;
+
 import javax.smartcardio.*;
 import java.nio.charset.StandardCharsets;
 
 import static pl.marcinchwedczuk.rfid.lib.Block.BLOCK_0;
 
 public class AcrCard {
+    private static final byte FF = (byte)0xFF;
+
     private final AcrTerminal terminal;
     private final Card card;
 
@@ -23,7 +27,7 @@ public class AcrCard {
 
     public String getReaderFirmwareVersion() {
         byte[] commandBytes = new byte[] {
-                (byte)0xFF, 0x00, 0x48, 0x00, 0x00
+                FF, 0x00, 0x48, 0x00, 0x00
         };
 
         try {
@@ -32,7 +36,23 @@ public class AcrCard {
 
             return new String(response.getBytes(), StandardCharsets.US_ASCII);
         } catch (CardException e) {
-            throw new AcrException(e);
+            throw AcrException.ofCardException(e);
+        }
+    }
+
+    public PiccOperatingParameter getPiccOperatingParameter() {
+        byte[] commandBytes = new byte[] {
+                FF, 0x00, 0x50, 0x00, 0x00
+        };
+
+        try {
+            ResponseAPDU response =
+                    card.getBasicChannel().transmit(new CommandAPDU(commandBytes));
+
+            // Experiments say it's 0x90 dataByte, default value 0xFF
+            return PiccOperatingParameter.fromBitPattern(response.getBytes()[1]);
+        } catch (CardException e) {
+            throw AcrException.ofCardException(e);
         }
     }
 
@@ -63,7 +83,7 @@ public class AcrCard {
 
             return response.getData();
         } catch (CardException e) {
-            throw new AcrException(e);
+            throw AcrException.ofCardException(e);
         }
     }
 
@@ -89,7 +109,7 @@ public class AcrCard {
             }
             // Success
         } catch (CardException e) {
-            throw new AcrException(e);
+            throw AcrException.ofCardException(e);
         }
     }
 
@@ -118,7 +138,7 @@ public class AcrCard {
             }
             // Success
         } catch (CardException e) {
-            throw new AcrException(e);
+            throw AcrException.ofCardException(e);
         }
     }
 
@@ -142,7 +162,7 @@ public class AcrCard {
             return response.getData();
 
         } catch (CardException e) {
-            throw new AcrException(e);
+            throw AcrException.ofCardException(e);
         }
     }
 
@@ -174,7 +194,7 @@ public class AcrCard {
             }
             // Success
         } catch (CardException e) {
-            throw toAcrException(e);
+            throw AcrException.ofCardException(e);
         }
     }
 
@@ -182,11 +202,9 @@ public class AcrCard {
         try {
             card.disconnect(true);
         } catch (CardException e) {
-            throw new AcrException(e);
+            throw AcrException.ofCardException(e);
         }
     }
 
-    private static AcrException toAcrException(CardException e) {
-        return new AcrException(e.getMessage(), e);
-    }
+
 }
