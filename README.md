@@ -23,9 +23,11 @@ I tested the app with both JDK 11 and JDK 14.
 
 # Setup ACR122U Reader
 
+## MacOS
 On MacOS everything should work out of the box, just plug your ACR122U
 and wait till the LED turns red.
 
+## GNU/Linux
 Quick setup for GNU/Linux, using old `pcsc-lite` library:
 ```
 sudo apt install pcsc-tools pcscd
@@ -56,6 +58,7 @@ Above process is based on
 [this tutorial](https://oneguyoneblog.com/2016/11/02/acr122u-nfc-usb-reader-linux-mint/)
 although I did not install the ACR drivers.
 
+## Windows
 The last but not... whatever, I did not use Windows but everything should
 work out of the box there too.
 
