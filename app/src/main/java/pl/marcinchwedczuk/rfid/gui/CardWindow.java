@@ -77,8 +77,6 @@ public class CardWindow implements Initializable {
 
         key.loadKey("FF:FF:FF:FF:FF:FF", Encoding.Hex);
         secSector.setPlainText("0");
-
-
     }
 
     private Scene getScene() {
@@ -365,20 +363,18 @@ public class CardWindow implements Initializable {
             String terminalName = card.terminal().name();
             String firmware = card.getReaderFirmwareVersion();
 
-            var param = card.readPiccOperatingParameter();
-            String tmp = param.toString();
-
-            card.configureBuzzerOnCartDetection(false);
-
             FxDialogBoxes.info(String.format(
                     "Terminal name: %s" + System.lineSeparator() +
-                    "Firmware version: %s." +
-                            "\n%s",
-                    terminalName, firmware, tmp));
+                    "Firmware version: %s.",
+                    terminalName, firmware));
         } catch (Exception e) {
             FxDialogBoxes.error(
                     "Reading firmware version failed.",
                     e.getMessage());
         }
+    }
+
+    public void showSettingsDialog(ActionEvent unused) {
+        SettingsWindow.show(card);
     }
 }

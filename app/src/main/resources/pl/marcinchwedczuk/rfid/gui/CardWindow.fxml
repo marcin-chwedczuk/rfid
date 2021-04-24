@@ -153,13 +153,13 @@
             <Image url="@img/key.png" />
          </image>
       </ImageView>
-      <MenuBar layoutX="553.0" layoutY="-13.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <MenuBar fx:id="menuBar" layoutX="553.0" layoutY="-13.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
           <Menu text="_Terminal">
             <items>
               <MenuItem onAction="#displayFirmwareVersion" text="Get _firmware version..." />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem text="_Settings..." />
+                  <MenuItem onAction="#showSettingsDialog" text="_Settings..." />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
