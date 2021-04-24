@@ -1,7 +1,7 @@
-package pl.marcinchwedczuk.rfid.lib;
+package pl.marcinchwedczuk.rfid.acr122;
 
-import static pl.marcinchwedczuk.rfid.lib.PiccOperatingParameter.PoolingInterval.INTERVAL_250_MILLIS;
-import static pl.marcinchwedczuk.rfid.lib.PiccOperatingParameter.PoolingInterval.INTERVAL_500_MILLIS;
+import static pl.marcinchwedczuk.rfid.acr122.PiccOperatingParameter.PoolingInterval.INTERVAL_250_MILLIS;
+import static pl.marcinchwedczuk.rfid.acr122.PiccOperatingParameter.PoolingInterval.INTERVAL_500_MILLIS;
 
 public class PiccOperatingParameter {
     private boolean enableAutoPiccPolling;

@@ -2,21 +2,16 @@ package pl.marcinchwedczuk.rfid.gui;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-import pl.marcinchwedczuk.rfid.lib.*;
+import pl.marcinchwedczuk.rfid.acr122.*;
 
-import javax.smartcardio.*;
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;

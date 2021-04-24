@@ -13,8 +13,8 @@ import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.marcinchwedczuk.rfid.gui.commands.*;
-import pl.marcinchwedczuk.rfid.lib.*;
-import pl.marcinchwedczuk.rfid.lib.PiccOperatingParameter.PoolingInterval;
+import pl.marcinchwedczuk.rfid.acr122.*;
+import pl.marcinchwedczuk.rfid.acr122.PiccOperatingParameter.PoolingInterval;
 import pl.marcinchwedczuk.rfid.xml.XmlCardData;
 
 import java.io.File;
@@ -26,8 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import static pl.marcinchwedczuk.rfid.lib.KeyRegister.REGISTER_0;
-import static pl.marcinchwedczuk.rfid.lib.SelectedKey.KEY_A;
+import static pl.marcinchwedczuk.rfid.acr122.KeyRegister.REGISTER_0;
+import static pl.marcinchwedczuk.rfid.acr122.SelectedKey.KEY_A;
 
 public class CardWindow implements Initializable {
     private static Logger logger = LogManager.getLogger(CardWindow.class);
@@ -368,8 +368,7 @@ public class CardWindow implements Initializable {
             var param = card.readPiccOperatingParameter();
             String tmp = param.toString();
 
-            param.setPollingInterval(PoolingInterval.INTERVAL_500_MILLIS);
-            card.savePiccOperatingParameter(param);
+            card.setTimeout(AcrCard.WAIT_INDEFINITELY);
 
             FxDialogBoxes.info(String.format(
                     "Terminal name: %s" + System.lineSeparator() +

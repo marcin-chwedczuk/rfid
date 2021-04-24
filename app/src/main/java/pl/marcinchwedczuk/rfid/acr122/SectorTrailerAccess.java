@@ -1,9 +1,9 @@
-package pl.marcinchwedczuk.rfid.lib;
+package pl.marcinchwedczuk.rfid.acr122;
 
 import java.util.*;
 import java.util.regex.Pattern;
 
-import static pl.marcinchwedczuk.rfid.lib.AccessCond.*;
+import static pl.marcinchwedczuk.rfid.acr122.AccessCond.*;
 
 /**
  * Readable keys cannot be used for authentication.

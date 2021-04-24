@@ -96,7 +96,7 @@
                 <configuration>
                     <argLine>
                         --add-opens pl.marcinchwedczuk/pl.marcinchwedczuk.rfid.xml=ALL-UNNAMED
-                        --add-opens pl.marcinchwedczuk/pl.marcinchwedczuk.rfid.lib=ALL-UNNAMED
+                        --add-opens pl.marcinchwedczuk/pl.marcinchwedczuk.rfid.acr122=ALL-UNNAMED
                     </argLine>
                 </configuration>
                 <dependencies>

@@ -1,4 +1,4 @@
-package pl.marcinchwedczuk.rfid.lib;
+package pl.marcinchwedczuk.rfid.acr122;
 
 public enum CardName {
     NXP_MIFARE_STANDARD_1K(0x0001, "NXP Mifare Standard 1k"),

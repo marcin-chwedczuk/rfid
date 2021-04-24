@@ -4,7 +4,7 @@ import javafx.collections.ObservableList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.marcinchwedczuk.rfid.gui.*;
-import pl.marcinchwedczuk.rfid.lib.*;
+import pl.marcinchwedczuk.rfid.acr122.*;
 
 import java.util.List;
 

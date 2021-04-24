@@ -1,8 +1,6 @@
-package pl.marcinchwedczuk.rfid.lib;
+package pl.marcinchwedczuk.rfid.acr122;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class TrailerBlock {
     private static final byte FF = (byte)0xff;

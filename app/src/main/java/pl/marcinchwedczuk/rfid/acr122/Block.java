@@ -1,4 +1,4 @@
-package pl.marcinchwedczuk.rfid.lib;
+package pl.marcinchwedczuk.rfid.acr122;
 
 import java.util.List;
 

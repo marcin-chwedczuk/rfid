@@ -2,9 +2,8 @@ package pl.marcinchwedczuk.rfid.xml;
 
 import org.junit.jupiter.api.Test;
 import pl.marcinchwedczuk.rfid.gui.DataRow;
-import pl.marcinchwedczuk.rfid.lib.Block;
-import pl.marcinchwedczuk.rfid.lib.ByteUtils;
-import pl.marcinchwedczuk.rfid.lib.Sector;
+import pl.marcinchwedczuk.rfid.acr122.ByteUtils;
+import pl.marcinchwedczuk.rfid.acr122.Sector;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,13 +11,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
 import static org.junit.jupiter.api.Assertions.*;
-import static pl.marcinchwedczuk.rfid.lib.Block.BLOCK_0;
-import static pl.marcinchwedczuk.rfid.lib.Block.TRAILER;
+import static pl.marcinchwedczuk.rfid.acr122.Block.BLOCK_0;
+import static pl.marcinchwedczuk.rfid.acr122.Block.TRAILER;
 
 class ImportExportTest {
 

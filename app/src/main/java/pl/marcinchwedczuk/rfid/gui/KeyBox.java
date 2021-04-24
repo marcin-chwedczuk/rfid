@@ -2,13 +2,12 @@ package pl.marcinchwedczuk.rfid.gui;
 
 import javafx.application.Platform;
 import javafx.css.PseudoClass;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import pl.marcinchwedczuk.rfid.lib.ByteUtils;
+import pl.marcinchwedczuk.rfid.acr122.ByteUtils;
 
 import java.io.IOException;
 import java.net.URL;

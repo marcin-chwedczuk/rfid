@@ -1,4 +1,4 @@
-package pl.marcinchwedczuk.rfid.lib;
+package pl.marcinchwedczuk.rfid.acr122;
 
 public enum CardStandard {
     NO_INFORMATION(0x00, "No information given"),

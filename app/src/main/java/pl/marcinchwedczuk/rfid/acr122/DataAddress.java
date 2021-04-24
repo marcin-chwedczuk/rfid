@@ -1,4 +1,4 @@
-package pl.marcinchwedczuk.rfid.lib;
+package pl.marcinchwedczuk.rfid.acr122;
 
 public class DataAddress {
     public final Sector sector;

@@ -2,14 +2,12 @@ package pl.marcinchwedczuk.rfid.gui.commands;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import pl.marcinchwedczuk.rfid.gui.DataRow;
-import pl.marcinchwedczuk.rfid.lib.*;
+import pl.marcinchwedczuk.rfid.acr122.*;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Consumer;
 
-import static pl.marcinchwedczuk.rfid.lib.Block.TRAILER;
+import static pl.marcinchwedczuk.rfid.acr122.Block.TRAILER;
 
 public class WritePermissionsCommand extends BaseUiCommand<Sector> {
     private static Logger logger = LogManager.getLogger(WritePermissionsCommand.class);

@@ -1,4 +1,4 @@
-package pl.marcinchwedczuk.rfid.lib;
+package pl.marcinchwedczuk.rfid.acr122;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 import javax.smartcardio.*;
 import java.nio.charset.StandardCharsets;
 
-import static pl.marcinchwedczuk.rfid.lib.Block.BLOCK_0;
+import static pl.marcinchwedczuk.rfid.acr122.Block.BLOCK_0;
 
 public class AcrCard {
     private static Logger logger = LogManager.getLogger(AcrCard.class);
@@ -85,6 +85,42 @@ public class AcrCard {
         }
     }
 
+    public static final int DISABLE_TIMEOUT = 0x00;
+    public static final int WAIT_INDEFINITELY = 0xFF;
+    /**
+     * Sets how long terminal will wait for a card to respond
+     * to the request in seconds.
+     *
+     * @param seconds
+     *      Timeout must be multiple of 5 seconds, e.g. 5, 10, 15 but not 12.
+     *      Use {@link #DISABLE_TIMEOUT} to disable timeout check.
+     *      Use {@link #WAIT_INDEFINITELY} to wait for a response without timing out.
+     */
+    public void setTimeout(int seconds) {
+        if (seconds < 0 || seconds > 0xFF) {
+            throw new IllegalArgumentException("seconds");
+        }
+
+        byte[] commandBytes = new byte[] {
+                FF, 0x00, 0x41, (byte)seconds, 0x00
+        };
+
+        try {
+            ResponseAPDU response =
+                    card.getBasicChannel().transmit(new CommandAPDU(commandBytes));
+
+            int sw = response.getSW();
+            if (sw == 0x6300) {
+                throw AcrStandardErrors.operationFailed();
+            }
+            else if (sw != 0x9000) {
+                throw AcrStandardErrors.unexpectedResponseCode(sw);
+            }
+        } catch (CardException e) {
+            throw AcrException.ofCardException(e);
+        }
+    }
+
     public String getCardUID() {
         byte[] uid = getData(0x00, 0x00, 0x00);
         return ByteUtils.asHexString(uid, ":");
@@ -102,13 +138,13 @@ public class AcrCard {
 
             int sw = response.getSW();
             if (sw == 0x6300) {
-                throw new AcrException("Operation timed out.");
+                throw AcrStandardErrors.operationFailed();
             }
-            if (sw == 0x6A81) {
-                throw new AcrException("Function not supported.");
+            else if (sw == 0x6A81) {
+                throw AcrStandardErrors.functionNotSupported();
             }
-            if (sw != 0x9000) {
-                throw new AcrException("Unrecognized SW1/SW2 code.");
+            else if (sw != 0x9000) {
+                throw AcrStandardErrors.unexpectedResponseCode(sw);
             }
 
             return response.getData();
@@ -116,6 +152,7 @@ public class AcrCard {
             throw AcrException.ofCardException(e);
         }
     }
+
 
     public void loadKeyToRegister(byte[] key, KeyRegister register) {
         if (key.length != 6) {
@@ -132,10 +169,10 @@ public class AcrCard {
 
             int sw = response.getSW();
             if (sw == 0x6300) {
-                throw new AcrException("Loading key failed.");
+                throw AcrStandardErrors.operationFailed();
             }
-            if (sw != 0x9000) {
-                throw new AcrException(String.format("Unknown SW code 0x%04x.", sw));
+            else if (sw != 0x9000) {
+                throw AcrStandardErrors.unexpectedResponseCode(sw);
             }
             // Success
         } catch (CardException e) {
@@ -161,10 +198,10 @@ public class AcrCard {
 
             int sw = response.getSW();
             if (sw == 0x6300) {
-                throw new AcrException("Authentication failed.");
+                throw AcrStandardErrors.operationFailed();
             }
-            if (sw != 0x9000) {
-                throw new AcrException(String.format("Unknown SW code 0x%04x.", sw));
+            else if (sw != 0x9000) {
+                throw AcrStandardErrors.unexpectedResponseCode(sw);
             }
             // Success
         } catch (CardException e) {
@@ -183,10 +220,10 @@ public class AcrCard {
 
             int sw = response.getSW();
             if (sw == 0x6300) {
-                throw new AcrException("Reading block failed.");
+                throw AcrStandardErrors.operationFailed();
             }
-            if (sw != 0x9000) {
-                throw new AcrException(String.format("Unknown SW code 0x%04x.", sw));
+            else if (sw != 0x9000) {
+                throw AcrStandardErrors.unexpectedResponseCode(sw);
             }
             // Success
             return response.getData();
@@ -216,11 +253,10 @@ public class AcrCard {
 
             int sw = response.getSW();
             if (sw == 0x6300) {
-                throw new AcrException(String.format(
-                        "Writing sector %s, block %s failed.", block.sector, block.block));
+                throw AcrStandardErrors.operationFailed();
             }
-            if (sw != 0x9000) {
-                throw new AcrException(String.format("Unknown SW response code 0x%04x.", sw));
+            else if (sw != 0x9000) {
+                throw AcrStandardErrors.unexpectedResponseCode(sw);
             }
             // Success
         } catch (CardException e) {
@@ -235,6 +271,4 @@ public class AcrCard {
             throw AcrException.ofCardException(e);
         }
     }
-
-
 }

@@ -3,13 +3,12 @@ package pl.marcinchwedczuk.rfid.gui.commands;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.marcinchwedczuk.rfid.gui.DataRow;
-import pl.marcinchwedczuk.rfid.lib.*;
+import pl.marcinchwedczuk.rfid.acr122.*;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
-import static pl.marcinchwedczuk.rfid.lib.KeyRegister.REGISTER_0;
 
 public class WriteDataCommand extends BaseUiCommand<DataRow> {
     private static Logger logger = LogManager.getLogger(WriteDataCommand.class);

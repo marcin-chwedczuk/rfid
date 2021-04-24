@@ -1,4 +1,4 @@
-package pl.marcinchwedczuk.rfid.lib;
+package pl.marcinchwedczuk.rfid.acr122;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
