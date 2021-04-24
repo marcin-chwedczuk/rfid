@@ -54,13 +54,18 @@ public class AcrTerminal {
         }
     }
 
+    /**
+     * No card should be on reader while executing this command
+     * (DIRECT mode is used to connect).
+     * @param bytes
+     * @return
+     * @throws CardException
+     */
     private byte[] sendCommandToReader(byte[] bytes) throws CardException {
         // See: https://stackoverflow.com/a/29235803/1779504
         // System specific see: https://github.com/leg0/libnfc/blob/master/libnfc/drivers/acr122_pcsc.c#L53
 
-        final int FILE_DEVICE_SMARTCARD = 0x310000;
-        final int IOCTL_CCID_ESCAPE_SCARD_CTL_CODE = FILE_DEVICE_SMARTCARD + 3500 * 4;
-
+        // macOS: https://github.com/pokusew/nfc-pcsc/issues/13#issuecomment-302482621
         Card card = cardTerminal.connect("DIRECT");
         try {
             return card.transmitControlCommand(

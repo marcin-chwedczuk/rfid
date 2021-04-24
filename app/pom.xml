@@ -83,9 +83,9 @@
                     <mainClass>pl.marcinchwedczuk.rfid.gui.App</mainClass>
                     <options>
                         <!-- Workaround for BUG (macOS only): https://stackoverflow.com/a/65062759/1779504 -->
-                        <!--
+
                         <option>-Dsun.security.smartcardio.library=/System/Library/Frameworks/PCSC.framework/PCSC</option>
-                        -->
+
                     </options>
                 </configuration>
             </plugin>
