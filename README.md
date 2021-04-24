@@ -1,3 +1,4 @@
+# Project status
 
 ![Build Status](https://github.com/marcin-chwedczuk/rfid/actions/workflows/basic-ci.yaml/badge.svg)
 
