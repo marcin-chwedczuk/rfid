@@ -2,13 +2,11 @@ package pl.marcinchwedczuk.rfid.lib;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import pl.marcinchwedczuk.rfid.lib.settings.PiccOperatingParameter;
 
 import javax.smartcardio.*;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 

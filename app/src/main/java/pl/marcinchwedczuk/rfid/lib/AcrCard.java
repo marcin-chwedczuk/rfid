@@ -1,6 +1,7 @@
 package pl.marcinchwedczuk.rfid.lib;
 
-import pl.marcinchwedczuk.rfid.lib.settings.PiccOperatingParameter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.smartcardio.*;
 import java.nio.charset.StandardCharsets;
@@ -8,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import static pl.marcinchwedczuk.rfid.lib.Block.BLOCK_0;
 
 public class AcrCard {
+    private static Logger logger = LogManager.getLogger(AcrCard.class);
     private static final byte FF = (byte)0xFF;
 
     private final AcrTerminal terminal;
@@ -40,7 +42,7 @@ public class AcrCard {
         }
     }
 
-    public PiccOperatingParameter getPiccOperatingParameter() {
+    public PiccOperatingParameter readPiccOperatingParameter() {
         byte[] commandBytes = new byte[] {
                 FF, 0x00, 0x50, 0x00, 0x00
         };
@@ -49,8 +51,35 @@ public class AcrCard {
             ResponseAPDU response =
                     card.getBasicChannel().transmit(new CommandAPDU(commandBytes));
 
-            // Experiments say it's 0x90 dataByte, default value 0xFF
-            return PiccOperatingParameter.fromBitPattern(response.getBytes()[1]);
+            byte[] responseBytes = response.getBytes();
+            if (responseBytes.length != 2 || responseBytes[0] != (byte)0x90) {
+                logger.error("Unexpected bytes returned from terminal {}.", responseBytes);
+                throw new AcrException("Terminal returned unexpected response.");
+            }
+
+            return PiccOperatingParameter.fromBitPattern(responseBytes[1]);
+        } catch (CardException e) {
+            throw AcrException.ofCardException(e);
+        }
+    }
+
+    public void savePiccOperatingParameter(PiccOperatingParameter parameter) {
+        byte parameterByte = parameter.toByte();
+
+        byte[] commandBytes = new byte[] {
+                FF, 0x00, 0x51, parameterByte, 0x00
+        };
+
+        try {
+            ResponseAPDU response =
+                    card.getBasicChannel().transmit(new CommandAPDU(commandBytes));
+
+            byte[] responseBytes = response.getBytes();
+            if (responseBytes.length != 2 || responseBytes[0] != (byte)0x90) {
+                logger.error("Unexpected bytes returned from terminal {}.", responseBytes);
+                throw new AcrException("Terminal returned unexpected response.");
+            }
+
         } catch (CardException e) {
             throw AcrException.ofCardException(e);
         }
@@ -61,6 +90,7 @@ public class AcrCard {
         return ByteUtils.asHexString(uid, ":");
     }
 
+    // TODO: Refactor this can only return ATS or serial number of the tag
     private byte[] getData(int p1, int p2, int len) {
         byte[] commandBytes = new byte[] {
                 (byte)0xFF, (byte)0xCA, (byte)(p1 & 0xFF), (byte)(p2 & 0xFF), (byte)(len & 0xFF)

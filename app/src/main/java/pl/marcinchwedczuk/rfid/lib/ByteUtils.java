@@ -5,6 +5,12 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class ByteUtils {
+    public static final String DEFAULT_SEPARATOR = ":";
+
+    public static byte[] fromHexString(String s) throws NumberFormatException {
+        return fromHexString(s, DEFAULT_SEPARATOR);
+    }
+
     public static byte[] fromHexString(String s, String separator) throws NumberFormatException {
         // Remove separators
         String withoutSeparator = s.replaceAll(Pattern.quote(separator), "");
@@ -25,6 +31,10 @@ public class ByteUtils {
             result[i] = bytes.get(i);
         }
         return result;
+    }
+
+    public static String asHexString(byte[] bytes) {
+        return asHexString(bytes, DEFAULT_SEPARATOR);
     }
 
     public static String asHexString(byte[] bytes, String separator) {
