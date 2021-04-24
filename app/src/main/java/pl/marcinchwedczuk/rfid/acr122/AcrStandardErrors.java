@@ -7,6 +7,12 @@ public class AcrStandardErrors {
         return new AcrException(String.format("Unexpected response SW code 0x%04x.", swCode));
     }
 
+    public static AcrException unexpectedResponseBytes(byte[] bytes) {
+        return new AcrException(String.format(
+                "Terminal returned unexpected response bytes: %s.",
+                ByteUtils.asHexString(bytes, "")));
+    }
+
     public static AcrException functionNotSupported() {
         return new AcrException("Function not supported.");
     }

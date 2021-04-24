@@ -52,9 +52,11 @@ public class AcrCard {
                     card.getBasicChannel().transmit(new CommandAPDU(commandBytes));
 
             byte[] responseBytes = response.getBytes();
+
+            // Format: [0x90, PICC byte]
             if (responseBytes.length != 2 || responseBytes[0] != (byte)0x90) {
                 logger.error("Unexpected bytes returned from terminal {}.", responseBytes);
-                throw new AcrException("Terminal returned unexpected response.");
+                throw AcrStandardErrors.unexpectedResponseBytes(responseBytes);
             }
 
             return PiccOperatingParameter.fromBitPattern(responseBytes[1]);
@@ -77,7 +79,7 @@ public class AcrCard {
             byte[] responseBytes = response.getBytes();
             if (responseBytes.length != 2 || responseBytes[0] != (byte)0x90) {
                 logger.error("Unexpected bytes returned from terminal {}.", responseBytes);
-                throw new AcrException("Terminal returned unexpected response.");
+                throw AcrStandardErrors.unexpectedResponseBytes(responseBytes);
             }
 
         } catch (CardException e) {
@@ -114,6 +116,31 @@ public class AcrCard {
                 throw AcrStandardErrors.operationFailed();
             }
             else if (sw != 0x9000) {
+                throw AcrStandardErrors.unexpectedResponseCode(sw);
+            }
+            // Success
+        } catch (CardException e) {
+            throw AcrException.ofCardException(e);
+        }
+    }
+
+    public void configureBuzzerOnCartDetection(boolean buzzOnCartDetection) {
+        byte param = buzzOnCartDetection ? FF : 0x00;
+        byte[] commandBytes = new byte[] {
+                FF, 0x00, 0x52, param, 0x00
+        };
+
+        try {
+            ResponseAPDU response =
+                    card.getBasicChannel().transmit(new CommandAPDU(commandBytes));
+
+            int sw = response.getSW();
+            if (sw == 0x6300) {
+                throw AcrStandardErrors.operationFailed();
+            }
+            // !!! This is different value than provided by the documentation.
+            // Looks like the format is [0x90, currentValue]
+            else if (sw != 0x90FF && sw != 0x9000) {
                 throw AcrStandardErrors.unexpectedResponseCode(sw);
             }
         } catch (CardException e) {

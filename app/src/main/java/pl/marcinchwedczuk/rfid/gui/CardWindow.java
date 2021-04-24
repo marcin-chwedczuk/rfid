@@ -368,7 +368,7 @@ public class CardWindow implements Initializable {
             var param = card.readPiccOperatingParameter();
             String tmp = param.toString();
 
-            card.setTimeout(AcrCard.WAIT_INDEFINITELY);
+            card.configureBuzzerOnCartDetection(false);
 
             FxDialogBoxes.info(String.format(
                     "Terminal name: %s" + System.lineSeparator() +
