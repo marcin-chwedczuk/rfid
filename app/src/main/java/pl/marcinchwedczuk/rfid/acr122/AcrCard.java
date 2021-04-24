@@ -148,6 +148,8 @@ public class AcrCard {
         }
     }
 
+
+
     public String getCardUID() {
         byte[] uid = getData(0x00, 0x00, 0x00);
         return ByteUtils.asHexString(uid, ":");
