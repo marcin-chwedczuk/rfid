@@ -38,6 +38,51 @@ public class LedSettings {
         blinkingMaskGreenLED = bits.isBitSet(7) ? BLINK : NOT_BLINK;
     }
 
+    byte toControlByte() {
+        return new RichByte(0)
+                .withBit(0, finalRedLED == ON)
+                .withBit(1, finalGreenLED == ON)
+                .withBit(2, maskRedLED == UPDATE)
+                .withBit(3, maskGreenLED == UPDATE)
+                .withBit(4, initialBlinkingRedLED == ON)
+                .withBit(5, initialBlinkingGreenLED == ON)
+                .withBit(6, blinkingMaskRedLED == BLINK)
+                .withBit(7, blinkingMaskGreenLED == BLINK)
+                .asByte();
+    }
+
+    public void setFinalRedLED(LedState finalRedLED) {
+        this.finalRedLED = finalRedLED;
+    }
+
+    public void setFinalGreenLED(LedState finalGreenLED) {
+        this.finalGreenLED = finalGreenLED;
+    }
+
+    public void setMaskRedLED(StateMask maskRedLED) {
+        this.maskRedLED = maskRedLED;
+    }
+
+    public void setMaskGreenLED(StateMask maskGreenLED) {
+        this.maskGreenLED = maskGreenLED;
+    }
+
+    public void setInitialBlinkingRedLED(LedState initialBlinkingRedLED) {
+        this.initialBlinkingRedLED = initialBlinkingRedLED;
+    }
+
+    public void setInitialBlinkingGreenLED(LedState initialBlinkingGreenLED) {
+        this.initialBlinkingGreenLED = initialBlinkingGreenLED;
+    }
+
+    public void setBlinkingMaskRedLED(LedBlinkingMask blinkingMaskRedLED) {
+        this.blinkingMaskRedLED = blinkingMaskRedLED;
+    }
+
+    public void setBlinkingMaskGreenLED(LedBlinkingMask blinkingMaskGreenLED) {
+        this.blinkingMaskGreenLED = blinkingMaskGreenLED;
+    }
+
     public static LedSettings ofControlByte(byte b) {
         return new LedSettings(b);
     }

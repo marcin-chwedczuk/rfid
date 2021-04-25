@@ -103,8 +103,12 @@ public class AcrCard {
             throw new IllegalArgumentException("seconds");
         }
 
+        // Timeout is measured in 5 seconds unit. We round up
+        // to the closed unit.
+        byte roundedUpUnits = (byte)((seconds + 4) / 5);
+
         byte[] commandBytes = new byte[] {
-                FF, 0x00, 0x41, (byte)seconds, 0x00
+                FF, 0x00, 0x41, roundedUpUnits, 0x00
         };
 
         try {
@@ -148,7 +152,31 @@ public class AcrCard {
         }
     }
 
+    public void configureLedAndBuzzer(LedBuzzerSettings settings) {
+        byte[] bdc = settings.toControlBytes();
 
+        byte[] commandBytes = new byte[] {
+                FF, 0x00, 0x40,
+                settings.getLedSettings().toControlByte(),
+                0x04, bdc[0], bdc[1], bdc[2], bdc[3]
+        };
+
+        try {
+            ResponseAPDU response =
+                    card.getBasicChannel().transmit(new CommandAPDU(commandBytes));
+
+            int sw = response.getSW();
+            if (sw == 0x6300) {
+                throw AcrStandardErrors.operationFailed();
+            }
+            else if (response.getSW1() != 0x90) {
+                throw AcrStandardErrors.unexpectedResponseCode(sw);
+            }
+            // Success
+        } catch (CardException e) {
+            throw AcrException.ofCardException(e);
+        }
+    }
 
     public String getCardUID() {
         byte[] uid = getData(0x00, 0x00, 0x00);

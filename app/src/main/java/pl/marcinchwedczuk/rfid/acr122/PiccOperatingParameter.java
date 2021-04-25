@@ -33,6 +33,10 @@ public class PiccOperatingParameter {
      */
     private SkipDetect iso14443TypeA;
 
+    public PiccOperatingParameter() {
+        this((byte)0);
+    }
+
     private PiccOperatingParameter(byte bits) {
         RichByte richBits = new RichByte(bits);
 

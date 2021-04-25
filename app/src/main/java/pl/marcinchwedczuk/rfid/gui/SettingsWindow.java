@@ -13,7 +13,9 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.marcinchwedczuk.rfid.acr122.AcrCard;
+import pl.marcinchwedczuk.rfid.acr122.LedBuzzerSettings;
 import pl.marcinchwedczuk.rfid.acr122.LedBuzzerSettings.Buzzer;
+import pl.marcinchwedczuk.rfid.acr122.LedSettings;
 import pl.marcinchwedczuk.rfid.acr122.LedSettings.LedBlinkingMask;
 import pl.marcinchwedczuk.rfid.acr122.LedSettings.LedState;
 import pl.marcinchwedczuk.rfid.acr122.LedSettings.StateMask;
@@ -87,7 +89,6 @@ public class SettingsWindow implements Initializable {
         enumChoiceBox(isoTypeA_CB, SkipDetect.values());
     }
 
-
     public void setCard(AcrCard card) {
         this.card = card;
 
@@ -100,6 +101,9 @@ public class SettingsWindow implements Initializable {
 
             FxDialogBoxes.error("Cannot read PICC Operating parameter.");
         }
+
+        loadDefaultsForLedSettings();
+        loadDefaultsForBuzzerSettings();
     }
 
     private void setPiccOperatingParameter(PiccOperatingParameter parameter) {
@@ -113,6 +117,28 @@ public class SettingsWindow implements Initializable {
         this.topazCB.setValue(parameter.getTopaz());
         this.isoTypeB_CB.setValue(parameter.getIso14443TypeB());
         this.isoTypeA_CB.setValue(parameter.getIso14443TypeA());
+    }
+
+    private void loadDefaultsForLedSettings() {
+        this.finalRedLedCB.setValue(LedState.OFF);
+        this.finalGreenLedCB.setValue(LedState.OFF);
+
+        this.maskRedLedCB.setValue(StateMask.UPDATE);
+        this.maskGreenLedCB.setValue(StateMask.UPDATE);
+
+        this.blinkingRedLedCB.setValue(LedState.OFF);
+        this.blinkingGreenLedCB.setValue(LedState.OFF);
+
+        this.blinkingMaskRedLedCB.setValue(LedBlinkingMask.NOT_BLINK);
+        this.blinkingMaskGreenLedCB.setValue(LedBlinkingMask.NOT_BLINK);
+    }
+
+    private void loadDefaultsForBuzzerSettings() {
+        this.t1Spinner.getValueFactory().setValue(5);
+        this.t2Spinner.getValueFactory().setValue(10);
+
+        this.repetitionsSpinner.getValueFactory().setValue(3);
+        this.linkToBuzzerCB.setValue(Buzzer.BUZZER_DISABLED);
     }
 
     public static SettingsWindow show(AcrCard card) {
@@ -137,7 +163,51 @@ public class SettingsWindow implements Initializable {
     }
 
     public void onSave(ActionEvent actionEvent) {
+        PiccOperatingParameter picc = new PiccOperatingParameter();
+        picc.setAutoPiccPolling(this.autoPiccPoolingCB.getValue());
+        picc.setAutoAtsGeneration(this.autoAtsGenerationCB.getValue());
+        picc.setPollingInterval(this.pollingIntervalCB.getValue());
+        picc.setFeliCa424K(this.feliCa424KCB.getValue());
+        picc.setFeliCa212K(this.feliCa212KCB.getValue());
+        picc.setTopaz(this.topazCB.getValue());
+        picc.setIso14443TypeB(this.isoTypeB_CB.getValue());
+        picc.setIso14443TypeA(this.isoTypeA_CB.getValue());
 
+        try {
+            //card.savePiccOperatingParameter(picc);
+        } catch (Exception e) {
+            FxDialogBoxes.exception(e);
+            return;
+        }
+
+        // Save Led & Buzzer
+        LedBuzzerSettings newSettings = new LedBuzzerSettings();
+        newSettings.setT1(t1Spinner.getValue());
+        newSettings.setT2(t2Spinner.getValue());
+        newSettings.setNumberOfRepetitions(repetitionsSpinner.getValue());
+        newSettings.setLinkToBuzzer(linkToBuzzerCB.getValue());
+
+        // LED Stuff
+        LedSettings ledSettings = newSettings.getLedSettings();
+        ledSettings.setFinalRedLED(this.finalRedLedCB.getValue());
+        ledSettings.setFinalGreenLED(this.finalGreenLedCB.getValue());
+        ledSettings.setMaskRedLED(this.maskRedLedCB.getValue());
+        ledSettings.setMaskGreenLED(this.maskGreenLedCB.getValue());
+        ledSettings.setInitialBlinkingRedLED(this.blinkingRedLedCB.getValue());
+        ledSettings.setInitialBlinkingGreenLED(this.blinkingGreenLedCB.getValue());
+        ledSettings.setBlinkingMaskRedLED(this.blinkingMaskRedLedCB.getValue());
+        ledSettings.setBlinkingMaskGreenLED(this.blinkingMaskGreenLedCB.getValue());
+
+
+        try {
+            card.setTimeout(AcrCard.DISABLE_TIMEOUT);
+            card.configureLedAndBuzzer(newSettings);
+            card.setTimeout(5);
+            FxDialogBoxes.info("DONE");
+        } catch (Exception e) {
+            FxDialogBoxes.exception(e);
+            return;
+        }
     }
 
     public void onCancel(ActionEvent actionEvent) {
@@ -153,6 +223,4 @@ public class SettingsWindow implements Initializable {
     void enumChoiceBox(ChoiceBox<E> cb, E[] values) {
         cb.getItems().setAll(values);
     }
-
-
 }
