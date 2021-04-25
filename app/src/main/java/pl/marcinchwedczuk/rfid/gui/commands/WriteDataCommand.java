@@ -44,6 +44,7 @@ public class WriteDataCommand extends BaseUiCommand<DataRow> {
     protected List<DataRow> defineWorkItems() {
         return Arrays.stream(data)
                 .filter(dr -> !dr.isSectorTrailer())
+                .filter(dr -> !dr.isManufacturerDataBlock())
                 .collect(toList());
     }
 
