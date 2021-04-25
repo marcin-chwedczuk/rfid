@@ -138,8 +138,8 @@
                                     <ChoiceBox fx:id="feliCa424KCB" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                                     <ChoiceBox fx:id="feliCa212KCB" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
                                     <ChoiceBox fx:id="topazCB" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-                                    <ChoiceBox fx:id="isoTypeBCB" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-                                    <ChoiceBox fx:id="isoTypeACB" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+                                    <ChoiceBox fx:id="isoTypeB_CB" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+                                    <ChoiceBox fx:id="isoTypeA_CB" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="7" />
                                  </children>
                               </GridPane>
                            </children>

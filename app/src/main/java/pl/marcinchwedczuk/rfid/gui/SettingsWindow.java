@@ -10,21 +10,26 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import pl.marcinchwedczuk.rfid.acr122.AcrCard;
-import pl.marcinchwedczuk.rfid.acr122.LedBuzzerSettings;
 import pl.marcinchwedczuk.rfid.acr122.LedBuzzerSettings.Buzzer;
-import pl.marcinchwedczuk.rfid.acr122.LedSettings;
 import pl.marcinchwedczuk.rfid.acr122.LedSettings.LedBlinkingMask;
 import pl.marcinchwedczuk.rfid.acr122.LedSettings.LedState;
 import pl.marcinchwedczuk.rfid.acr122.LedSettings.StateMask;
 import pl.marcinchwedczuk.rfid.acr122.PiccOperatingParameter;
+import pl.marcinchwedczuk.rfid.acr122.PiccOperatingParameter.EnableDisable;
 import pl.marcinchwedczuk.rfid.acr122.PiccOperatingParameter.PoolingInterval;
+import pl.marcinchwedczuk.rfid.acr122.PiccOperatingParameter.SkipDetect;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+
 public class SettingsWindow implements Initializable {
+    private static Logger logger = LogManager.getLogger(SettingsWindow.class);
+
     // LED Settings
     @FXML private ChoiceBox<LedState> finalRedLedCB;
     @FXML private ChoiceBox<LedState> finalGreenLedCB;
@@ -48,8 +53,8 @@ public class SettingsWindow implements Initializable {
     @FXML private ChoiceBox<SkipDetect> feliCa424KCB;
     @FXML private ChoiceBox<SkipDetect> feliCa212KCB;
     @FXML private ChoiceBox<SkipDetect> topazCB;
-    @FXML private ChoiceBox<SkipDetect> isoTypeBCB;
-    @FXML private ChoiceBox<SkipDetect> isoTypeACB;
+    @FXML private ChoiceBox<SkipDetect> isoTypeB_CB;
+    @FXML private ChoiceBox<SkipDetect> isoTypeA_CB;
 
     private AcrCard card;
 
@@ -78,17 +83,36 @@ public class SettingsWindow implements Initializable {
         enumChoiceBox(feliCa424KCB, SkipDetect.values());
         enumChoiceBox(feliCa212KCB, SkipDetect.values());
         enumChoiceBox(topazCB, SkipDetect.values());
-        enumChoiceBox(isoTypeBCB, SkipDetect.values());
-        enumChoiceBox(isoTypeACB, SkipDetect.values());
+        enumChoiceBox(isoTypeB_CB, SkipDetect.values());
+        enumChoiceBox(isoTypeA_CB, SkipDetect.values());
     }
 
-    private static <E extends Enum<E>>
-    void enumChoiceBox(ChoiceBox<E> cb, E[] values) {
-        cb.getItems().setAll(values);
-    }
 
     public void setCard(AcrCard card) {
         this.card = card;
+
+        try {
+            PiccOperatingParameter picc = card.readPiccOperatingParameter();
+            setPiccOperatingParameter(picc);
+        } catch (Exception e) {
+            logger.error("Error while getting picc parameter.", e);
+            closeWindow();
+
+            FxDialogBoxes.error("Cannot read PICC Operating parameter.");
+        }
+    }
+
+    private void setPiccOperatingParameter(PiccOperatingParameter parameter) {
+        this.autoPiccPoolingCB.setValue(parameter.getAutoPiccPolling());
+        this.autoAtsGenerationCB.setValue(parameter.getAutoAtsGeneration());
+
+        this.pollingIntervalCB.setValue(parameter.getPollingInterval());
+
+        this.feliCa424KCB.setValue(parameter.getFeliCa424K());
+        this.feliCa212KCB.setValue(parameter.getFeliCa212K());
+        this.topazCB.setValue(parameter.getTopaz());
+        this.isoTypeB_CB.setValue(parameter.getIso14443TypeB());
+        this.isoTypeA_CB.setValue(parameter.getIso14443TypeA());
     }
 
     public static SettingsWindow show(AcrCard card) {
@@ -117,10 +141,18 @@ public class SettingsWindow implements Initializable {
     }
 
     public void onCancel(ActionEvent actionEvent) {
+        closeWindow();
+    }
+
+    private void closeWindow() {
         final Stage stage = (Stage) finalRedLedCB.getScene().getWindow();
         stage.close();
     }
 
-    public enum EnableDisable { ENABLE, DISABLE }
-    public enum SkipDetect { SKIP, DETECT }
+    private static <E extends Enum<E>>
+    void enumChoiceBox(ChoiceBox<E> cb, E[] values) {
+        cb.getItems().setAll(values);
+    }
+
+
 }
