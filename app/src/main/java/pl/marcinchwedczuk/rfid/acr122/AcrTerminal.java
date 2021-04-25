@@ -66,12 +66,15 @@ public class AcrTerminal {
         // macOS: https://github.com/pokusew/nfc-pcsc/issues/13#issuecomment-302482621
         Card card = cardTerminal.connect("DIRECT");
         try {
+            card.getBasicChannel(); // Why?
             return card.transmitControlCommand(
-                    SCARD_CTL_CODE(3500), bytes);
+                    IOCTL_CCID_ESCAPE(), bytes);
         } finally {
             card.disconnect(false);
         }
     }
+
+    final static int IOCTL_SMARTCARD_ACR122_ESCAPE_COMMAND = 0x003136B0;
 
     public static final int SCARD_CTL_CODE(int command) {
         boolean isWindows = System.getProperty("os.name").startsWith("Windows");
@@ -79,6 +82,18 @@ public class AcrTerminal {
             return 0x00310000 | (command << 2);
         } else {
             return 0x42000000 | command;
+        }
+    }
+
+    static int IOCTL_CCID_ESCAPE()
+    {
+        boolean isWindows = System.getProperty("os.name").startsWith("Windows");
+        if (isWindows)
+        {
+            return SCARD_CTL_CODE(3500);
+        } else
+        {
+            return SCARD_CTL_CODE(1);
         }
     }
 

@@ -200,9 +200,7 @@ public class SettingsWindow implements Initializable {
 
 
         try {
-            card.setTimeout(AcrCard.DISABLE_TIMEOUT);
             card.configureLedAndBuzzer(newSettings);
-            card.setTimeout(5);
             FxDialogBoxes.info("DONE");
         } catch (Exception e) {
             FxDialogBoxes.exception(e);
