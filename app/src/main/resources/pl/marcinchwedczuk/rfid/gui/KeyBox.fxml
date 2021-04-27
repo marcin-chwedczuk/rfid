@@ -5,8 +5,8 @@
 <?import javafx.scene.layout.HBox?>
 <?import pl.marcinchwedczuk.rfid.gui.MaskedTextField?>
 
-<fx:root stylesheets="@KeyBox.css" type="javafx.scene.layout.HBox" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
-   <MaskedTextField fx:id="keyTextField" styleClass="keyField" HBox.hgrow="ALWAYS">
+<fx:root alignment="CENTER_LEFT" stylesheets="@KeyBox.css" type="javafx.scene.layout.HBox" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+   <MaskedTextField fx:id="keyTextField" minWidth="-Infinity" prefColumnCount="18" styleClass="keyField" HBox.hgrow="ALWAYS">
       <tooltip>
          <Tooltip fx:id="validationTooltip" autoHide="true" styleClass="validationTooltip" text="Empty Tooltip" />
       </tooltip></MaskedTextField>

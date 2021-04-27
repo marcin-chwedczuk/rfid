@@ -7,7 +7,6 @@
 
 #infoText {
   -fx-text-fill: #333;
-  /* -fx-font-family: monospace; */
   -fx-font-size: 20;
   -fx-font-weight: bold;
 }

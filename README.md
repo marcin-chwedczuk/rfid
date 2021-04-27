@@ -85,8 +85,8 @@ You should change `ifdDriverOptions` to `0x0001`:
 
 The same procedure can be followed on macOS before BigSur,
 see [this GitHub comment](https://github.com/pokusew/nfc-pcsc/issues/13#issuecomment-302482621)
-for detail. I was not able to change this value on macOS BigSur though.
+for details. I was not able to change this value on macOS BigSur though.
 
-See `docs/API-ACR122U-2.04.pdf` document in this repository to find out how you
+Please see `docs/API-ACR122U-2.04.pdf` document in this repository to find out how you
 can do this on Windows (pages 38 - 40).
 

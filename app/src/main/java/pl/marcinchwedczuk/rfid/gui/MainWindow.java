@@ -23,9 +23,6 @@ public class MainWindow {
     private final Timer timer = new Timer(true);
     private Optional<Stage> cartWindow = Optional.empty();
 
-    private void out(String format, Object... args) {
-    }
-
     @FXML
     public void initialize() {
         refreshTerminalList(null);
