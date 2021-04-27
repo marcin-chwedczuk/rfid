@@ -54,7 +54,6 @@ public class AboutWindow implements Initializable {
             childWindow.setTitle("About...");
             childWindow.setScene(new Scene(loader.load()));
             childWindow.initModality(Modality.APPLICATION_MODAL);
-            // childWindow.initOwner(owner.getWindow());
             childWindow.setResizable(false);
 
             childWindow.show();
@@ -63,17 +62,20 @@ public class AboutWindow implements Initializable {
         }
     }
 
-    public void closeWindow(ActionEvent unused) {
+    @FXML
+    public void closeWindow() {
         final Stage stage = (Stage) javaFxLabel.getScene().getWindow();
         stage.close();
     }
 
-    public void openApplicationGitHubPage(ActionEvent actionEvent) {
+    @FXML
+    private void openApplicationGitHubPage() {
         App.hostServices().showDocument(
                 "https://github.com/marcin-chwedczuk/rfid");
     }
 
-    public void openSangaYTChannel(ActionEvent actionEvent) {
+    @FXML
+    private void openSangaYTChannel() {
         App.hostServices().showDocument(
                 "https://www.youtube.com/watch?v=VZDPBHtS0k4&list=PLXsEtURGV4pRLnvgoTd4FjzKFbXEfFNXn");
     }
