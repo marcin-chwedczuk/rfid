@@ -1,0 +1,23 @@
+
+
+.contentBox {
+  -fx-padding: 1em;
+}
+
+.contentSeparator {
+  -fx-padding: 1em 0em 1em 0em;
+}
+
+.buttonBox {
+  -fx-padding: 2em 0em 0em 0em;
+}
+
+.hyperlink.no-border {
+    -fx-border-color: transparent;
+}
+
+.hugeText {
+  -fx-text-fill: linear-gradient(to right, #f733d9, #3b0b32);
+  -fx-font-family: "Comic Sans MS", "Comic Sans", cursive;
+  -fx-font-size: 36px;
+}

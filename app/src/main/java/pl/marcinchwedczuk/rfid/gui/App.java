@@ -1,6 +1,7 @@
 package pl.marcinchwedczuk.rfid.gui;
 
 import javafx.application.Application;
+import javafx.application.HostServices;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +14,13 @@ import java.lang.management.RuntimeMXBean;
 import java.util.List;
 
 public class App extends Application {
+    private static HostServices hostServices = null;
+    public static HostServices hostServices() {
+        if (hostServices == null) {
+            throw new IllegalStateException();
+        }
+        return hostServices;
+    }
 
     @Override
     public void start(Stage primaryStage) throws IOException {
@@ -24,6 +32,8 @@ public class App extends Application {
             LogManager.getLogger().error("Unhandled exception", e);
             FxDialogBoxes.exception(e);
         });
+
+        App.hostServices = getHostServices();
 
         Parent root = FXMLLoader.load(
                 getClass().getResource("/pl/marcinchwedczuk/rfid/gui/MainWindow.fxml"));

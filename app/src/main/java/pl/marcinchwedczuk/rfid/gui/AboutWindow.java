@@ -1,12 +1,16 @@
 package pl.marcinchwedczuk.rfid.gui;
 
 import javafx.animation.*;
+import javafx.application.HostServices;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -21,6 +25,7 @@ public class AboutWindow implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        // JavaFX label animation
         RotateTransition rotate = new RotateTransition();
         rotate.setAxis(Rotate.Z_AXIS);
         rotate.setByAngle(360);
@@ -32,8 +37,8 @@ public class AboutWindow implements Initializable {
         rotate.play();
 
         ScaleTransition shrinkGrow = new ScaleTransition(Duration.millis(2000), javaFxLabel);
-        shrinkGrow.setByX(1.3f);
-        shrinkGrow.setByY(1.3f);
+        shrinkGrow.setByX(1.1f);
+        shrinkGrow.setByY(1.1f);
         shrinkGrow.setCycleCount(Animation.INDEFINITE);
         shrinkGrow.setAutoReverse(true);
 
@@ -61,5 +66,15 @@ public class AboutWindow implements Initializable {
     public void closeWindow(ActionEvent unused) {
         final Stage stage = (Stage) javaFxLabel.getScene().getWindow();
         stage.close();
+    }
+
+    public void openApplicationGitHubPage(ActionEvent actionEvent) {
+        App.hostServices().showDocument(
+                "https://github.com/marcin-chwedczuk/rfid");
+    }
+
+    public void openSangaYTChannel(ActionEvent actionEvent) {
+        App.hostServices().showDocument(
+                "https://www.youtube.com/watch?v=VZDPBHtS0k4&list=PLXsEtURGV4pRLnvgoTd4FjzKFbXEfFNXn");
     }
 }
