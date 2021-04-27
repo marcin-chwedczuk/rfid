@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
@@ -28,11 +29,11 @@
 <?import pl.marcinchwedczuk.rfid.gui.KeyBox?>
 <?import pl.marcinchwedczuk.rfid.gui.MaskedTextField?>
 
-<AnchorPane stylesheets="@CardWindow.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.marcinchwedczuk.rfid.gui.CardWindow">
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" stylesheets="@CardWindow.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.marcinchwedczuk.rfid.gui.CardWindow">
    <children>
       <VBox layoutX="280.0" layoutY="55.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <MenuBar fx:id="menuBar" prefHeight="28.0" prefWidth="829.0">
+            <MenuBar fx:id="menuBar" prefHeight="28.0" prefWidth="829.0" VBox.vgrow="NEVER">
               <menus>
                 <Menu text="_Terminal">
                   <items>
@@ -48,7 +49,7 @@
                 </Menu>
               </menus>
             </MenuBar>
-            <GridPane prefHeight="26.0" prefWidth="432.0">
+            <GridPane prefHeight="26.0" prefWidth="432.0" VBox.vgrow="NEVER">
               <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" />
@@ -69,7 +70,7 @@
                   <TextField fx:id="cardStandard" disable="true" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefColumnCount="30" GridPane.columnIndex="7" />
                </children>
             </GridPane>
-            <GridPane>
+            <GridPane VBox.vgrow="NEVER">
               <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" />
@@ -100,31 +101,89 @@
                   <Button mnemonicParsing="false" onAction="#loadDefaultFactoryKey" text="Load Default Factory Key" GridPane.columnIndex="10" />
                </children>
             </GridPane>
-            <TabPane prefHeight="658.0" prefWidth="1280.0" tabClosingPolicy="UNAVAILABLE">
+            <TabPane minHeight="-Infinity" minWidth="-Infinity" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
               <tabs>
                 <Tab text="READ / WRITE">
                   <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                    <AnchorPane minHeight="-Infinity" minWidth="-Infinity">
                            <children>
-                              <TableView fx:id="dataTable" editable="true" layoutX="334.0" layoutY="14.0" prefHeight="652.0" prefWidth="675.0" styleClass="data-table" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="334.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
+                              <HBox layoutX="108.0" layoutY="151.0" minHeight="-Infinity" minWidth="-Infinity" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <GridPane minHeight="-Infinity" minWidth="-Infinity" HBox.hgrow="NEVER">
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints minHeight="-Infinity" vgrow="NEVER" />
+                                        <RowConstraints minHeight="-Infinity" vgrow="NEVER" />
+                                        <RowConstraints minHeight="-Infinity" vgrow="NEVER" />
+                                          <RowConstraints maxHeight="10.0" minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="-Infinity" vgrow="NEVER" />
+                                          <RowConstraints minHeight="-Infinity" vgrow="NEVER" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+                                      </rowConstraints>
+                                       <children>
+                                          <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                             <children>
+                                                <Label text="Display Data As:" />
+                                                <ToggleButton fx:id="displayDataAsHex" mnemonicParsing="false" selected="true" text="HEX">
+                                                   <toggleGroup>
+                                                      <ToggleGroup fx:id="displayDataAs" />
+                                                   </toggleGroup>
+                                                </ToggleButton>
+                                                <ToggleButton mnemonicParsing="false" text="ASCII" toggleGroup="$displayDataAs" />
+                                             </children>
+                                             <padding>
+                                                <Insets bottom="10.0" />
+                                             </padding>
+                                          </HBox>
+                                          <VBox minHeight="-Infinity" minWidth="-Infinity" spacing="4.0" GridPane.rowIndex="1">
+                                             <children>
+                                                <Label text="From Sector:" />
+                                                <Spinner fx:id="fromSector" editable="true" minHeight="-Infinity" minWidth="-Infinity" />
+                                             </children>
+                                             <padding>
+                                                <Insets bottom="10.0" />
+                                             </padding>
+                                          </VBox>
+                                          <VBox minHeight="-Infinity" minWidth="-Infinity" spacing="4.0" GridPane.rowIndex="2">
+                                             <children>
+                                                <Label text="To Sector:" />
+                                                <Spinner fx:id="toSector" editable="true" minHeight="-Infinity" minWidth="-Infinity" />
+                                             </children>
+                                             <padding>
+                                                <Insets bottom="10.0" />
+                                             </padding>
+                                          </VBox>
+                                          <Button mnemonicParsing="false" onAction="#selectAllSectors" text="Entire Card" GridPane.rowIndex="4" />
+                                          <HBox alignment="TOP_RIGHT" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" GridPane.rowIndex="5">
+                                             <children>
+                                                <Button fx:id="writeCardData" mnemonicParsing="false" onAction="#writeSectors" prefHeight="40.0" prefWidth="135.0" styleClass="write-button" text="WRITE" />
+                                                <Button fx:id="readCardData" mnemonicParsing="false" onAction="#readSectors" prefHeight="40.0" prefWidth="144.0" styleClass="read-button" text="READ" />
+                                             </children>
+                                             <opaqueInsets>
+                                                <Insets />
+                                             </opaqueInsets>
+                                             <padding>
+                                                <Insets top="30.0" />
+                                             </padding>
+                                          </HBox>
+                                          <VBox alignment="BOTTOM_RIGHT" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" GridPane.hgrow="NEVER" GridPane.rowIndex="6">
+                                             <children>
+                                                <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#exportToXml" prefWidth="200.0" text="EXPORT DATA TO XML" VBox.vgrow="NEVER" />
+                                                <Button mnemonicParsing="false" onAction="#importFromXml" prefWidth="200.0" text="IMPORT DATA FROM XML" />
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </GridPane>
+                                    <TableView fx:id="dataTable" editable="true" minHeight="-Infinity" minWidth="-Infinity" styleClass="data-table" HBox.hgrow="ALWAYS">
 
                         </TableView>
-                              <Spinner fx:id="fromSector" layoutX="14.0" layoutY="87.0" prefHeight="27.0" prefWidth="297.0" />
-                              <Label layoutX="14.0" layoutY="64.0" text="From Sector:" />
-                              <Button fx:id="readCardData" layoutX="167.0" layoutY="259.0" mnemonicParsing="false" onAction="#readSectors" prefHeight="40.0" prefWidth="144.0" styleClass="read-button" text="READ" />
-                              <Label layoutX="14.0" layoutY="132.0" text="To Sector:" />
-                              <Spinner fx:id="toSector" layoutX="14.0" layoutY="149.0" prefHeight="27.0" prefWidth="297.0" />
-                              <Button layoutX="15.0" layoutY="199.0" mnemonicParsing="false" onAction="#selectAllSectors" text="Entire Card" />
-                              <Button fx:id="writeCardData" layoutX="14.0" layoutY="259.0" mnemonicParsing="false" onAction="#writeSectors" prefHeight="40.0" prefWidth="135.0" styleClass="write-button" text="WRITE" />
-                              <Label layoutX="16.0" layoutY="24.0" text="Display Data As:" />
-                              <Button layoutX="19.0" layoutY="592.0" mnemonicParsing="false" onAction="#exportToXml" prefHeight="27.0" prefWidth="167.0" text="EXPORT DATA TO XML" AnchorPane.bottomAnchor="61.0" AnchorPane.leftAnchor="19.0" />
-                              <Button layoutX="19.0" layoutY="631.0" mnemonicParsing="false" onAction="#importFromXml" prefHeight="27.0" prefWidth="167.0" text="IMPORT DATA FROM XML" AnchorPane.bottomAnchor="22.0" AnchorPane.leftAnchor="19.0" />
-                              <ToggleButton fx:id="displayDataAsHex" layoutX="117.0" layoutY="20.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="68.0" selected="true" text="HEX">
-                                 <toggleGroup>
-                                    <ToggleGroup fx:id="displayDataAs" />
-                                 </toggleGroup>
-                              </ToggleButton>
-                              <ToggleButton layoutX="195.0" layoutY="20.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="68.0" text="ASCII" toggleGroup="$displayDataAs" />
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                 </padding>
+                              </HBox>
                            </children>
                         </AnchorPane>
                   </content>

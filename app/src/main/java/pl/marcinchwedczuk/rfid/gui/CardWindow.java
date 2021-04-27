@@ -9,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -175,6 +176,9 @@ public class CardWindow implements Initializable {
             final int index = i;
             TableColumn<DataRow, Byte> dataColumn = new TableColumn<>("B" + i);
 
+            dataColumn.setPrefWidth(Region.USE_COMPUTED_SIZE);
+            dataColumn.setMaxWidth(Region.USE_COMPUTED_SIZE);
+            dataColumn.setMinWidth(Region.USE_PREF_SIZE);
             dataColumn.setCellValueFactory((TableColumn.CellDataFeatures<DataRow, Byte> row) -> {
                 DataRow dataRow = row.getValue();
 
