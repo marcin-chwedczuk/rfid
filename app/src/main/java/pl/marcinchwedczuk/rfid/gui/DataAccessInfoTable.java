@@ -69,7 +69,6 @@ public class DataAccessInfoTable {
         col.setCellValueFactory(new PropertyValueFactory<>(property));
         col.setSortable(false);
         col.setEditable(false);
-
         return col;
     }
 

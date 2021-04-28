@@ -191,9 +191,16 @@
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <HBox layoutX="22.0" layoutY="14.0" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" />
+                                  <ColumnConstraints hgrow="ALWAYS" maxWidth="800.0" minWidth="-Infinity" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="-Infinity" valignment="TOP" vgrow="ALWAYS" />
+                                </rowConstraints>
                                  <children>
-                                    <VBox minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" HBox.hgrow="NEVER">
+                                    <VBox minHeight="-Infinity" minWidth="-Infinity" spacing="10.0">
                                        <children>
                                           <HBox alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0">
                                              <children>
@@ -286,22 +293,22 @@
                                           <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                        </padding>
                                     </VBox>
-                                    <VBox minWidth="600.0" spacing="10.0" HBox.hgrow="ALWAYS">
+                                    <VBox spacing="10.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                                        <children>
-                                          <TitledPane animated="false" prefHeight="387.0" prefWidth="699.0" text="Access conditions for data  blocks:">
+                                          <TitledPane animated="false" collapsible="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="387.0" text="Access conditions for data  blocks:">
                                             <content>
                                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                    <children>
-                                                      <TableView fx:id="dataAccessInfo" layoutX="21.4" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                      <TableView fx:id="dataAccessInfo" layoutX="21.4" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                                    </children>
                                                 </AnchorPane>
                                             </content>
                                           </TitledPane>
-                                          <TitledPane animated="false" prefHeight="420.0" text="Access conditions for the sector trailer:">
+                                          <TitledPane animated="false" collapsible="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="420.0" text="Access conditions for the sector trailer:">
                                             <content>
                                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                    <children>
-                                                      <TableView fx:id="trailerAccessInfo" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                      <TableView fx:id="trailerAccessInfo" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                                    </children>
                                                 </AnchorPane>
                                             </content>
@@ -312,7 +319,7 @@
                                        </padding>
                                     </VBox>
                                  </children>
-                              </HBox>
+                              </GridPane>
                            </children>
                         </AnchorPane>
                     </content>
