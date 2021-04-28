@@ -28,11 +28,11 @@
 <?import pl.marcinchwedczuk.rfid.gui.KeyBox?>
 <?import pl.marcinchwedczuk.rfid.gui.MaskedTextField?>
 
-<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="998.0" prefWidth="1354.0" stylesheets="@CardWindow.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.marcinchwedczuk.rfid.gui.CardWindow">
+<AnchorPane stylesheets="@CardWindow.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.marcinchwedczuk.rfid.gui.CardWindow">
    <children>
-      <VBox layoutX="280.0" layoutY="55.0" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox layoutX="280.0" layoutY="55.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <MenuBar fx:id="menuBar" prefHeight="28.0" prefWidth="829.0" VBox.vgrow="NEVER">
+            <MenuBar fx:id="menuBar" VBox.vgrow="NEVER">
               <menus>
                 <Menu text="_Terminal">
                   <items>
@@ -48,7 +48,7 @@
                 </Menu>
               </menus>
             </MenuBar>
-            <GridPane prefHeight="26.0" prefWidth="432.0" VBox.vgrow="NEVER">
+            <GridPane VBox.vgrow="NEVER">
               <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" />
@@ -100,15 +100,15 @@
                   <Button mnemonicParsing="false" onAction="#loadDefaultFactoryKey" text="Load Default Factory Key" GridPane.columnIndex="10" />
                </children>
             </GridPane>
-            <TabPane minHeight="-Infinity" minWidth="-Infinity" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+            <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
               <tabs>
                 <Tab text="READ / WRITE">
                   <content>
-                    <AnchorPane minHeight="-Infinity" minWidth="-Infinity">
+                    <AnchorPane>
                            <children>
-                              <HBox layoutX="108.0" layoutY="151.0" minHeight="-Infinity" minWidth="-Infinity" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <HBox layoutX="108.0" layoutY="151.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
-                                    <GridPane minHeight="-Infinity" minWidth="-Infinity" HBox.hgrow="NEVER">
+                                    <GridPane HBox.hgrow="NEVER">
                                       <columnConstraints>
                                         <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" />
                                       </columnConstraints>
@@ -175,7 +175,7 @@
                                           </VBox>
                                        </children>
                                     </GridPane>
-                                    <TableView fx:id="dataTable" editable="true" minHeight="-Infinity" minWidth="-Infinity" styleClass="data-table" HBox.hgrow="ALWAYS">
+                                    <TableView fx:id="dataTable" editable="true" styleClass="data-table" HBox.hgrow="ALWAYS">
 
                         </TableView>
                                  </children>
@@ -189,7 +189,7 @@
                 </Tab>
                   <Tab text="SECURITY">
                     <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                      <AnchorPane>
                            <children>
                               <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                 <columnConstraints>
@@ -200,18 +200,18 @@
                                   <RowConstraints minHeight="-Infinity" valignment="TOP" vgrow="ALWAYS" />
                                 </rowConstraints>
                                  <children>
-                                    <VBox minHeight="-Infinity" minWidth="-Infinity" spacing="10.0">
+                                    <VBox spacing="10.0">
                                        <children>
-                                          <HBox alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0">
+                                          <HBox alignment="CENTER_LEFT" spacing="10.0">
                                              <children>
                                                 <Label text="Sector:" />
                                                 <MaskedTextField fx:id="secSector" mask="##" minHeight="-Infinity" minWidth="-Infinity" promptText="Sector" />
                                                 <Button mnemonicParsing="false" onAction="#secReadPermissions" prefHeight="26.0" prefWidth="250.0" text="Read Keys &amp; Permissions" />
                                              </children>
                                           </HBox>
-                                          <TitledPane animated="false" collapsible="false" minHeight="-Infinity" minWidth="-Infinity" text="KEYS">
+                                          <TitledPane animated="false" collapsible="false" text="KEYS">
                                             <content>
-                                              <AnchorPane minHeight="-Infinity" minWidth="-Infinity">
+                                              <AnchorPane>
                                                    <children>
                                                       <GridPane layoutX="76.0" layoutY="145.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                         <columnConstraints>
@@ -237,9 +237,9 @@
                                                 </AnchorPane>
                                             </content>
                                           </TitledPane>
-                                          <TitledPane animated="false" collapsible="false" minHeight="-Infinity" minWidth="-Infinity" text="PERMISSIONS">
+                                          <TitledPane animated="false" collapsible="false" text="PERMISSIONS">
                                             <content>
-                                              <AnchorPane minHeight="-Infinity" minWidth="-Infinity">
+                                              <AnchorPane>
                                                    <children>
                                                       <GridPane layoutX="37.0" layoutY="72.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                         <columnConstraints>
@@ -273,9 +273,9 @@
                                                 </AnchorPane>
                                             </content>
                                           </TitledPane>
-                                          <TitledPane animated="false" collapsible="false" prefHeight="86.0" prefWidth="521.0" text="SETTINGS">
+                                          <TitledPane animated="false" collapsible="false" text="SETTINGS">
                                             <content>
-                                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="90.0" prefWidth="512.0">
+                                              <AnchorPane>
                                                    <children>
                                                       <CheckBox layoutX="14.0" layoutY="21.0" mnemonicParsing="false" text="Ignore sectors that cannot be changed" />
                                                    </children>
@@ -284,8 +284,8 @@
                                           </TitledPane>
                                           <HBox alignment="CENTER_RIGHT" spacing="10.0">
                                              <children>
-                                                <Button alignment="CENTER" mnemonicParsing="false" onAction="#secWriteForEntireCard" prefHeight="50.0" prefWidth="239.0" styleClass="write-button" text="Write Permissions for &#10;Entire Card" />
-                                                <Button alignment="CENTER" mnemonicParsing="false" onAction="#secWriteForSector" prefHeight="50.0" prefWidth="271.0" styleClass="write-button" text="Write Permissions for &#10;Selected Sector Only" />
+                                                <Button alignment="CENTER" mnemonicParsing="false" onAction="#secWriteForEntireCard" prefHeight="50.0" prefWidth="240.0" styleClass="write-button" text="Write Permissions for &#10;Entire Card" />
+                                                <Button alignment="CENTER" mnemonicParsing="false" onAction="#secWriteForSector" prefHeight="50.0" prefWidth="240.0" styleClass="write-button" text="Write Permissions for &#10;Selected Sector Only" />
                                              </children>
                                           </HBox>
                                        </children>
@@ -295,20 +295,20 @@
                                     </VBox>
                                     <VBox spacing="10.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                                        <children>
-                                          <TitledPane animated="false" collapsible="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="387.0" text="Access conditions for data  blocks:">
+                                          <TitledPane animated="false" collapsible="false" text="Access conditions for data  blocks:" VBox.vgrow="ALWAYS">
                                             <content>
-                                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                              <AnchorPane>
                                                    <children>
-                                                      <TableView fx:id="dataAccessInfo" layoutX="21.4" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                      <TableView fx:id="dataAccessInfo" layoutX="21.4" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                                    </children>
                                                 </AnchorPane>
                                             </content>
                                           </TitledPane>
-                                          <TitledPane animated="false" collapsible="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="420.0" text="Access conditions for the sector trailer:">
+                                          <TitledPane animated="false" collapsible="false" text="Access conditions for the sector trailer:" VBox.vgrow="ALWAYS">
                                             <content>
-                                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                              <AnchorPane>
                                                    <children>
-                                                      <TableView fx:id="trailerAccessInfo" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                      <TableView fx:id="trailerAccessInfo" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                                    </children>
                                                 </AnchorPane>
                                             </content>

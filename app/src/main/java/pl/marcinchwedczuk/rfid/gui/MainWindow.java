@@ -60,11 +60,12 @@ public class MainWindow {
 
             Stage childWindow = new Stage();
             childWindow.setTitle("MIFARE 1K Tag Editor");
-            childWindow.setScene(new Scene(loader.load(), 1500, 1024));
+            childWindow.setScene(new Scene(loader.load()));
             childWindow.initModality(Modality.APPLICATION_MODAL);
             childWindow.initOwner(terminalsList.getScene().getWindow());
-            //childWindow.setMinWidth(1000);
-            //childWindow.setMinHeight(640);
+            childWindow.setMinWidth(1000);
+            childWindow.setMinHeight(640);
+            childWindow.setResizable(true);
 
             childWindow.setOnCloseRequest(we -> card.disconnect());
             ((CardWindow)loader.getController()).setCard(card);
@@ -103,15 +104,6 @@ public class MainWindow {
     }
 
     public void test(ActionEvent actionEvent) {
-        try {
-            String tmp = currentTerminal().get().getPiccOperatingParameter().toString();
-
-            FxDialogBoxes.info(tmp);
-        } catch (Exception e) {
-            e.printStackTrace();
-            FxDialogBoxes.error(
-                    "FAILURE",
-                    e.getMessage());
-        }
+        TestWindow.show();
     }
 }
