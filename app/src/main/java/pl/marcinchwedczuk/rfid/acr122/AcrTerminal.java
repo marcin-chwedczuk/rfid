@@ -13,7 +13,7 @@ import static java.util.stream.Collectors.toList;
 /**
  * {@code javax.smartcardio} wrapper for ACR122 reader.
  */
-public class AcrTerminal {
+public class AcrTerminal extends AcrTerminalCommands {
     private static final Logger logger = LogManager.getLogger(AcrTerminal.class);
     private static final byte FF = (byte)0xFF;
 
@@ -23,6 +23,24 @@ public class AcrTerminal {
         if (cardTerminal == null) throw new NullPointerException();
 
         this.cardTerminal = cardTerminal;
+    }
+
+    /**
+     * No card should be on reader while executing this command
+     * (DIRECT mode is used to connect).
+     */
+    protected byte[] sendCommandToTerminal(byte[] bytes) throws CardException {
+        // See: https://stackoverflow.com/a/29235803/1779504
+        // System specific see: https://github.com/leg0/libnfc/blob/master/libnfc/drivers/acr122_pcsc.c#L53
+        // macOS: https://github.com/pokusew/nfc-pcsc/issues/13#issuecomment-302482621
+        Card card = cardTerminal.connect("DIRECT");
+        try {
+            // card.getBasicChannel(); // Why?
+            return card.transmitControlCommand(
+                    PcScUtils.IOCTL_CCID_ESCAPE(), bytes);
+        } finally {
+            card.disconnect(false);
+        }
     }
 
     public String name() {
@@ -49,66 +67,6 @@ public class AcrTerminal {
             return new AcrCard(this, card);
         } catch (CardException e) {
             throw new AcrException(e);
-        }
-    }
-
-    /**
-     * No card should be on reader while executing this command
-     * (DIRECT mode is used to connect).
-     * @param bytes
-     * @return
-     * @throws CardException
-     */
-    private byte[] sendCommandToReader(byte[] bytes) throws CardException {
-        // See: https://stackoverflow.com/a/29235803/1779504
-        // System specific see: https://github.com/leg0/libnfc/blob/master/libnfc/drivers/acr122_pcsc.c#L53
-
-        // macOS: https://github.com/pokusew/nfc-pcsc/issues/13#issuecomment-302482621
-        Card card = cardTerminal.connect("DIRECT");
-        try {
-            card.getBasicChannel(); // Why?
-            return card.transmitControlCommand(
-                    IOCTL_CCID_ESCAPE(), bytes);
-        } finally {
-            card.disconnect(false);
-        }
-    }
-
-    final static int IOCTL_SMARTCARD_ACR122_ESCAPE_COMMAND = 0x003136B0;
-
-    public static final int SCARD_CTL_CODE(int command) {
-        boolean isWindows = System.getProperty("os.name").startsWith("Windows");
-        if (isWindows) {
-            return 0x00310000 | (command << 2);
-        } else {
-            return 0x42000000 | command;
-        }
-    }
-
-    static int IOCTL_CCID_ESCAPE()
-    {
-        boolean isWindows = System.getProperty("os.name").startsWith("Windows");
-        if (isWindows)
-        {
-            return SCARD_CTL_CODE(3500);
-        } else
-        {
-            return SCARD_CTL_CODE(1);
-        }
-    }
-
-    public PiccOperatingParameter getPiccOperatingParameter() {
-        byte[] commandBytes = new byte[] {
-                FF, 0x00, 0x50, 0x00, 0x00
-        };
-
-        try {
-            byte[] response = sendCommandToReader(commandBytes);
-
-            // Experiments say it's 0x90 dataByte, default value 0xFF
-            return PiccOperatingParameter.fromBitPattern(response[0]);
-        } catch (CardException e) {
-            throw AcrException.ofCardException(e);
         }
     }
 
