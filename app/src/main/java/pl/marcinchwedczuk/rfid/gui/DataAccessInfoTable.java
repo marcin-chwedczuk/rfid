@@ -3,6 +3,7 @@ package pl.marcinchwedczuk.rfid.gui;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Region;
 
 import java.util.function.Consumer;
 
@@ -68,6 +69,7 @@ public class DataAccessInfoTable {
         col.setCellValueFactory(new PropertyValueFactory<>(property));
         col.setSortable(false);
         col.setEditable(false);
+
         return col;
     }
 

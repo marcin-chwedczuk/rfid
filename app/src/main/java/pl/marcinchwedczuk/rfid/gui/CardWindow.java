@@ -176,9 +176,6 @@ public class CardWindow implements Initializable {
             final int index = i;
             TableColumn<DataRow, Byte> dataColumn = new TableColumn<>("B" + i);
 
-            dataColumn.setPrefWidth(Region.USE_COMPUTED_SIZE);
-            dataColumn.setMaxWidth(Region.USE_COMPUTED_SIZE);
-            dataColumn.setMinWidth(Region.USE_PREF_SIZE);
             dataColumn.setCellValueFactory((TableColumn.CellDataFeatures<DataRow, Byte> row) -> {
                 DataRow dataRow = row.getValue();
 
@@ -194,7 +191,7 @@ public class CardWindow implements Initializable {
             dataColumn.setEditable(true);
             dataColumn.setSortable(false);
             dataColumn.setMaxWidth(60.0);
-            dataColumn.setMinWidth(60.0);
+            dataColumn.setMinWidth(20.0);
             dataColumn.setCellFactory(l -> new DataRowByteTableCell(displayDataEncoding));
 
             dataColumns.add(dataColumn);

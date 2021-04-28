@@ -23,15 +23,14 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import pl.marcinchwedczuk.rfid.gui.KeyBox?>
 <?import pl.marcinchwedczuk.rfid.gui.MaskedTextField?>
 
-<AnchorPane minHeight="-Infinity" minWidth="-Infinity" stylesheets="@CardWindow.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.marcinchwedczuk.rfid.gui.CardWindow">
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="998.0" prefWidth="1354.0" stylesheets="@CardWindow.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.marcinchwedczuk.rfid.gui.CardWindow">
    <children>
-      <VBox layoutX="280.0" layoutY="55.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox layoutX="280.0" layoutY="55.0" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <MenuBar fx:id="menuBar" prefHeight="28.0" prefWidth="829.0" VBox.vgrow="NEVER">
               <menus>
@@ -194,44 +193,80 @@
                            <children>
                               <HBox layoutX="22.0" layoutY="14.0" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
-                                    <Pane minWidth="555.0" HBox.hgrow="NEVER">
+                                    <VBox minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" HBox.hgrow="NEVER">
                                        <children>
-                                          <Label layoutX="21.0" layoutY="28.0" text="Sector:" />
-                                          <MaskedTextField fx:id="secSector" layoutX="71.0" layoutY="23.0" mask="##" prefHeight="26.0" prefWidth="203.0" promptText="Sector" />
-                                          <Button layoutX="288.0" layoutY="23.0" mnemonicParsing="false" onAction="#secReadPermissions" prefHeight="26.0" prefWidth="250.0" text="Read Keys &amp; Permissions" />
-                                          <TitledPane animated="false" collapsible="false" layoutX="20.0" layoutY="71.0" prefHeight="159.0" prefWidth="521.0" text="KEYS">
+                                          <HBox alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0">
+                                             <children>
+                                                <Label text="Sector:" />
+                                                <MaskedTextField fx:id="secSector" mask="##" minHeight="-Infinity" minWidth="-Infinity" promptText="Sector" />
+                                                <Button mnemonicParsing="false" onAction="#secReadPermissions" prefHeight="26.0" prefWidth="250.0" text="Read Keys &amp; Permissions" />
+                                             </children>
+                                          </HBox>
+                                          <TitledPane animated="false" collapsible="false" minHeight="-Infinity" minWidth="-Infinity" text="KEYS">
                                             <content>
-                                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="151.0" prefWidth="519.0">
+                                              <AnchorPane minHeight="-Infinity" minWidth="-Infinity">
                                                    <children>
-                                                      <Label layoutX="12.0" layoutY="14.0" text="NOTE: Not readable key will be read as 6 zero bytes.&#10;" />
-                                                      <KeyBox fx:id="secKeyA" layoutX="64.0" layoutY="52.0" prefHeight="26.0" prefWidth="224.0" />
-                                                      <Label layoutX="15.0" layoutY="56.0" text="Key A:" />
-                                                      <KeyBox fx:id="secKeyB" layoutX="64.0" layoutY="89.0" prefHeight="26.0" prefWidth="224.0" />
-                                                      <Label layoutX="15.0" layoutY="94.0" text="Key B:" />
+                                                      <GridPane layoutX="76.0" layoutY="145.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                        <columnConstraints>
+                                                          <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" />
+                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
+                                                            <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" />
+                                                            <ColumnConstraints hgrow="ALWAYS" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
+                                                        </columnConstraints>
+                                                        <rowConstraints>
+                                                          <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                                          <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                                          <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                                        </rowConstraints>
+                                                         <children>
+                                                            <Label text="NOTE: Not readable key will be read as 6 zero bytes.&#10;" GridPane.columnSpan="2147483647" />
+                                                            <Label text="Key A:" GridPane.rowIndex="1" />
+                                                            <Label text="Key B:" GridPane.rowIndex="2" />
+                                                            <KeyBox fx:id="secKeyA" minHeight="-Infinity" minWidth="-Infinity" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                                            <KeyBox fx:id="secKeyB" minHeight="-Infinity" minWidth="-Infinity" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                                         </children>
+                                                      </GridPane>
                                                    </children>
                                                 </AnchorPane>
                                             </content>
                                           </TitledPane>
-                                          <TitledPane animated="false" collapsible="false" layoutX="21.0" layoutY="243.0" prefHeight="293.0" prefWidth="520.0" text="PERMISSIONS">
+                                          <TitledPane animated="false" collapsible="false" minHeight="-Infinity" minWidth="-Infinity" text="PERMISSIONS">
                                             <content>
-                                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="319.0" prefWidth="519.0">
+                                              <AnchorPane minHeight="-Infinity" minWidth="-Infinity">
                                                    <children>
-                                                      <Label layoutX="14.0" layoutY="108.0" text="Data Block 0:" />
-                                                      <ChoiceBox fx:id="secBlock0Perms" layoutX="99.0" layoutY="104.0" prefWidth="150.0" styleClass="cbits" />
-                                                      <Label layoutX="15.0" layoutY="141.0" text="Data Block 1:" />
-                                                      <ChoiceBox fx:id="secBlock1Perms" layoutX="99.0" layoutY="137.0" prefWidth="150.0" styleClass="cbits" />
-                                                      <Label layoutX="14.0" layoutY="177.0" text="Data Block 2:" />
-                                                      <ChoiceBox fx:id="secBlock2Perms" layoutX="99.0" layoutY="173.0" prefWidth="150.0" styleClass="cbits" />
-                                                      <Label layoutX="15.0" layoutY="228.0" text="Sector Trailer:" />
-                                                      <ChoiceBox fx:id="secTrailerPerms" layoutX="99.0" layoutY="224.0" prefWidth="150.0" styleClass="cbits" />
-                                                      <Label layoutX="15.0" layoutY="14.0" prefHeight="63.0" prefWidth="495.0" styleClass="permWarningText" text="Setting these values incorrectly may make your card unusable." wrapText="true" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0" />
+                                                      <GridPane layoutX="37.0" layoutY="72.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                        <columnConstraints>
+                                                          <ColumnConstraints halignment="CENTER" hgrow="NEVER" minWidth="-Infinity" />
+                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
+                                                            <ColumnConstraints halignment="CENTER" hgrow="NEVER" minWidth="-Infinity" />
+                                                            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="0.0" prefWidth="0.0" />
+                                                        </columnConstraints>
+                                                        <rowConstraints>
+                                                            <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
+                                                            <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints maxHeight="10.0" minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                        </rowConstraints>
+                                                         <children>
+                                                            <Label text="Data Block 0:" GridPane.rowIndex="2" />
+                                                            <ChoiceBox fx:id="secBlock0Perms" prefWidth="150.0" styleClass="cbits" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                                            <Label text="Data Block 1:" GridPane.rowIndex="3" />
+                                                            <ChoiceBox fx:id="secBlock1Perms" prefWidth="150.0" styleClass="cbits" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                                            <Label text="Data Block 2:" GridPane.rowIndex="4" />
+                                                            <ChoiceBox fx:id="secBlock2Perms" prefWidth="150.0" styleClass="cbits" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                                                            <Label text="Sector Trailer:" GridPane.rowIndex="6" />
+                                                            <ChoiceBox fx:id="secTrailerPerms" prefWidth="150.0" styleClass="cbits" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+                                                            <Label minHeight="-Infinity" minWidth="-Infinity" styleClass="permWarningText" text="Setting these values incorrectly may make your card unusable." wrapText="true" GridPane.columnSpan="2147483647" />
+                                                         </children>
+                                                      </GridPane>
                                                    </children>
                                                 </AnchorPane>
                                             </content>
                                           </TitledPane>
-                                          <Button alignment="CENTER" layoutX="21.0" layoutY="660.0" mnemonicParsing="false" onAction="#secWriteForEntireCard" prefHeight="50.0" prefWidth="239.0" styleClass="write-button" text="Write Permissions for &#10;Entire Card" />
-                                          <Button alignment="CENTER" layoutX="267.0" layoutY="660.0" mnemonicParsing="false" onAction="#secWriteForSector" prefHeight="50.0" prefWidth="271.0" styleClass="write-button" text="Write Permissions for &#10;Selected Sector Only" />
-                                          <TitledPane animated="false" collapsible="false" layoutX="21.0" layoutY="551.0" prefHeight="86.0" prefWidth="521.0" text="SETTINGS">
+                                          <TitledPane animated="false" collapsible="false" prefHeight="86.0" prefWidth="521.0" text="SETTINGS">
                                             <content>
                                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="90.0" prefWidth="512.0">
                                                    <children>
@@ -240,29 +275,41 @@
                                                 </AnchorPane>
                                             </content>
                                           </TitledPane>
+                                          <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                                             <children>
+                                                <Button alignment="CENTER" mnemonicParsing="false" onAction="#secWriteForEntireCard" prefHeight="50.0" prefWidth="239.0" styleClass="write-button" text="Write Permissions for &#10;Entire Card" />
+                                                <Button alignment="CENTER" mnemonicParsing="false" onAction="#secWriteForSector" prefHeight="50.0" prefWidth="271.0" styleClass="write-button" text="Write Permissions for &#10;Selected Sector Only" />
+                                             </children>
+                                          </HBox>
                                        </children>
-                                    </Pane>
-                                    <VBox fillWidth="false" minWidth="600.0" HBox.hgrow="NEVER">
+                                       <padding>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </padding>
+                                    </VBox>
+                                    <VBox minWidth="600.0" spacing="10.0" HBox.hgrow="ALWAYS">
                                        <children>
                                           <TitledPane animated="false" prefHeight="387.0" prefWidth="699.0" text="Access conditions for data  blocks:">
                                             <content>
                                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                    <children>
-                                                      <TableView fx:id="dataAccessInfo" layoutX="21.4" prefHeight="364.0" prefWidth="676.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                      <TableView fx:id="dataAccessInfo" layoutX="21.4" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                                    </children>
                                                 </AnchorPane>
                                             </content>
                                           </TitledPane>
-                                          <TitledPane animated="false" prefHeight="420.0" prefWidth="699.0" text="Access conditions for the sector trailer:">
+                                          <TitledPane animated="false" prefHeight="420.0" text="Access conditions for the sector trailer:">
                                             <content>
                                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                    <children>
-                                                      <TableView fx:id="trailerAccessInfo" prefHeight="406.0" prefWidth="591.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                      <TableView fx:id="trailerAccessInfo" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                                    </children>
                                                 </AnchorPane>
                                             </content>
                                           </TitledPane>
                                        </children>
+                                       <padding>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </padding>
                                     </VBox>
                                  </children>
                               </HBox>

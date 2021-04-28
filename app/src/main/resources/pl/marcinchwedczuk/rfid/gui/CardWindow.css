@@ -12,6 +12,10 @@
     -fx-background-color: #dedede;
 }
 
+.data-table .table-cell {
+    -fx-alignment: CENTER;
+}
+
 .table-cell {
     -fx-font-family: monospace;
     -fx-font-weight: bold;
