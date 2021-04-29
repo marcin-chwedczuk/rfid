@@ -6,9 +6,9 @@ import javafx.util.StringConverter;
 class DataRowByteStringConverter extends StringConverter<Byte> {
     private static final String NON_PRINTABLE_CHARACTER_PLACEHOLDER = "\uFFFD";
 
-    private final ReadOnlyObjectProperty<Encoding> encoding;
+    private final ReadOnlyObjectProperty<KeyForm> encoding;
 
-    DataRowByteStringConverter(ReadOnlyObjectProperty<Encoding> encoding) {
+    DataRowByteStringConverter(ReadOnlyObjectProperty<KeyForm> encoding) {
         this.encoding = encoding;
     }
 
@@ -18,7 +18,7 @@ class DataRowByteStringConverter extends StringConverter<Byte> {
             return "";
         }
 
-        return encoding.get() == Encoding.Hex
+        return encoding.get() == KeyForm.Hex
                 ? byteToHex(b)
                 : byteToPrintableAscii(b);
     }
@@ -29,7 +29,7 @@ class DataRowByteStringConverter extends StringConverter<Byte> {
             return null;
         }
 
-        return encoding.get() == Encoding.Hex
+        return encoding.get() == KeyForm.Hex
                 ? hexToByte(string)
                 : characterToByte(string);
     }

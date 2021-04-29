@@ -173,7 +173,6 @@ public class SettingsWindow implements Initializable {
         this.linkToBuzzerCB.setValue(Buzzer.BUZZER_DURING_T1);
     }
 
-
     @FXML
     public void sendBlinkBuzzCommand() {
         // Save Led & Buzzer
@@ -202,7 +201,7 @@ public class SettingsWindow implements Initializable {
     }
 
     @FXML
-    private void onCancel(ActionEvent actionEvent) {
+    private void onCancel() {
         closeWindow();
     }
 

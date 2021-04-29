@@ -1,10 +1,7 @@
 package pl.marcinchwedczuk.rfid.gui;
 
 import javafx.application.Platform;
-import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.css.PseudoClass;
-import javafx.scene.control.TableRow;
 import javafx.scene.control.cell.TextFieldTableCell;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,7 +11,7 @@ public class DataRowByteTableCell extends TextFieldTableCell<DataRow, Byte> {
 
     private final DataRowTableCellStylist stylist = new DataRowTableCellStylist();
 
-    public DataRowByteTableCell(ReadOnlyObjectProperty<Encoding> encoding) {
+    public DataRowByteTableCell(ReadOnlyObjectProperty<KeyForm> encoding) {
         super(new DataRowByteStringConverter(encoding));
     }
 

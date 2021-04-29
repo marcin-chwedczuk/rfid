@@ -17,7 +17,7 @@ public class KeyBox extends HBox implements Initializable {
     private final PseudoClass cssInvalid = PseudoClass.getPseudoClass("invalid");
 
     @FXML private MaskedTextField keyTextField;
-    @FXML private ChoiceBox<Encoding> modeMenu;
+    @FXML private ChoiceBox<KeyForm> modeMenu;
     @FXML private Tooltip validationTooltip;
 
     public KeyBox() {
@@ -38,10 +38,10 @@ public class KeyBox extends HBox implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        modeMenu.getItems().setAll(Encoding.values());
+        modeMenu.getItems().setAll(KeyForm.values());
 
         modeMenu.setOnAction(event -> {
-            Encoding current = modeMenu.getValue();
+            KeyForm current = modeMenu.getValue();
             modeChanged(current);
         });
 
@@ -78,17 +78,17 @@ public class KeyBox extends HBox implements Initializable {
         return ByteUtils.fromHexString(key, ":");
     }
 
-    public Encoding getEncoding() {
-        return Encoding.Hex;
+    public KeyForm getEncoding() {
+        return KeyForm.Hex;
     }
 
-    public void loadKey(String key, Encoding encoding) {
-        modeMenu.getSelectionModel().select(encoding);
+    public void loadKey(String key, KeyForm keyForm) {
+        modeMenu.getSelectionModel().select(keyForm);
         keyTextField.setPlainText(key);
         Platform.runLater(this::validate);
     }
 
-    private void modeChanged(Encoding text) {
+    private void modeChanged(KeyForm text) {
         // TODO: Attempt to convert text
         switch (text) {
             case Hex:

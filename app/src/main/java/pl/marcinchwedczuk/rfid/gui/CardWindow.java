@@ -10,7 +10,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -19,7 +18,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.marcinchwedczuk.rfid.gui.commands.*;
 import pl.marcinchwedczuk.rfid.acr122.*;
-import pl.marcinchwedczuk.rfid.acr122.PiccOperatingParameter.PoolingInterval;
 import pl.marcinchwedczuk.rfid.xml.XmlCardData;
 
 import java.io.File;
@@ -46,7 +44,7 @@ public class CardWindow implements Initializable {
     @FXML private KeyBox key;
     @FXML private ChoiceBox<SelectedKey> useAsKeyChoiceBox;
 
-    private final SimpleObjectProperty<Encoding> displayDataEncoding = new SimpleObjectProperty<>(Encoding.Hex);
+    private final SimpleObjectProperty<KeyForm> displayDataEncoding = new SimpleObjectProperty<>(KeyForm.Hex);
     @FXML private ToggleButton displayDataAsHex;
 
     @FXML private Spinner<Integer> fromSector;
@@ -81,7 +79,7 @@ public class CardWindow implements Initializable {
         useAsKeyChoiceBox.getItems().setAll(SelectedKey.values());
         useAsKeyChoiceBox.getSelectionModel().select(KEY_A);
 
-        key.loadKey("FF:FF:FF:FF:FF:FF", Encoding.Hex);
+        key.loadKey("FF:FF:FF:FF:FF:FF", KeyForm.Hex);
         secSector.setPlainText("0");
     }
 
@@ -99,7 +97,7 @@ public class CardWindow implements Initializable {
         initializeTableView();
 
         displayDataAsHex.selectedProperty().addListener((prop, oldValue, newValue) -> {
-            Encoding current = displayDataAsHex.isSelected() ? Encoding.Hex : Encoding.Ascii;
+            KeyForm current = displayDataAsHex.isSelected() ? KeyForm.Hex : KeyForm.Ascii;
             displayDataEncoding.setValue(current);
             dataTable.refresh();
         });
@@ -225,10 +223,10 @@ public class CardWindow implements Initializable {
 
     private byte[] getKeyBytes() {
         String keyString = key.getKey();
-        Encoding encoding = key.getEncoding();
+        KeyForm keyForm = key.getEncoding();
 
         try {
-            byte[] keyBytes = encoding == Encoding.Hex
+            byte[] keyBytes = keyForm == KeyForm.Hex
                     ? ByteUtils.fromHexString(keyString, ":")
                     : keyString.getBytes(StandardCharsets.US_ASCII);
 
@@ -277,7 +275,7 @@ public class CardWindow implements Initializable {
     }
 
     public void loadDefaultFactoryKey(ActionEvent actionEvent) {
-        key.loadKey("FF:FF:FF:FF:FF:FF", Encoding.Hex);
+        key.loadKey("FF:FF:FF:FF:FF:FF", KeyForm.Hex);
         useAsKeyChoiceBox.setValue(KEY_A);
     }
 
@@ -323,9 +321,9 @@ public class CardWindow implements Initializable {
 
         if (useAsKeyChoiceBox.getValue() == KEY_A) {
             secKeyA.loadKey(key.getKey(), key.getEncoding());
-            secKeyB.loadKey(trailerBlock.keyBHexString(), Encoding.Hex);
+            secKeyB.loadKey(trailerBlock.keyBHexString(), KeyForm.Hex);
         } else {
-            secKeyA.loadKey(trailerBlock.keyAHexString(), Encoding.Hex);
+            secKeyA.loadKey(trailerBlock.keyAHexString(), KeyForm.Hex);
             secKeyB.loadKey(key.getKey(), key.getEncoding());
         }
     }

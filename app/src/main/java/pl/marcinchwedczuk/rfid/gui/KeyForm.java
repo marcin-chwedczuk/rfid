@@ -1,5 +1,5 @@
 package pl.marcinchwedczuk.rfid.gui;
 
-public enum Encoding {
+public enum KeyForm {
     Hex, Ascii
 }
