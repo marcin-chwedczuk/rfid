@@ -104,19 +104,7 @@ public class MainWindow {
     }
 
     public void test(ActionEvent actionEvent) {
-        try {
-            String firmware =
-                    currentTerminal().get().getReaderFirmwareVersion();
-            FxDialogBoxes.info(firmware);
-
-            String picc =
-            currentTerminal().get().readPiccOperatingParameter().toString();
-            FxDialogBoxes.info(picc);
-
-
-            currentTerminal().get().configureBuzzerOnCartDetection(false);
-        } catch (Exception e) {
-            FxDialogBoxes.exception(e);
-        }
+        // TODO: Check terminal not present disable menu
+        SettingsWindow.show(currentTerminal().get());
     }
 }

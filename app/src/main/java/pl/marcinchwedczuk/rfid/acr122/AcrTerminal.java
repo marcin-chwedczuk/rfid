@@ -30,12 +30,17 @@ public class AcrTerminal extends AcrTerminalCommands {
      * (DIRECT mode is used to connect).
      */
     protected byte[] sendCommandToTerminal(byte[] bytes) throws CardException {
+        if (isCardPresent()) {
+            // TODO: Switch to card mode when card is present
+            throw new IllegalStateException(
+                    "This method can only be called when card is not present on the terminal.");
+        }
+
         // See: https://stackoverflow.com/a/29235803/1779504
         // System specific see: https://github.com/leg0/libnfc/blob/master/libnfc/drivers/acr122_pcsc.c#L53
         // macOS: https://github.com/pokusew/nfc-pcsc/issues/13#issuecomment-302482621
         Card card = cardTerminal.connect("DIRECT");
         try {
-            // card.getBasicChannel(); // Why?
             return card.transmitControlCommand(
                     PcScUtils.IOCTL_CCID_ESCAPE(), bytes);
         } finally {

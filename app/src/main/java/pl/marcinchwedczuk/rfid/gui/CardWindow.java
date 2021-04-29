@@ -375,7 +375,8 @@ public class CardWindow implements Initializable {
         }
     }
 
-    public void showSettingsDialog(ActionEvent unused) {
+    @FXML
+    private void showSettingsDialog() {
         SettingsWindow.show(card);
     }
 }

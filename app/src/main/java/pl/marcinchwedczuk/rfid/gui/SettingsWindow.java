@@ -12,14 +12,11 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import pl.marcinchwedczuk.rfid.acr122.AcrCard;
-import pl.marcinchwedczuk.rfid.acr122.LedBuzzerSettings;
+import pl.marcinchwedczuk.rfid.acr122.*;
 import pl.marcinchwedczuk.rfid.acr122.LedBuzzerSettings.Buzzer;
-import pl.marcinchwedczuk.rfid.acr122.LedSettings;
 import pl.marcinchwedczuk.rfid.acr122.LedSettings.LedBlinkingMask;
 import pl.marcinchwedczuk.rfid.acr122.LedSettings.LedState;
 import pl.marcinchwedczuk.rfid.acr122.LedSettings.StateMask;
-import pl.marcinchwedczuk.rfid.acr122.PiccOperatingParameter;
 import pl.marcinchwedczuk.rfid.acr122.PiccOperatingParameter.EnableDisable;
 import pl.marcinchwedczuk.rfid.acr122.PiccOperatingParameter.PoolingInterval;
 import pl.marcinchwedczuk.rfid.acr122.PiccOperatingParameter.SkipDetect;
@@ -58,7 +55,7 @@ public class SettingsWindow implements Initializable {
     @FXML private ChoiceBox<SkipDetect> isoTypeB_CB;
     @FXML private ChoiceBox<SkipDetect> isoTypeA_CB;
 
-    private AcrCard card;
+    private AcrTerminalCommands terminalCommands;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -89,11 +86,11 @@ public class SettingsWindow implements Initializable {
         enumChoiceBox(isoTypeA_CB, SkipDetect.values());
     }
 
-    public void setCard(AcrCard card) {
-        this.card = card;
+    public void setTerminalCommands(AcrTerminalCommands terminalCommands) {
+        this.terminalCommands = terminalCommands;
 
         try {
-            PiccOperatingParameter picc = card.readPiccOperatingParameter();
+            PiccOperatingParameter picc = terminalCommands.readPiccOperatingParameter();
             setPiccOperatingParameter(picc);
         } catch (Exception e) {
             logger.error("Error while getting picc parameter.", e);
@@ -134,35 +131,15 @@ public class SettingsWindow implements Initializable {
     }
 
     private void loadDefaultsForBuzzerSettings() {
-        this.t1Spinner.getValueFactory().setValue(5);
-        this.t2Spinner.getValueFactory().setValue(10);
+        this.t1Spinner.getValueFactory().setValue(3);
+        this.t2Spinner.getValueFactory().setValue(3);
 
-        this.repetitionsSpinner.getValueFactory().setValue(3);
-        this.linkToBuzzerCB.setValue(Buzzer.BUZZER_DISABLED);
+        this.repetitionsSpinner.getValueFactory().setValue(1);
+        this.linkToBuzzerCB.setValue(Buzzer.BUZZER_DURING_T1);
     }
 
-    public static SettingsWindow show(AcrCard card) {
-        try {
-            FXMLLoader loader = new FXMLLoader(
-                SettingsWindow.class.getResource("/pl/marcinchwedczuk/rfid/gui/SettingsWindow.fxml"));
-
-            Stage childWindow = new Stage();
-            childWindow.setTitle("ACR122U Settings...");
-            childWindow.setScene(new Scene(loader.load()));
-            childWindow.initModality(Modality.APPLICATION_MODAL);
-            childWindow.setResizable(false);
-
-            SettingsWindow controller = (SettingsWindow)loader.getController();
-            controller.setCard(card);
-
-            childWindow.show();
-            return controller;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void onSave(ActionEvent actionEvent) {
+    @FXML
+    private void onSave() {
         PiccOperatingParameter picc = new PiccOperatingParameter();
         picc.setAutoPiccPolling(this.autoPiccPoolingCB.getValue());
         picc.setAutoAtsGeneration(this.autoAtsGenerationCB.getValue());
@@ -200,21 +177,42 @@ public class SettingsWindow implements Initializable {
 
 
         try {
-            card.configureLedAndBuzzer(newSettings);
+            terminalCommands.configureLedAndBuzzer(newSettings);
             FxDialogBoxes.info("DONE");
         } catch (Exception e) {
             FxDialogBoxes.exception(e);
-            return;
         }
     }
 
-    public void onCancel(ActionEvent actionEvent) {
+    @FXML
+    private void onCancel(ActionEvent actionEvent) {
         closeWindow();
     }
 
-    private void closeWindow() {
+    public void closeWindow() {
         final Stage stage = (Stage) finalRedLedCB.getScene().getWindow();
         stage.close();
+    }
+
+    public static SettingsWindow show(AcrTerminalCommands card) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    SettingsWindow.class.getResource("/pl/marcinchwedczuk/rfid/gui/SettingsWindow.fxml"));
+
+            Stage childWindow = new Stage();
+            childWindow.setTitle("ACR122U Settings...");
+            childWindow.setScene(new Scene(loader.load()));
+            childWindow.initModality(Modality.APPLICATION_MODAL);
+            childWindow.setResizable(false);
+
+            SettingsWindow controller = (SettingsWindow)loader.getController();
+            controller.setTerminalCommands(card);
+
+            childWindow.show();
+            return controller;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static <E extends Enum<E>>
