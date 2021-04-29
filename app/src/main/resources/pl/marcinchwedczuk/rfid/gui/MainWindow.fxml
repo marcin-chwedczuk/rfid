@@ -57,7 +57,7 @@
                   </Menu>
                 <Menu text="_Terminal">
                   <items>
-                    <MenuItem onAction="#test" text="Test" />
+                    <MenuItem fx:id="settingsMenuItem" onAction="#showSettings" text="Settings..." />
                   </items>
                 </Menu>
                   <Menu text="_Help">

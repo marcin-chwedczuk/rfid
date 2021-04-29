@@ -1,31 +1,47 @@
 package pl.marcinchwedczuk.rfid.gui;
 
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import pl.marcinchwedczuk.rfid.acr122.*;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MainWindow {
-    @FXML public ComboBox<AcrTerminal> terminalsList;
-    @FXML public Label infoScreen;
-
-    private final Timer timer = new Timer(true);
-    private Optional<Stage> cartWindow = Optional.empty();
+public class MainWindow implements Initializable {
+    @FXML
+    private ComboBox<AcrTerminal> terminalsList;
 
     @FXML
-    public void initialize() {
-        refreshTerminalList(null);
+    private Label infoScreen;
+
+    @FXML
+    private MenuItem settingsMenuItem;
+
+    private final Timer timer = new Timer(true);
+    private CardWindow cartWindow = null;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        settingsMenuItem.disableProperty().bind(Bindings.createBooleanBinding(
+                () -> terminalsList.getValue() == null,
+                terminalsList.valueProperty()));
+
+        refreshTerminalList();
 
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -38,46 +54,21 @@ public class MainWindow {
     }
 
     private void checkCardStateChanged() {
-        currentTerminal().ifPresent(
-                terminal -> {
-                    if (!terminal.isCardPresent()) {
-                        cartWindow.ifPresent(stage -> stage.close());
-                        cartWindow = Optional.empty();
-                    } else {
-                        if (cartWindow.isEmpty()) {
-                            cartWindow = Optional.of(showCardWindow());
-                        }
-                    }
-                });
-    }
-
-    private Stage showCardWindow() {
-        AcrCard card = currentTerminal().get().connect();
-
-        try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/pl/marcinchwedczuk/rfid/gui/CardWindow.fxml"));
-
-            Stage childWindow = new Stage();
-            childWindow.setTitle("MIFARE 1K Tag Editor");
-            childWindow.setScene(new Scene(loader.load()));
-            childWindow.initModality(Modality.APPLICATION_MODAL);
-            childWindow.initOwner(terminalsList.getScene().getWindow());
-            childWindow.setMinWidth(1000);
-            childWindow.setMinHeight(640);
-            childWindow.setResizable(true);
-
-            childWindow.setOnCloseRequest(we -> card.disconnect());
-            ((CardWindow)loader.getController()).setCard(card);
-
-            childWindow.show();
-            return childWindow;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        AcrTerminal terminal = currentTerminal();
+        if (terminal == null || !terminal.isCardPresent()) {
+            if (cartWindow != null) {
+                cartWindow.closeWindow();
+                cartWindow = null;
+            }
+        } else {
+            if (cartWindow == null) {
+                cartWindow = showCardWindow(terminal);
+            }
         }
     }
 
-    public void refreshTerminalList(ActionEvent actionEvent) {
+    @FXML
+    private void refreshTerminalList() {
         infoScreen.setText("Select terminal to start...");
 
         terminalsList.getItems().clear();
@@ -91,20 +82,33 @@ public class MainWindow {
         }
     }
 
-    private Optional<AcrTerminal> currentTerminal() {
-        return Optional.ofNullable(terminalsList.getSelectionModel().getSelectedItem());
-    }
-
-    public void closeMainWindow(ActionEvent actionEvent) {
+    @FXML
+    private void closeMainWindow() {
+        timer.cancel();
         Platform.exit();
     }
 
-    public void showAboutDialog(ActionEvent actionEvent) {
+    @FXML
+    private void showAboutDialog() {
         AboutWindow.show();
     }
 
-    public void test(ActionEvent actionEvent) {
+    @FXML
+    private void showSettings() {
         // TODO: Check terminal not present disable menu
-        SettingsWindow.show(currentTerminal().get());
+        SettingsWindow.show(currentTerminal());
+    }
+
+    private AcrTerminal currentTerminal() {
+        return terminalsList.getSelectionModel().getSelectedItem();
+    }
+
+    private CardWindow showCardWindow(AcrTerminal terminal) {
+        AcrCard card = terminal.connect();
+        return CardWindow.show(card, getWindow());
+    }
+
+    private Window getWindow() {
+        return terminalsList.getScene().getWindow();
     }
 }

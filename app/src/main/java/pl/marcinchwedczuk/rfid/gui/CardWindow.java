@@ -5,12 +5,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.marcinchwedczuk.rfid.gui.commands.*;
@@ -19,6 +23,7 @@ import pl.marcinchwedczuk.rfid.acr122.PiccOperatingParameter.PoolingInterval;
 import pl.marcinchwedczuk.rfid.xml.XmlCardData;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -379,4 +384,38 @@ public class CardWindow implements Initializable {
     private void showSettingsDialog() {
         SettingsWindow.show(card);
     }
+
+    public void closeWindow() {
+        ((Stage)getScene().getWindow()).close();
+    }
+
+    public static CardWindow show(AcrCard card, Window owner) {
+
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    CardWindow.class.getResource("/pl/marcinchwedczuk/rfid/gui/CardWindow.fxml"));
+
+            Stage childWindow = new Stage();
+            childWindow.setTitle("MIFARE 1K Tag Editor");
+            childWindow.setScene(new Scene(loader.load()));
+            childWindow.initModality(Modality.APPLICATION_MODAL);
+            childWindow.initOwner(owner);
+            childWindow.setMinWidth(640);
+            childWindow.setMinHeight(480);
+            childWindow.setResizable(true);
+
+            childWindow.setOnCloseRequest(we -> card.disconnect());
+
+            CardWindow controller = (CardWindow)loader.getController();
+            controller.setCard(card);
+
+            childWindow.sizeToScene();
+            childWindow.show();
+
+            return controller;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

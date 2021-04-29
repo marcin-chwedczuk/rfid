@@ -117,6 +117,27 @@ public class SettingsWindow implements Initializable {
         setPiccOperatingParameter(picc);
     }
 
+    @FXML
+    private void savePICC() {
+        PiccOperatingParameter picc = new PiccOperatingParameter();
+        picc.setAutoPiccPolling(this.autoPiccPoolingCB.getValue());
+        picc.setAutoAtsGeneration(this.autoAtsGenerationCB.getValue());
+        picc.setPollingInterval(this.pollingIntervalCB.getValue());
+        picc.setFeliCa424K(this.feliCa424KCB.getValue());
+        picc.setFeliCa212K(this.feliCa212KCB.getValue());
+        picc.setTopaz(this.topazCB.getValue());
+        picc.setIso14443TypeB(this.isoTypeB_CB.getValue());
+        picc.setIso14443TypeA(this.isoTypeA_CB.getValue());
+
+        try {
+            terminalCommands.savePiccOperatingParameter(picc);
+            FxDialogBoxes.info("PICC parameters were changed!");
+        } catch (Exception e) {
+            FxDialogBoxes.exception(e);
+        }
+    }
+
+
     private void setPiccOperatingParameter(PiccOperatingParameter parameter) {
         this.autoPiccPoolingCB.setValue(parameter.getAutoPiccPolling());
         this.autoAtsGenerationCB.setValue(parameter.getAutoAtsGeneration());
@@ -152,10 +173,6 @@ public class SettingsWindow implements Initializable {
         this.linkToBuzzerCB.setValue(Buzzer.BUZZER_DURING_T1);
     }
 
-    @FXML
-    private void onCancel(ActionEvent actionEvent) {
-        closeWindow();
-    }
 
     @FXML
     public void sendBlinkBuzzCommand() {
@@ -184,25 +201,9 @@ public class SettingsWindow implements Initializable {
         }
     }
 
-
     @FXML
-    private void savePICC() {
-        PiccOperatingParameter picc = new PiccOperatingParameter();
-        picc.setAutoPiccPolling(this.autoPiccPoolingCB.getValue());
-        picc.setAutoAtsGeneration(this.autoAtsGenerationCB.getValue());
-        picc.setPollingInterval(this.pollingIntervalCB.getValue());
-        picc.setFeliCa424K(this.feliCa424KCB.getValue());
-        picc.setFeliCa212K(this.feliCa212KCB.getValue());
-        picc.setTopaz(this.topazCB.getValue());
-        picc.setIso14443TypeB(this.isoTypeB_CB.getValue());
-        picc.setIso14443TypeA(this.isoTypeA_CB.getValue());
-
-        try {
-            terminalCommands.savePiccOperatingParameter(picc);
-            FxDialogBoxes.info("PICC parameters were changed!");
-        } catch (Exception e) {
-            FxDialogBoxes.exception(e);
-        }
+    private void onCancel(ActionEvent actionEvent) {
+        closeWindow();
     }
 
     public void closeWindow() {
