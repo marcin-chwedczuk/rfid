@@ -1,5 +1,7 @@
 package pl.marcinchwedczuk.rfid.acr122;
 
+import javax.smartcardio.CardException;
+
 public class AcrStandardErrors {
     private AcrStandardErrors() { }
 
@@ -19,5 +21,9 @@ public class AcrStandardErrors {
 
     public static AcrException operationFailed() {
         return new AcrException("The operation failed.");
+    }
+
+    public static AcrException escapeCommandNotEnabled() {
+        return new AcrException("PC/SC Escape command is not allowed.");
     }
 }

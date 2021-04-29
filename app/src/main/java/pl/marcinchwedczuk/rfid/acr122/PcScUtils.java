@@ -1,5 +1,7 @@
 package pl.marcinchwedczuk.rfid.acr122;
 
+import javax.smartcardio.CardException;
+
 public class PcScUtils {
     private PcScUtils() {
     }
@@ -24,5 +26,16 @@ public class PcScUtils {
         boolean isWindows =
                 System.getProperty("os.name").startsWith("Windows");
         return isWindows;
+    }
+
+    public static boolean isEscapeCommandNotEnabled(CardException e) {
+        // TODO: Test this on Windows & Linux
+        if (e.getCause() != null &&
+                e.getCause().getClass().getName().equals("sun.security.smartcardio.PCSCException") &&
+                e.getCause().getMessage().contains("SCARD_E_NOT_TRANSACTED")) {
+            return true;
+        }
+
+        return false;
     }
 }

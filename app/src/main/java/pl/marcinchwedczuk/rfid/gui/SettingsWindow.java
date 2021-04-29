@@ -1,5 +1,6 @@
 package pl.marcinchwedczuk.rfid.gui;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,8 +9,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.TitledPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.marcinchwedczuk.rfid.acr122.*;
@@ -24,6 +27,7 @@ import pl.marcinchwedczuk.rfid.acr122.PiccOperatingParameter.SkipDetect;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 
 
 public class SettingsWindow implements Initializable {
@@ -55,6 +59,8 @@ public class SettingsWindow implements Initializable {
     @FXML private ChoiceBox<SkipDetect> isoTypeB_CB;
     @FXML private ChoiceBox<SkipDetect> isoTypeA_CB;
 
+    @FXML private TitledPane remarksPane;
+
     private AcrTerminalCommands terminalCommands;
 
     @Override
@@ -84,23 +90,31 @@ public class SettingsWindow implements Initializable {
         enumChoiceBox(topazCB, SkipDetect.values());
         enumChoiceBox(isoTypeB_CB, SkipDetect.values());
         enumChoiceBox(isoTypeA_CB, SkipDetect.values());
+
+        remarksPane.expandedProperty().addListener((prop, oldValue, isAnimated) -> {
+            Platform.runLater(() -> getStage().sizeToScene());
+        });
     }
 
     public void setTerminalCommands(AcrTerminalCommands terminalCommands) {
         this.terminalCommands = terminalCommands;
 
-        try {
-            PiccOperatingParameter picc = terminalCommands.readPiccOperatingParameter();
-            setPiccOperatingParameter(picc);
-        } catch (Exception e) {
-            logger.error("Error while getting picc parameter.", e);
-            closeWindow();
-
-            FxDialogBoxes.error("Cannot read PICC Operating parameter.");
-        }
-
+        refreshPICC();
         loadDefaultsForLedSettings();
         loadDefaultsForBuzzerSettings();
+    }
+
+    @FXML
+    private void refreshPICC() {
+        PiccOperatingParameter picc;
+        try {
+            picc = terminalCommands.readPiccOperatingParameter();
+        } catch (Exception e) {
+            FxDialogBoxes.error("Cannot read PICC parameter.", e.getMessage());
+            return;
+        }
+
+        setPiccOperatingParameter(picc);
     }
 
     private void setPiccOperatingParameter(PiccOperatingParameter parameter) {
@@ -139,24 +153,12 @@ public class SettingsWindow implements Initializable {
     }
 
     @FXML
-    private void onSave() {
-        PiccOperatingParameter picc = new PiccOperatingParameter();
-        picc.setAutoPiccPolling(this.autoPiccPoolingCB.getValue());
-        picc.setAutoAtsGeneration(this.autoAtsGenerationCB.getValue());
-        picc.setPollingInterval(this.pollingIntervalCB.getValue());
-        picc.setFeliCa424K(this.feliCa424KCB.getValue());
-        picc.setFeliCa212K(this.feliCa212KCB.getValue());
-        picc.setTopaz(this.topazCB.getValue());
-        picc.setIso14443TypeB(this.isoTypeB_CB.getValue());
-        picc.setIso14443TypeA(this.isoTypeA_CB.getValue());
+    private void onCancel(ActionEvent actionEvent) {
+        closeWindow();
+    }
 
-        try {
-            //card.savePiccOperatingParameter(picc);
-        } catch (Exception e) {
-            FxDialogBoxes.exception(e);
-            return;
-        }
-
+    @FXML
+    public void sendBlinkBuzzCommand() {
         // Save Led & Buzzer
         LedBuzzerSettings newSettings = new LedBuzzerSettings();
         newSettings.setT1(t1Spinner.getValue());
@@ -175,23 +177,53 @@ public class SettingsWindow implements Initializable {
         ledSettings.setBlinkingMaskRedLED(this.blinkingMaskRedLedCB.getValue());
         ledSettings.setBlinkingMaskGreenLED(this.blinkingMaskGreenLedCB.getValue());
 
-
         try {
             terminalCommands.configureLedAndBuzzer(newSettings);
-            FxDialogBoxes.info("DONE");
         } catch (Exception e) {
             FxDialogBoxes.exception(e);
         }
     }
 
+
     @FXML
-    private void onCancel(ActionEvent actionEvent) {
-        closeWindow();
+    private void savePICC() {
+        PiccOperatingParameter picc = new PiccOperatingParameter();
+        picc.setAutoPiccPolling(this.autoPiccPoolingCB.getValue());
+        picc.setAutoAtsGeneration(this.autoAtsGenerationCB.getValue());
+        picc.setPollingInterval(this.pollingIntervalCB.getValue());
+        picc.setFeliCa424K(this.feliCa424KCB.getValue());
+        picc.setFeliCa212K(this.feliCa212KCB.getValue());
+        picc.setTopaz(this.topazCB.getValue());
+        picc.setIso14443TypeB(this.isoTypeB_CB.getValue());
+        picc.setIso14443TypeA(this.isoTypeA_CB.getValue());
+
+        try {
+            terminalCommands.savePiccOperatingParameter(picc);
+            FxDialogBoxes.info("PICC parameters were changed!");
+        } catch (Exception e) {
+            FxDialogBoxes.exception(e);
+        }
     }
 
     public void closeWindow() {
-        final Stage stage = (Stage) finalRedLedCB.getScene().getWindow();
-        stage.close();
+        Stage stage = getStage();
+        if (stage != null) {
+            stage.close();
+        }
+    }
+
+    private Stage getStage() {
+        Scene scene = finalRedLedCB.getScene();
+        if (scene == null) {
+            return null;
+        }
+
+        Window window = scene.getWindow();
+        if (window == null) {
+            return null;
+        }
+
+        return (Stage)window;
     }
 
     public static SettingsWindow show(AcrTerminalCommands card) {
@@ -207,6 +239,7 @@ public class SettingsWindow implements Initializable {
 
             SettingsWindow controller = (SettingsWindow)loader.getController();
             controller.setTerminalCommands(card);
+            childWindow.sizeToScene();
 
             childWindow.show();
             return controller;

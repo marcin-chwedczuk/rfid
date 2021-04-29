@@ -43,6 +43,11 @@ public class AcrTerminal extends AcrTerminalCommands {
         try {
             return card.transmitControlCommand(
                     PcScUtils.IOCTL_CCID_ESCAPE(), bytes);
+        } catch (CardException e) {
+            if (PcScUtils.isEscapeCommandNotEnabled(e)) {
+                throw AcrStandardErrors.escapeCommandNotEnabled();
+            }
+            throw e;
         } finally {
             card.disconnect(false);
         }
