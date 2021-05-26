@@ -1,6 +1,6 @@
 # Project status
 
-![Build Status](https://github.com/marcin-chwedczuk/rfid/actions/workflows/basic-ci.yaml/badge.svg)
+![Build Status](https://github.com/marcin-chwedczuk/rfid/actions/workflows/ci.yaml/badge.svg)
 
 # How to run?
 
