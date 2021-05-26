@@ -16,8 +16,8 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import pl.marcinchwedczuk.rfid.card.acr122.*;
 import pl.marcinchwedczuk.rfid.gui.commands.*;
-import pl.marcinchwedczuk.rfid.acr122.*;
 import pl.marcinchwedczuk.rfid.xml.XmlCardData;
 
 import java.io.File;
@@ -30,8 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import static pl.marcinchwedczuk.rfid.acr122.KeyRegister.REGISTER_0;
-import static pl.marcinchwedczuk.rfid.acr122.SelectedKey.KEY_A;
+import static pl.marcinchwedczuk.rfid.card.acr122.KeyRegister.REGISTER_0;
+import static pl.marcinchwedczuk.rfid.card.acr122.SelectedKey.KEY_A;
 
 public class CardWindow implements Initializable {
     private static Logger logger = LogManager.getLogger(CardWindow.class);

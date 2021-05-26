@@ -1,4 +1,4 @@
-module pl.marcinchwedczuk {
+module pl.marcinchwedczuk.rfid {
     requires javafx.controls;
     requires javafx.fxml;
 
@@ -12,7 +12,8 @@ module pl.marcinchwedczuk {
     requires com.fasterxml.jackson.databind;
     requires java.management;
 
-    requires pl.marcinchwedczuk.rfid.acr122;
+    requires pl.marcinchwedczuk.rfid.card.api;
+    requires pl.marcinchwedczuk.rfid.card.acr122;
 
     exports pl.marcinchwedczuk.rfid.gui;
 

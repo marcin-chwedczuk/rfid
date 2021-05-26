@@ -2,8 +2,8 @@ package pl.marcinchwedczuk.rfid.gui.commands;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import pl.marcinchwedczuk.rfid.card.acr122.*;
 import pl.marcinchwedczuk.rfid.gui.DataRow;
-import pl.marcinchwedczuk.rfid.acr122.*;
 
 import java.util.Arrays;
 import java.util.List;

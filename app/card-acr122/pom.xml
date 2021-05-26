@@ -13,7 +13,7 @@
 
     <properties>
         <extra-jvm-options-when-running-tests>
-            --add-opens pl.marcinchwedczuk.rfid.acr122/pl.marcinchwedczuk.rfid.acr122=ALL-UNNAMED
+            --add-opens pl.marcinchwedczuk.rfid.card.acr122/pl.marcinchwedczuk.rfid.card.acr122=ALL-UNNAMED
         </extra-jvm-options-when-running-tests>
     </properties>
 

@@ -19,7 +19,8 @@ For all other operating systems, the above line must be commented out.
 
 To start application simply run:
 ```
-$ ./mvnw javafx:run
+$ ./mvnw clean install
+$ ./mvnw javafx:run -pl gui
 ```
 
 I tested the app with both JDK 11 and JDK 14.

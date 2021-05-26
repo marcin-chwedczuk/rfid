@@ -1,8 +1,8 @@
 package pl.marcinchwedczuk.rfid.gui;
 
-import pl.marcinchwedczuk.rfid.acr122.Block;
-import pl.marcinchwedczuk.rfid.acr122.ByteUtils;
-import pl.marcinchwedczuk.rfid.acr122.Sector;
+import pl.marcinchwedczuk.rfid.card.acr122.Block;
+import pl.marcinchwedczuk.rfid.card.acr122.ByteUtils;
+import pl.marcinchwedczuk.rfid.card.acr122.Sector;
 
 import java.util.Arrays;
 import java.util.Objects;

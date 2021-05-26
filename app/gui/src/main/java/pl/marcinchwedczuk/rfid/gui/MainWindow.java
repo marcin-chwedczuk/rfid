@@ -8,7 +8,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Window;
-import pl.marcinchwedczuk.rfid.acr122.*;
+import pl.marcinchwedczuk.rfid.card.acr122.AcrCard;
+import pl.marcinchwedczuk.rfid.card.acr122.AcrTerminal;
 
 import java.net.URL;
 import java.util.ResourceBundle;

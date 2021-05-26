@@ -7,7 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import pl.marcinchwedczuk.rfid.acr122.ByteUtils;
+import pl.marcinchwedczuk.rfid.card.acr122.ByteUtils;
 
 import java.io.IOException;
 import java.net.URL;

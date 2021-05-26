@@ -13,7 +13,7 @@
 
     <properties>
         <extra-jvm-options-when-running-tests>
-            --add-opens pl.marcinchwedczuk/pl.marcinchwedczuk.rfid.xml=ALL-UNNAMED
+            --add-opens pl.marcinchwedczuk.rfid/pl.marcinchwedczuk.rfid.xml=ALL-UNNAMED
         </extra-jvm-options-when-running-tests>
     </properties>
 

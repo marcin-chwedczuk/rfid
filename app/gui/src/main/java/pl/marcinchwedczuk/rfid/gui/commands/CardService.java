@@ -2,9 +2,9 @@ package pl.marcinchwedczuk.rfid.gui.commands;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import pl.marcinchwedczuk.rfid.acr122.*;
+import pl.marcinchwedczuk.rfid.card.acr122.*;
 
-import static pl.marcinchwedczuk.rfid.acr122.KeyRegister.REGISTER_0;
+import static pl.marcinchwedczuk.rfid.card.acr122.KeyRegister.REGISTER_0;
 
 public class CardService {
     private static Logger logger = LogManager.getLogger(CardService.class);
