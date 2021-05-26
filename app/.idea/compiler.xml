@@ -6,10 +6,19 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="rfid" />
+        <module name="acr122" />
+        <module name="card-api" />
+        <module name="gui" />
+        <module name="card-acr122" />
+        <module name="card-fake" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="acr122" target="11" />
+      <module name="card-acr122" target="11" />
+      <module name="card-api" target="11" />
+      <module name="card-fake" target="11" />
+      <module name="gui" target="11" />
       <module name="rfid" target="11" />
     </bytecodeTargetLevel>
   </component>

@@ -2,6 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/card-acr122/acr122.iml" filepath="$PROJECT_DIR$/card-acr122/acr122.iml" />
+      <module fileurl="file://$PROJECT_DIR$/card-acr122/card-acr122.iml" filepath="$PROJECT_DIR$/card-acr122/card-acr122.iml" />
+      <module fileurl="file://$PROJECT_DIR$/card-api/card-api.iml" filepath="$PROJECT_DIR$/card-api/card-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/card-fake/card-fake.iml" filepath="$PROJECT_DIR$/card-fake/card-fake.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gui/gui.iml" filepath="$PROJECT_DIR$/gui/gui.iml" />
       <module fileurl="file://$PROJECT_DIR$/rfid.iml" filepath="$PROJECT_DIR$/rfid.iml" />
     </modules>
   </component>
