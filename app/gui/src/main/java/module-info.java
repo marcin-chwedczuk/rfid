@@ -12,6 +12,8 @@ module pl.marcinchwedczuk {
     requires com.fasterxml.jackson.databind;
     requires java.management;
 
+    requires pl.marcinchwedczuk.rfid.acr122;
+
     exports pl.marcinchwedczuk.rfid.gui;
 
     // Allow @FXML injection to private fields.

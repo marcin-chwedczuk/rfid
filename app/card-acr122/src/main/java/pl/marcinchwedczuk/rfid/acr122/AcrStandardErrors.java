@@ -1,7 +1,5 @@
 package pl.marcinchwedczuk.rfid.acr122;
 
-import javax.smartcardio.CardException;
-
 public class AcrStandardErrors {
     private AcrStandardErrors() { }
 

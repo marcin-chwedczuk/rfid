@@ -11,6 +11,12 @@
 
     <artifactId>card-acr122</artifactId>
 
+    <properties>
+        <extra-jvm-options-when-running-tests>
+            --add-opens pl.marcinchwedczuk.rfid.acr122/pl.marcinchwedczuk.rfid.acr122=ALL-UNNAMED
+        </extra-jvm-options-when-running-tests>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>pl.marcinchwedczuk</groupId>

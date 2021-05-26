@@ -4,7 +4,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.smartcardio.*;
-import java.nio.charset.StandardCharsets;
 
 import static pl.marcinchwedczuk.rfid.acr122.Block.BLOCK_0;
 

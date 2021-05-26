@@ -11,8 +11,17 @@
 
     <artifactId>gui</artifactId>
 
-    <dependencies>
+    <properties>
+        <extra-jvm-options-when-running-tests>
+            --add-opens pl.marcinchwedczuk/pl.marcinchwedczuk.rfid.xml=ALL-UNNAMED
+        </extra-jvm-options-when-running-tests>
+    </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>pl.marcinchwedczuk</groupId>
+            <artifactId>card-acr122</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.openjfx</groupId>
