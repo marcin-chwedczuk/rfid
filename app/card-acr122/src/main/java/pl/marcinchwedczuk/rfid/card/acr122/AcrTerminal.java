@@ -1,7 +1,8 @@
 package pl.marcinchwedczuk.rfid.card.acr122;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.smartcardio.*;
 import java.security.NoSuchAlgorithmException;
@@ -14,7 +15,7 @@ import static java.util.stream.Collectors.toList;
  * {@code javax.smartcardio} wrapper for ACR122 reader.
  */
 public class AcrTerminal extends AcrTerminalCommands {
-    private static final Logger logger = LogManager.getLogger(AcrTerminal.class);
+    private static final Logger logger = LoggerFactory.getLogger(AcrTerminal.class);
     private static final byte FF = (byte)0xFF;
 
     private final CardTerminal cardTerminal;

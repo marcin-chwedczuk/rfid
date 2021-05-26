@@ -14,8 +14,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.marcinchwedczuk.rfid.card.acr122.*;
 import pl.marcinchwedczuk.rfid.gui.commands.*;
 import pl.marcinchwedczuk.rfid.xml.XmlCardData;
@@ -34,7 +34,7 @@ import static pl.marcinchwedczuk.rfid.card.acr122.KeyRegister.REGISTER_0;
 import static pl.marcinchwedczuk.rfid.card.acr122.SelectedKey.KEY_A;
 
 public class CardWindow implements Initializable {
-    private static Logger logger = LogManager.getLogger(CardWindow.class);
+    private static final Logger logger = LoggerFactory.getLogger(CardWindow.class);
 
     private final FileChooser fileChooser = new FileChooser();
 

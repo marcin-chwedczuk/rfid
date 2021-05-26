@@ -12,8 +12,8 @@ import javafx.scene.control.TitledPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.marcinchwedczuk.rfid.card.acr122.AcrTerminalCommands;
 import pl.marcinchwedczuk.rfid.card.acr122.LedBuzzerSettings;
 import pl.marcinchwedczuk.rfid.card.acr122.LedBuzzerSettings.Buzzer;
@@ -25,6 +25,7 @@ import pl.marcinchwedczuk.rfid.card.acr122.PiccOperatingParameter;
 import pl.marcinchwedczuk.rfid.card.acr122.PiccOperatingParameter.EnableDisable;
 import pl.marcinchwedczuk.rfid.card.acr122.PiccOperatingParameter.PoolingInterval;
 import pl.marcinchwedczuk.rfid.card.acr122.PiccOperatingParameter.SkipDetect;
+import pl.marcinchwedczuk.rfid.gui.commands.BaseUiCommand;
 
 import java.io.IOException;
 import java.net.URL;
@@ -32,7 +33,7 @@ import java.util.ResourceBundle;
 
 
 public class SettingsWindow implements Initializable {
-    private static Logger logger = LogManager.getLogger(SettingsWindow.class);
+    private static final Logger logger = LoggerFactory.getLogger(SettingsWindow.class);
 
     // LED Settings
     @FXML private ChoiceBox<LedState> finalRedLedCB;

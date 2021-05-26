@@ -2,11 +2,12 @@ package pl.marcinchwedczuk.rfid.gui;
 
 import javafx.application.Application;
 import javafx.application.HostServices;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
-import org.apache.logging.log4j.LogManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
@@ -14,6 +15,9 @@ import java.lang.management.RuntimeMXBean;
 import java.util.List;
 
 public class App extends Application {
+
+    private static final Logger logger = LoggerFactory.getLogger(App.class);
+
     private static HostServices hostServices = null;
     public static HostServices hostServices() {
         if (hostServices == null) {
@@ -29,7 +33,7 @@ public class App extends Application {
         System.setProperty("prism.lcdtext", "false");
 
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
-            LogManager.getLogger().error("Unhandled exception", e);
+            logger.error("Unhandled exception", e);
             FxDialogBoxes.exception(e);
         });
 

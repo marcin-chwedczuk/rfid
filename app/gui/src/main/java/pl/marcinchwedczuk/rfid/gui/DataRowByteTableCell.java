@@ -3,11 +3,12 @@ package pl.marcinchwedczuk.rfid.gui;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.scene.control.cell.TextFieldTableCell;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import pl.marcinchwedczuk.rfid.gui.commands.BaseUiCommand;
 
 public class DataRowByteTableCell extends TextFieldTableCell<DataRow, Byte> {
-    private static final Logger logger = LogManager.getLogger(DataRowByteTableCell.class);
+    private static final Logger logger = LoggerFactory.getLogger(DataRowByteTableCell.class);
 
     private final DataRowTableCellStylist stylist = new DataRowTableCellStylist();
 

@@ -16,10 +16,14 @@
             <groupId>pl.marcinchwedczuk</groupId>
             <artifactId>card-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>pl.marcinchwedczuk</groupId>
+            <artifactId>card-commons</artifactId>
+        </dependency>
 
         <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
         </dependency>
 
         <dependency>

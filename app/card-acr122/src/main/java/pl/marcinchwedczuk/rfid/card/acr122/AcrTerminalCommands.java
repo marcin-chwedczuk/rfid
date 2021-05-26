@@ -1,14 +1,14 @@
 package pl.marcinchwedczuk.rfid.card.acr122;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.smartcardio.CardException;
 import javax.smartcardio.ResponseAPDU;
 import java.nio.charset.StandardCharsets;
 
 public abstract class AcrTerminalCommands {
-    private static Logger logger = LogManager.getLogger(AcrTerminalCommands.class);
+    private static final Logger logger = LoggerFactory.getLogger(AcrTerminal.class);
 
     protected abstract byte[] sendCommandToTerminal(byte[] commandBytes) throws CardException;
 

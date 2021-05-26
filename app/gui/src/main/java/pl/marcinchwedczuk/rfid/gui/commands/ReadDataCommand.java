@@ -1,15 +1,15 @@
 package pl.marcinchwedczuk.rfid.gui.commands;
 
 import javafx.collections.ObservableList;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.marcinchwedczuk.rfid.card.acr122.*;
-import pl.marcinchwedczuk.rfid.gui.*;
+import pl.marcinchwedczuk.rfid.gui.DataRow;
 
 import java.util.List;
 
 public class ReadDataCommand extends BaseUiCommand<Sector> {
-    private static Logger logger = LogManager.getLogger(ReadDataCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(ReadDataCommand.class);
 
     private final CardService cardService;
     private final byte[] key;

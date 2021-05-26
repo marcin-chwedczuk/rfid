@@ -1,7 +1,7 @@
 package pl.marcinchwedczuk.rfid.gui.commands;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.marcinchwedczuk.rfid.card.acr122.*;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 import static pl.marcinchwedczuk.rfid.card.acr122.Block.TRAILER;
 
 public class ReadPermissionsCommand extends BaseUiCommand<Sector> {
-    private static Logger logger = LogManager.getLogger(ReadPermissionsCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(ReadPermissionsCommand.class);
 
     private final CardService cardService;
     private final byte[] key;

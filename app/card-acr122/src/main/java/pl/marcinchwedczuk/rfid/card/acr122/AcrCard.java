@@ -1,14 +1,14 @@
 package pl.marcinchwedczuk.rfid.card.acr122;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.smartcardio.*;
 
 import static pl.marcinchwedczuk.rfid.card.acr122.Block.BLOCK_0;
 
 public class AcrCard extends AcrTerminalCommands {
-    private static Logger logger = LogManager.getLogger(AcrCard.class);
+    private static final Logger logger = LoggerFactory.getLogger(AcrTerminal.class);
     private static final byte FF = (byte)0xFF;
 
     private final AcrTerminal terminal;

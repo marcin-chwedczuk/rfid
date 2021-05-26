@@ -1,7 +1,7 @@
 package pl.marcinchwedczuk.rfid.gui.commands;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.marcinchwedczuk.rfid.card.acr122.*;
 import pl.marcinchwedczuk.rfid.gui.DataRow;
 
@@ -11,7 +11,7 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 public class WriteDataCommand extends BaseUiCommand<DataRow> {
-    private static Logger logger = LogManager.getLogger(WriteDataCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(WriteDataCommand.class);
 
     private final CardService cardService;
     private final byte[] key;

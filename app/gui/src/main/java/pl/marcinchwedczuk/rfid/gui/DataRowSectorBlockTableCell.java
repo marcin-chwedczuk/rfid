@@ -2,11 +2,12 @@ package pl.marcinchwedczuk.rfid.gui;
 
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.IntegerStringConverter;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import pl.marcinchwedczuk.rfid.gui.commands.BaseUiCommand;
 
 public class DataRowSectorBlockTableCell extends TextFieldTableCell<DataRow, Integer> {
-    private static final Logger logger = LogManager.getLogger(DataRowSectorBlockTableCell.class);
+    private static final Logger logger = LoggerFactory.getLogger(DataRowSectorBlockTableCell.class);
 
     private final DataRowTableCellStylist stylist = new DataRowTableCellStylist();
 
