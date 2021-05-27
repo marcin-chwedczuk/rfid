@@ -10,6 +10,8 @@ import javafx.scene.control.MenuItem;
 import javafx.stage.Window;
 import pl.marcinchwedczuk.rfid.card.acr122.AcrCard;
 import pl.marcinchwedczuk.rfid.card.acr122.AcrTerminal;
+import pl.marcinchwedczuk.rfid.card.acr122.AcrTerminalProvider;
+import pl.marcinchwedczuk.rfid.card.fake.FakeCardTerminal;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -65,8 +67,10 @@ public class MainWindow implements Initializable {
     private void refreshTerminalList() {
         infoScreen.setText("Select terminal to start...");
 
+        AcrTerminalProvider.setFakeTerminal(new FakeCardTerminal());
+
         terminalsList.getItems().clear();
-        terminalsList.getItems().addAll(AcrTerminal.getTerminals());
+        terminalsList.getItems().addAll(AcrTerminalProvider.INSTANCE.findTerminals());
         terminalsList.getSelectionModel().selectFirst();
 
         if (!terminalsList.getSelectionModel().isEmpty()) {

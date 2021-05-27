@@ -22,6 +22,10 @@
             <groupId>pl.marcinchwedczuk</groupId>
             <artifactId>card-acr122</artifactId>
         </dependency>
+        <dependency>
+            <groupId>pl.marcinchwedczuk</groupId>
+            <artifactId>card-fake</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -55,6 +59,7 @@
             <artifactId>junit-jupiter-api</artifactId>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 
     <build>
