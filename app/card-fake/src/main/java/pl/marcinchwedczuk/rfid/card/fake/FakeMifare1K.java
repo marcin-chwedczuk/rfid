@@ -8,6 +8,8 @@ import javax.smartcardio.CardException;
 import javax.smartcardio.CommandAPDU;
 import javax.smartcardio.ResponseAPDU;
 
+import java.util.Arrays;
+
 import static pl.marcinchwedczuk.rfid.card.fake.StringUtils.byteArrayFromHexString;
 import static pl.marcinchwedczuk.rfid.card.fake.StringUtils.byteArrayToHexString;
 
@@ -113,8 +115,44 @@ public class FakeMifare1K {
                     nBytes,
                     authenticatedUsingKey);
 
+            if (dataToReturn == null) {
+                // Access not allowed
+                return new ResponseAPDU(byteArrayFromHexString("63 00"));
+            }
+
             return new ResponseAPDU(byteArrayFromHexString(
                     byteArrayToHexString(dataToReturn) +  " 90 00"));
+        }
+
+        if (matchesPattern(cmd, "FF D6 00 .. .." +
+                " .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. ..")) {
+            // Write / Update
+            byte[] data = cmd.getBytes();
+
+            byte blockNumber = data[3];
+            byte nBytes = data[4];
+
+            int sectorIndex = blockNumber / 4;
+            int blockIndex = blockNumber % 4;
+
+            byte[] blockData = Arrays.copyOfRange(data, 5, 5 + 16);
+            if (blockData.length != 16) {
+                // Invalid block data length
+                return new ResponseAPDU(byteArrayFromHexString("63 00"));
+            }
+
+            if (authenticatedSectorIndex != sectorIndex) {
+                // Not authenticated
+                return new ResponseAPDU(byteArrayFromHexString("63 00"));
+            }
+
+            boolean success = sectors[sectorIndex].write(blockIndex, blockData, authenticatedUsingKey);
+            if (!success) {
+                // Write failed
+                return new ResponseAPDU(byteArrayFromHexString("63 00"));
+            }
+
+            return new ResponseAPDU(byteArrayFromHexString("90 00"));
         }
 
         logger.error("Unknown sequence of bytes: {}", byteArrayToHexString(cmd.getBytes()));
