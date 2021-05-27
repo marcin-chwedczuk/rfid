@@ -63,6 +63,7 @@ public class ReadDataCommand extends BaseUiCommand<Sector> {
     @Override
     protected void after() {
         if (error() != null) {
+            logger.error("Error during read data operation!", error());
             displayError(error());
         }
     }

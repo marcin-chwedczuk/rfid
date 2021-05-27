@@ -26,7 +26,10 @@ class StringUtils {
                 builder.append(" ");
             }
 
-            builder.append(Integer.toString(Byte.toUnsignedInt(arr[i]), 16));
+            String tmp = Integer
+                    .toHexString(Byte.toUnsignedInt(arr[i]))
+                    .toUpperCase();
+            builder.append(tmp.length() == 1 ? "0" + tmp : tmp);
         }
 
         return builder.toString();

@@ -22,6 +22,8 @@
 
         <!-- Placeholders to be customized by child projects -->
         <extra-jvm-options-when-running-tests></extra-jvm-options-when-running-tests>
+
+
     </properties>
 
     <dependencyManagement>
@@ -71,13 +73,6 @@
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-slf4j-impl</artifactId>
                 <version>2.9.0</version>
-                <scope>runtime</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-core</artifactId>
-                <version>2.14.1</version>
-                <scope>runtime</scope>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.dataformat</groupId>

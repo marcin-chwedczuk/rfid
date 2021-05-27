@@ -5,6 +5,7 @@ module pl.marcinchwedczuk.rfid {
     requires java.smartcardio;
 
     requires org.slf4j;
+    // requires org.apache.logging.log4j.slf4j;
 
     requires com.fasterxml.jackson.dataformat.xml;
     requires com.fasterxml.jackson.core;
