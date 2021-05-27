@@ -26,7 +26,7 @@ public class AccessBitsParser {
         for (String bitName: bitsNames) {
             if (bitName.startsWith("c")) {
 
-                int bitPosition = charValue(bitName.charAt(1));
+                int bitPosition = charValue(bitName.charAt(1)) - 1; // Make it zero-based
                 int blockIndex = charValue(bitName.charAt(2));
 
                 map[blockIndex][bitPosition] = getBit(bytes, byteIndex, bitIndex) ? '1' : '0';

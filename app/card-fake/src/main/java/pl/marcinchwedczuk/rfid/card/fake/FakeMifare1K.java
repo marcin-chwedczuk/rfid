@@ -32,7 +32,7 @@ public class FakeMifare1K {
     private byte[] keyRegister0 = null;
     private byte[] keyRegister1 = null;
 
-    private boolean authenticatedUsingKeyA = true;
+    private KeyType authenticatedUsingKey = null;
     private int authenticatedSectorIndex = -1;
 
     public ATR getATR() {
@@ -84,7 +84,7 @@ public class FakeMifare1K {
             boolean success = sectors[sectorIndex].authenticate(keyA, loadedKey);
             if (success) {
                 authenticatedSectorIndex = sectorIndex;
-                authenticatedUsingKeyA = keyA;
+                authenticatedUsingKey = keyA ? KeyType.KEY_A : KeyType.KEY_B;
                 return new ResponseAPDU(byteArrayFromHexString("90 00"));
             }
             else {
@@ -108,7 +108,11 @@ public class FakeMifare1K {
                 return new ResponseAPDU(byteArrayFromHexString("63 00"));
             }
 
-            byte[] dataToReturn = sectors[sectorIndex].read(blockIndex, nBytes, authenticatedUsingKeyA);
+            byte[] dataToReturn = sectors[sectorIndex].read(
+                    blockIndex,
+                    nBytes,
+                    authenticatedUsingKey);
+
             return new ResponseAPDU(byteArrayFromHexString(
                     byteArrayToHexString(dataToReturn) +  " 90 00"));
         }

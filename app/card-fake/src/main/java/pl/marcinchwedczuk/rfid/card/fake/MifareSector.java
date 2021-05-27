@@ -36,8 +36,38 @@ public class MifareSector {
         return Arrays.equals(internalKey, key);
     }
 
-    public byte[] read(int blockIndex, byte nBytes, boolean keyA) {
-        // TODO: Check can read
-        return Arrays.copyOf(blocks[blockIndex], nBytes);
+    public byte[] read(int blockIndex, byte nBytes, KeyType key) {
+        String[] accessBits = new AccessBitsParser().parse(blocks[3]);
+
+        if (blockIndex < 3) {
+            // Normal block
+            DataBlockAccess access = DataBlockAccess.fromBits(accessBits[blockIndex]);
+            if (!access.readAccess().allowedUsingKey(key)) {
+                return null;
+            }
+
+            return Arrays.copyOf(blocks[blockIndex], nBytes);
+        }
+        else {
+            // Sector trailer
+            TrailerBlockAccess access = TrailerBlockAccess.fromBits(accessBits[3]);
+            byte[] trailerCopy = blocks[3].clone();
+
+            if (!access.readAccessKeyA.allowedUsingKey(key)) {
+                // Zero key A
+                Arrays.fill(trailerCopy, 0, 6, (byte)0x00);
+            }
+
+            if (!access.readAccessAccessBits.allowedUsingKey(key)) {
+                Arrays.fill(trailerCopy, 7, 10, (byte)0x00);
+            }
+
+            if (!access.readAccessKeyB.allowedUsingKey(key)) {
+                // Zero key B
+                Arrays.fill(trailerCopy, 10, 16, (byte)0x00);
+            }
+
+            return Arrays.copyOf(trailerCopy, nBytes);
+        }
     }
 }

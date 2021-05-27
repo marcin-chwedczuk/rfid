@@ -94,4 +94,9 @@ public enum DataBlockAccess {
 
     abstract AccessLevel readAccess();
     abstract AccessLevel writeAccess();
+
+
+    public static DataBlockAccess fromBits(String bits) {
+        return DataBlockAccess.valueOf("C" + bits);
+    }
 }
