@@ -7,6 +7,8 @@
     <file url="file://$PROJECT_DIR$/card-commons/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/card-fake/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/card-fake/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/gui-tests/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/gui-tests/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/gui/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/gui/src/main/resources" charset="UTF-8" />
   </component>

@@ -11,6 +11,7 @@
         <module>card-acr122</module>
         <module>card-fake</module>
         <module>gui</module>
+        <module>gui-tests</module>
     </modules>
 
     <properties>
@@ -23,12 +24,19 @@
         <log4j.version>2.13.3</log4j.version>
         <jackson.version>2.11.1</jackson.version>
         <woodstox.version>5.1.0</woodstox.version>
+
         <junit.version>5.3.0</junit.version>
         <assertj.version>3.19.0</assertj.version>
+        <testfx.version>4.0.16-alpha</testfx.version>
+        <!-- jdk-11+26 for Java 11, jdk-9+181 for Java 9, 8u76-b04 for Java 8 -->
+        <openjfx-monocle.version>jdk-11+26</openjfx-monocle.version>
 
         <!-- Placeholders to be customized by child projects or profiles -->
         <extra-jvm-options-when-running-tests></extra-jvm-options-when-running-tests>
         <extra-jvm-options-when-running-gui-app></extra-jvm-options-when-running-gui-app>
+
+        <!-- tests -->
+        <skip.it.tests>true</skip.it.tests>
     </properties>
 
     <dependencyManagement>
@@ -112,6 +120,7 @@
                 <version>${woodstox.version}</version>
             </dependency>
 
+            <!-- Test dependencies -->
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-api</artifactId>
@@ -121,6 +130,28 @@
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
                 <version>${assertj.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.testfx</groupId>
+                <artifactId>testfx-core</artifactId>
+                <version>${testfx.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.testfx</groupId>
+                <artifactId>testfx-junit5</artifactId>
+                <version>${testfx.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.testfx</groupId>
+                <artifactId>openjfx-monocle</artifactId>
+                <version>${openjfx-monocle.version}</version>
+            </dependency>
+            <dependency>
+                <!-- Needed for screenshot in TestFX -->
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-swing</artifactId>
+                <version>${javafx.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -203,6 +234,13 @@
                     <!-- set logging level to DEBUG -->
                     -Dlog.level=DEBUG
                 </extra-jvm-options-when-running-gui-app>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>run-it</id>
+            <properties>
+                <skip.it.tests>false</skip.it.tests>
             </properties>
         </profile>
     </profiles>

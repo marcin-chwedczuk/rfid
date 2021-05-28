@@ -13,6 +13,8 @@
 
     <properties>
         <extra-jvm-options-when-running-tests>
+            --add-exports javafx.graphics/com.sun.javafx.application=ALL-UNNAMED
+            --add-opens javafx.graphics/com.sun.glass.ui=ALL-UNNAMED
             --add-opens pl.marcinchwedczuk.rfid/pl.marcinchwedczuk.rfid.xml=ALL-UNNAMED
         </extra-jvm-options-when-running-tests>
     </properties>
@@ -69,7 +71,6 @@
             <artifactId>junit-jupiter-api</artifactId>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -87,6 +88,7 @@
                     </options>
                 </configuration>
             </plugin>
+
         </plugins>
     </build>
 </project>

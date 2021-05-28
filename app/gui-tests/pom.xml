@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>rfid</artifactId>
+        <groupId>pl.marcinchwedczuk</groupId>
+        <version>1.0.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>gui-tests</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>pl.marcinchwedczuk</groupId>
+            <artifactId>gui</artifactId>
+        </dependency>
+        <!--
+        <dependency>
+            <groupId>pl.marcinchwedczuk</groupId>
+            <artifactId>card-fake</artifactId>
+        </dependency>
+        -->
+
+        <!-- TODO: Check why dependencies are not properly resolved. Maybe modules again? -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-junit5</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>openjfx-monocle</artifactId>
+        </dependency>
+        <dependency>
+            <!-- Needed for screenshot in TestFX -->
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-swing</artifactId>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>integration-tests</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                        <configuration>
+                            <trimStackTrace>false</trimStackTrace>
+                            <skipTests>${skip.it.tests}</skipTests>
+                            <testSourceDirectory>src/main/java</testSourceDirectory>
+                            <testClassesDirectory>${project.build.directory}/classes</testClassesDirectory>
+                            <includes>
+                                <include>**/*IT</include>
+                            </includes>
+                            <systemProperties>
+                                <property>
+                                    <name>screenshotDirectory</name>
+                                    <value>${project.build.directory}/failsafe-reports/screenshots</value>
+                                </property>
+                            </systemProperties>
+
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

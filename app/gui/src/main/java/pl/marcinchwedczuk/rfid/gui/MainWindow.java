@@ -7,6 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 import pl.marcinchwedczuk.rfid.card.acr122.AcrCard;
 import pl.marcinchwedczuk.rfid.card.acr122.AcrTerminal;
@@ -83,7 +84,8 @@ public class MainWindow implements Initializable {
     @FXML
     private void closeMainWindow() {
         timer.cancel();
-        Platform.exit();
+        Stage s = (Stage)this.infoScreen.getScene().getWindow();
+        s.close();
     }
 
     @FXML

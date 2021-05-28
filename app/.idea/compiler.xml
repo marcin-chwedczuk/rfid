@@ -9,6 +9,7 @@
         <module name="card-acr122" />
         <module name="card-commons" />
         <module name="acr122" />
+        <module name="gui-tests" />
         <module name="card-fake" />
         <module name="gui" />
       </profile>
@@ -20,6 +21,7 @@
       <module name="card-commons" target="11" />
       <module name="card-fake" target="11" />
       <module name="gui" target="11" />
+      <module name="gui-tests" target="11" />
       <module name="rfid" target="11" />
     </bytecodeTargetLevel>
   </component>

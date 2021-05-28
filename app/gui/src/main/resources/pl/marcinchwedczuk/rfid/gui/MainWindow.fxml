@@ -66,7 +66,8 @@
                         <Button mnemonicParsing="false" onAction="#refreshTerminalList" text="Refresh"/>
                     </children>
                 </HBox>
-                <Button mnemonicParsing="false" onAction="#closeMainWindow" prefHeight="34.0" prefWidth="125.0"
+                <Button fx:id="closeWindowButton"
+                        mnemonicParsing="false" onAction="#closeMainWindow" prefHeight="34.0" prefWidth="125.0"
                         text="Close" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="6"/>
             </children>
         </GridPane>
