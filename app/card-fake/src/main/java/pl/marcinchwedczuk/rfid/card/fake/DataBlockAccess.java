@@ -2,7 +2,7 @@ package pl.marcinchwedczuk.rfid.card.fake;
 
 import static pl.marcinchwedczuk.rfid.card.fake.AccessLevel.*;
 
-public enum DataBlockAccess {
+enum DataBlockAccess {
     C000 {
         @Override
         AccessLevel readAccess() {

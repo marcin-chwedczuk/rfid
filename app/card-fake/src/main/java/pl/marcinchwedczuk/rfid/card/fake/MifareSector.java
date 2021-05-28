@@ -5,14 +5,12 @@ import pl.marcinchwedczuk.rfid.card.commons.StringUtils;
 import javax.smartcardio.CardException;
 import java.util.Arrays;
 
-public class MifareSector {
+class MifareSector {
     // Last block is "Sector Trailer"
     private byte[][] blocks = new byte[4][16];
 
     public MifareSector() {
-        // TODO: Set transport configuration
-
-        // Default sector trailer
+        // Default sector trailer aka transport configuration
         blocks[3] = StringUtils.byteArrayFromHexString(
                 "FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF");
     }
@@ -27,10 +25,6 @@ public class MifareSector {
 
     private byte[] getKeyB() {
         return Arrays.copyOfRange(getSectorTrailer(), 10, 16);
-    }
-
-    private void parseAccessBits() {
-
     }
 
     public boolean authenticate(boolean keyA, byte[] key) {
@@ -58,16 +52,16 @@ public class MifareSector {
             TrailerBlockAccess access = TrailerBlockAccess.fromBits(accessBits[3]);
             byte[] trailerCopy = blocks[3].clone();
 
-            if (!access.readAccessKeyA.allowedUsingKey(key)) {
+            if (!access.readAccessToKeyA.allowedUsingKey(key)) {
                 // Zero key A
                 Arrays.fill(trailerCopy, 0, 6, (byte)0x00);
             }
 
-            if (!access.readAccessAccessBits.allowedUsingKey(key)) {
+            if (!access.readAccessToAccessBits.allowedUsingKey(key)) {
                 Arrays.fill(trailerCopy, 7, 10, (byte)0x00);
             }
 
-            if (!access.readAccessKeyB.allowedUsingKey(key)) {
+            if (!access.readAccessToKeyB.allowedUsingKey(key)) {
                 // Zero key B
                 Arrays.fill(trailerCopy, 10, 16, (byte)0x00);
             }
@@ -96,15 +90,15 @@ public class MifareSector {
             byte[] trailerCopy = blocks[3].clone();
 
             // TODO: Allow partial update? or fail?
-            if (access.writeAccessKeyA.allowedUsingKey(key)) {
+            if (access.writeAccessToKeyA.allowedUsingKey(key)) {
                 System.arraycopy(blockData, 0, trailerCopy, 0, 6);
             }
 
-            if (access.writeAccessAccessBits.allowedUsingKey(key)) {
+            if (access.writeAccessToAccessBits.allowedUsingKey(key)) {
                 System.arraycopy(blockData, 6, trailerCopy, 6, 4);
             }
 
-            if (access.writeAccessKeyB.allowedUsingKey(key)) {
+            if (access.writeAccessToKeyB.allowedUsingKey(key)) {
                 System.arraycopy(blockData, 10, trailerCopy, 10, 6);
             }
 

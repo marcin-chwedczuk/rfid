@@ -3,7 +3,7 @@ package pl.marcinchwedczuk.rfid.card.fake;
 import javax.smartcardio.*;
 import java.nio.ByteBuffer;
 
-public class FakeCardChannel extends CardChannel {
+class FakeCardChannel extends CardChannel {
     private final FakeCard fakeCard;
     private final FakeMifare1K mifare1K;
 
@@ -24,7 +24,7 @@ public class FakeCardChannel extends CardChannel {
 
     @Override
     public ResponseAPDU transmit(CommandAPDU command) throws CardException {
-        return mifare1K.accept(command);
+        return mifare1K.execute(command);
     }
 
     @Override

@@ -14,7 +14,7 @@ import java.util.Arrays;
 import static pl.marcinchwedczuk.rfid.card.commons.StringUtils.byteArrayFromHexString;
 import static pl.marcinchwedczuk.rfid.card.commons.StringUtils.toHexString;
 
-public class FakeMifare1K {
+class FakeMifare1K {
     private static final Logger logger = LoggerFactory.getLogger(FakeMifare1K.class);
 
     /**
@@ -46,7 +46,7 @@ public class FakeMifare1K {
         ));
     }
 
-    public ResponseAPDU accept(CommandAPDU cmd) throws CardException {
+    public ResponseAPDU execute(CommandAPDU cmd) throws CardException {
         if (matchesPattern(cmd, "FF CA 00 00 04") ) {
             // Get Card ID
             return new ResponseAPDU(byteArrayFromHexString(

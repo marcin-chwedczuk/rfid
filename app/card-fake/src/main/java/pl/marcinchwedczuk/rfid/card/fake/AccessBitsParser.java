@@ -2,14 +2,14 @@ package pl.marcinchwedczuk.rfid.card.fake;
 
 import java.util.Arrays;
 
-public class AccessBitsParser {
+class AccessBitsParser {
     /**
      * @param bytes
      *  Trailer sector bytes. Should be `byte[16]` array.
      * @return
      *  Returns array which at index `i` contains access bits for sector `i`.
      *  For example array may contain value `"010"` at index `1`.
-     *  That means that we have control bits for sector `1`:
+     *  That means that we have access control bits for sector `1`:
      *  `C1_1 ... C3_1` set to values `0`, `1` and `0`.
      */
     public String[] parse(byte[] bytes) {

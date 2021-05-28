@@ -11,7 +11,7 @@ import javax.smartcardio.CardException;
  * All data is based on ACR API specification document
  * (see docs/ folder in this repository).
  */
-public class FakeCard extends Card {
+class FakeCard extends Card {
     private final FakeMifare1K mifare1K = new FakeMifare1K();
 
     @Override
@@ -46,7 +46,7 @@ public class FakeCard extends Card {
 
     @Override
     public byte[] transmitControlCommand(int controlCode, byte[] command) throws CardException {
-        return new byte[0];
+        throw new RuntimeException("Not implemented.");
     }
 
     @Override
