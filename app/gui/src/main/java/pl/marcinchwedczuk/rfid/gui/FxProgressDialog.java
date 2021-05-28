@@ -16,11 +16,16 @@ public class FxProgressDialog implements UiServices.ProgressDialog {
     private Stage window;
     private boolean cancelled = false;
 
-    @FXML private Button cancelButton;
-    @FXML public ProgressBar progressBar;
-    @FXML public Label operationName;
+    @FXML
+    private Button cancelButton;
+    @FXML
+    public ProgressBar progressBar;
+    @FXML
+    public Label operationName;
 
-    public Stage getWindow() { return window; }
+    public Stage getWindow() {
+        return window;
+    }
 
     private void init(Stage window, String description, Runnable onCancel) {
         this.window = window;

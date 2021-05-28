@@ -1,9 +1,9 @@
 package pl.marcinchwedczuk.rfid.xml;
 
 import org.junit.jupiter.api.Test;
-import pl.marcinchwedczuk.rfid.gui.DataRow;
 import pl.marcinchwedczuk.rfid.card.acr122.ByteArrays;
 import pl.marcinchwedczuk.rfid.card.acr122.Sector;
+import pl.marcinchwedczuk.rfid.gui.DataRow;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,17 +14,18 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static pl.marcinchwedczuk.rfid.card.acr122.Block.BLOCK_0;
 import static pl.marcinchwedczuk.rfid.card.acr122.Block.TRAILER;
 
 class ImportExportTest {
 
-    @Test void export() {
-        Stream<DataRow> data = Arrays.stream(new DataRow[] {
-            // sector, block, bytes, isSectorTrailer
-            new DataRow(Sector.of(2), BLOCK_0, ByteArrays.fromHexString("00:01:02:03:04:05:06:07:08:09:0a:0b:0c:0d:0e:0f", ":")),
-            new DataRow(Sector.of(2), TRAILER, ByteArrays.fromHexString("f0:f1:f2:f3:f4:f5:f6:f7:f8:f9:fa:fb:fc:fd:fe:ff", ":")),
+    @Test
+    void export() {
+        Stream<DataRow> data = Arrays.stream(new DataRow[]{
+                // sector, block, bytes, isSectorTrailer
+                new DataRow(Sector.of(2), BLOCK_0, ByteArrays.fromHexString("00:01:02:03:04:05:06:07:08:09:0a:0b:0c:0d:0e:0f", ":")),
+                new DataRow(Sector.of(2), TRAILER, ByteArrays.fromHexString("f0:f1:f2:f3:f4:f5:f6:f7:f8:f9:fa:fb:fc:fd:fe:ff", ":")),
         });
 
         String actualXml = new XmlCardData(data)
@@ -39,7 +40,8 @@ class ImportExportTest {
         assertEquals(expectedXml, actualXml);
     }
 
-    @Test void import_() {
+    @Test
+    void import_() {
         String xml = readResource("/pl/marcinchwedczuk/rfid/xml/test-expected-xml-1.xml");
         List<DataRow> dataRows = XmlCardData.fromXml(xml).toDataRows();
 

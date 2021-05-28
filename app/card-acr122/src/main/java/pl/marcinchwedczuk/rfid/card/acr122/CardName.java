@@ -37,7 +37,7 @@ public enum CardName {
     }
 
     public static CardName fromPixNN(int pixNN) {
-        for (CardName value: CardName.values()) {
+        for (CardName value : CardName.values()) {
             if (value.pixNN == pixNN) {
                 return value;
             }

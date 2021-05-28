@@ -21,6 +21,7 @@ public class UiServices {
 
     public interface ProgressDialog {
         void updateProgress(double percentage);
+
         void close();
     }
 }

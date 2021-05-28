@@ -93,6 +93,7 @@ enum DataBlockAccess {
     };
 
     abstract AccessLevel readAccess();
+
     abstract AccessLevel writeAccess();
 
 

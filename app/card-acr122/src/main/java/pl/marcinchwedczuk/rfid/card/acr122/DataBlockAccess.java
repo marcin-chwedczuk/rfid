@@ -40,37 +40,41 @@ public class DataBlockAccess {
         sb.append("+--------------------------------------+").append('\n');
         sb.append("|  READ  |  WRITE  | INCREMENT | OTHER |").append('\n');
         sb.append("|  " + toString(read) + "  |  " + toString(write) +
-                "   |    " + toString(increment) + "   |  "  + toString(other) + " |").append('\n');
+                "   |    " + toString(increment) + "   |  " + toString(other) + " |").append('\n');
         sb.append("+--------------------------------------+").append('\n');
         return sb.toString();
     }
 
     private String toString(AccessCond accessCond) {
         switch (accessCond) {
-            case NEVER: return "----";
-            case KEY_A: return "AAAA";
-            case KEY_B: return "BBBB";
-            case KEY_A_OR_B: return "ABAB";
+            case NEVER:
+                return "----";
+            case KEY_A:
+                return "AAAA";
+            case KEY_B:
+                return "BBBB";
+            case KEY_A_OR_B:
+                return "ABAB";
         }
 
         return "????";
     }
 
     private static Map<String, DataBlockAccess> accessMap = createMap(
-        //                  CBITS |         READ |      WRITE |     INCREMENT | OTHER
-        new DataBlockAccess(cbits(0, 0, 0), KEY_A_OR_B, KEY_A_OR_B, KEY_A_OR_B, KEY_A_OR_B),
-        new DataBlockAccess(cbits(0, 1, 0), KEY_A_OR_B, NEVER, NEVER, NEVER),
-        new DataBlockAccess(cbits(1, 0, 0), KEY_A_OR_B, KEY_B, NEVER, NEVER),
-        new DataBlockAccess(cbits(1, 1, 0), KEY_A_OR_B, KEY_B, KEY_B, KEY_A_OR_B),
-        new DataBlockAccess(cbits(0, 0, 1), KEY_A_OR_B, NEVER, NEVER, KEY_A_OR_B),
-        new DataBlockAccess(cbits(0, 1, 1), KEY_B, KEY_B, NEVER, NEVER),
-        new DataBlockAccess(cbits(1, 0, 1), KEY_B, NEVER, NEVER, NEVER),
-        new DataBlockAccess(cbits(1, 1, 1), NEVER, NEVER, NEVER, NEVER)
+            //                  CBITS |         READ |      WRITE |     INCREMENT | OTHER
+            new DataBlockAccess(cbits(0, 0, 0), KEY_A_OR_B, KEY_A_OR_B, KEY_A_OR_B, KEY_A_OR_B),
+            new DataBlockAccess(cbits(0, 1, 0), KEY_A_OR_B, NEVER, NEVER, NEVER),
+            new DataBlockAccess(cbits(1, 0, 0), KEY_A_OR_B, KEY_B, NEVER, NEVER),
+            new DataBlockAccess(cbits(1, 1, 0), KEY_A_OR_B, KEY_B, KEY_B, KEY_A_OR_B),
+            new DataBlockAccess(cbits(0, 0, 1), KEY_A_OR_B, NEVER, NEVER, KEY_A_OR_B),
+            new DataBlockAccess(cbits(0, 1, 1), KEY_B, KEY_B, NEVER, NEVER),
+            new DataBlockAccess(cbits(1, 0, 1), KEY_B, NEVER, NEVER, NEVER),
+            new DataBlockAccess(cbits(1, 1, 1), NEVER, NEVER, NEVER, NEVER)
     );
 
     private static Map<String, DataBlockAccess> createMap(DataBlockAccess... accesses) {
         Map<String, DataBlockAccess> map = new HashMap<>();
-        for (DataBlockAccess dba: accesses) {
+        for (DataBlockAccess dba : accesses) {
             map.put(dba.cbits, dba);
         }
         return map;

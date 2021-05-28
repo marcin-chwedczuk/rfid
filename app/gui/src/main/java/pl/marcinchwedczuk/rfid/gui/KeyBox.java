@@ -5,7 +5,8 @@ import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import pl.marcinchwedczuk.rfid.card.acr122.ByteArrays;
 
@@ -16,9 +17,12 @@ import java.util.ResourceBundle;
 public class KeyBox extends HBox implements Initializable {
     private final PseudoClass cssInvalid = PseudoClass.getPseudoClass("invalid");
 
-    @FXML private MaskedTextField keyTextField;
-    @FXML private ChoiceBox<KeyForm> modeMenu;
-    @FXML private Tooltip validationTooltip;
+    @FXML
+    private MaskedTextField keyTextField;
+    @FXML
+    private ChoiceBox<KeyForm> modeMenu;
+    @FXML
+    private Tooltip validationTooltip;
 
     public KeyBox() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("KeyBox.fxml"));

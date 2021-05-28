@@ -61,8 +61,7 @@ public class ReadPermissionsCommand extends BaseUiCommand<Sector> {
     protected void after() {
         if (error() != null) {
             displayError(error());
-        }
-        else {
+        } else {
             callback.accept(result);
         }
     }

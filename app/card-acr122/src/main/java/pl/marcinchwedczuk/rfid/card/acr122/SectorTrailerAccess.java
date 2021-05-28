@@ -9,7 +9,7 @@ import static pl.marcinchwedczuk.rfid.card.acr122.AccessCond.*;
  * Readable keys cannot be used for authentication.
  * This means if keyB is readable then it cannot be used for authentication purposes,
  * instead you may use keyB to store extra 6 bytes of data.
- *
+ * <p>
  * See docs/mifare_classic.pdf, page 12 for details.
  */
 public class SectorTrailerAccess {
@@ -28,9 +28,9 @@ public class SectorTrailerAccess {
     public final AccessCond writeKeyB;
 
     private SectorTrailerAccess(String cbits,
-                               AccessCond readKeyA, AccessCond writeKeyA,
-                               AccessCond accessBitsRead, AccessCond accessBitsWrite,
-                               AccessCond readKeyB, AccessCond writeKeyB) {
+                                AccessCond readKeyA, AccessCond writeKeyA,
+                                AccessCond accessBitsRead, AccessCond accessBitsWrite,
+                                AccessCond readKeyB, AccessCond writeKeyB) {
         this.cbits = cbits;
         this.readKeyA = readKeyA;
         this.writeKeyA = writeKeyA;
@@ -55,8 +55,8 @@ public class SectorTrailerAccess {
         sb.append("+------------------------------------------------+").append('\n');
         sb.append("|    KEY A     |   ACCESS BITS    |    KEY B     |").append('\n');
         sb.append("| READ | WRITE |   READ | WRITE   | READ | WRITE |").append('\n');
-        sb.append("| "  + toString(readKeyA) + " | " + toString(writeKeyA) +
-                "  |   "  + toString(accessBitsRead) +  " | " + toString(accessBitsWrite) +
+        sb.append("| " + toString(readKeyA) + " | " + toString(writeKeyA) +
+                "  |   " + toString(accessBitsRead) + " | " + toString(accessBitsWrite) +
                 "    | " + toString(readKeyB) + " | " + toString(writeKeyB) + "  |").append('\n');
         sb.append("+------------------------------------------------+").append('\n');
         return sb.toString();
@@ -64,31 +64,35 @@ public class SectorTrailerAccess {
 
     private String toString(AccessCond accessCond) {
         switch (accessCond) {
-            case NEVER: return "----";
-            case KEY_A: return "AAAA";
-            case KEY_B: return "BBBB";
-            case KEY_A_OR_B: return "ABAB";
+            case NEVER:
+                return "----";
+            case KEY_A:
+                return "AAAA";
+            case KEY_B:
+                return "BBBB";
+            case KEY_A_OR_B:
+                return "ABAB";
         }
 
         return "????";
     }
 
     private static Map<String, SectorTrailerAccess> accessMap = createMap(
-        // |  CBITS   |    KEY A     |   ACCESS BITS    |    KEY B     |
-        // | C1 C2 C3 | READ | WRITE |   READ | WRITE   | READ | WRITE |
-        new SectorTrailerAccess(cbits(0, 0, 0), NEVER, KEY_A, KEY_A, NEVER, KEY_A, KEY_A),
-        new SectorTrailerAccess(cbits(0, 1, 0), NEVER, NEVER, KEY_A, NEVER, KEY_A, NEVER),
-        new SectorTrailerAccess(cbits(1, 0, 0), NEVER, KEY_B, KEY_A_OR_B, NEVER, NEVER, KEY_B),
-        new SectorTrailerAccess(cbits(1, 1, 0), NEVER, NEVER, KEY_A_OR_B, NEVER, NEVER, NEVER),
-        // transport configuration
-        new SectorTrailerAccess(cbits(0, 0, 1), NEVER, KEY_A, KEY_A, KEY_A, KEY_A, KEY_A),
-        new SectorTrailerAccess(cbits(0, 1, 1), NEVER, KEY_B, KEY_A_OR_B, KEY_B, NEVER, KEY_B),
-        new SectorTrailerAccess(cbits(1, 0, 1), NEVER, NEVER, KEY_A_OR_B, KEY_B, NEVER, NEVER),
-        new SectorTrailerAccess(cbits(1, 1, 1), NEVER, NEVER, KEY_A_OR_B, NEVER, NEVER, NEVER));
+            // |  CBITS   |    KEY A     |   ACCESS BITS    |    KEY B     |
+            // | C1 C2 C3 | READ | WRITE |   READ | WRITE   | READ | WRITE |
+            new SectorTrailerAccess(cbits(0, 0, 0), NEVER, KEY_A, KEY_A, NEVER, KEY_A, KEY_A),
+            new SectorTrailerAccess(cbits(0, 1, 0), NEVER, NEVER, KEY_A, NEVER, KEY_A, NEVER),
+            new SectorTrailerAccess(cbits(1, 0, 0), NEVER, KEY_B, KEY_A_OR_B, NEVER, NEVER, KEY_B),
+            new SectorTrailerAccess(cbits(1, 1, 0), NEVER, NEVER, KEY_A_OR_B, NEVER, NEVER, NEVER),
+            // transport configuration
+            new SectorTrailerAccess(cbits(0, 0, 1), NEVER, KEY_A, KEY_A, KEY_A, KEY_A, KEY_A),
+            new SectorTrailerAccess(cbits(0, 1, 1), NEVER, KEY_B, KEY_A_OR_B, KEY_B, NEVER, KEY_B),
+            new SectorTrailerAccess(cbits(1, 0, 1), NEVER, NEVER, KEY_A_OR_B, KEY_B, NEVER, NEVER),
+            new SectorTrailerAccess(cbits(1, 1, 1), NEVER, NEVER, KEY_A_OR_B, NEVER, NEVER, NEVER));
 
     private static Map<String, SectorTrailerAccess> createMap(SectorTrailerAccess... accesses) {
         Map<String, SectorTrailerAccess> map = new HashMap<>();
-        for (SectorTrailerAccess dba: accesses) {
+        for (SectorTrailerAccess dba : accesses) {
             map.put(dba.cbits, dba);
         }
         return map;

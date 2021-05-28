@@ -12,8 +12,7 @@ public enum CardStandard {
     ISO_14443B_LEVEL34(0x06, "ISO 14443 B, level 3 or 4"),
 
     ICODE_1(0x09, "ICODE 1"),
-    ISO_15693(0x0b, "ISO 15693")
-    ;
+    ISO_15693(0x0b, "ISO 15693");
 
     private int pixSS;
     private String description;
@@ -28,7 +27,7 @@ public enum CardStandard {
     }
 
     public static CardStandard fromPixSS(int pixSS) {
-        for (CardStandard cardStandard: CardStandard.values()) {
+        for (CardStandard cardStandard : CardStandard.values()) {
             if (cardStandard.pixSS == pixSS) {
                 return cardStandard;
             }

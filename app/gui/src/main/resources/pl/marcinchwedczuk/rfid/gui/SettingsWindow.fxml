@@ -1,192 +1,240 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.Spinner?>
-<?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.control.Tooltip?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
-
-<AnchorPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.marcinchwedczuk.rfid.gui.SettingsWindow">
-   <children>
-      <VBox spacing="10.0">
-         <children>
-            <TitledPane fx:id="remarksPane" animated="false" text="Remarks" VBox.vgrow="NEVER">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0">
-                     <children>
-                        <ScrollPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <content>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="To understand settings provided on this form please check the Application Programming Interface document, provided on both the manufacturer site and in the docs folder of application repository.&#10;&#10;Sending Blinking &amp; Buzzing command that lasts longer than 2 seconds can result in terminal restart. It's best to send at most 3 repetitions of a given pattern. After command timeouts the reader may no longer respond properly. Unplugging the reader and plugging it again will fix this problem.&#10;&#10;Setting PICC parameters to incorrect values may result in bricking the terminal.&#10;Usually unplugging the reader and plugging it again is enough to reset the reader configuration.&#10;If this does not help, you will need to install official ACR122 drivers and sample applications. They will allow you to reset PICC parameters to their original values.&#10;You can find more details on the producer webpage: https://www.acs.com.hk/en/products/3/acr122u-usb-nfc-reader/https://www.acs.com.hk/en/products/3/acr122u-usb-nfc-reader/" wrappingWidth="600.0" />
-                           </content>
-                        </ScrollPane>
-                     </children>
-                  </AnchorPane>
-              </content>
-            </TitledPane>
-            <HBox spacing="10.0" VBox.vgrow="NEVER">
-               <children>
-                  <VBox>
-                     <children>
-                        <TitledPane animated="false" collapsible="false" text="Request LED blinking &amp; Buzzer buzzing...">
-                          <content>
-                            <AnchorPane minHeight="0.0" minWidth="0.0">
-                                 <children>
-                                    <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                      <columnConstraints>
-                                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" />
-                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0" minWidth="10.0" prefWidth="12.999992370605469" />
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                                      </columnConstraints>
-                                      <rowConstraints>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                          <RowConstraints vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                          <RowConstraints vgrow="SOMETIMES" />
-                                          <RowConstraints vgrow="SOMETIMES" />
-                                      </rowConstraints>
-                                       <children>
-                                          <Label text="Final State: Red LED:" />
-                                          <ChoiceBox fx:id="finalRedLedCB" prefWidth="150.0" GridPane.columnIndex="2" />
-                                          <Label text="Final State: Green LED:" GridPane.rowIndex="1" />
-                                          <Label text="State Mask: Red LED:" GridPane.rowIndex="2" />
-                                          <Label text="State Mask: Green LED:" GridPane.rowIndex="3" />
-                                          <Label text="Initial Blinking State: Red LED:" GridPane.rowIndex="4" />
-                                          <Label text="Initial Blinking State: Green LED:" GridPane.rowIndex="5" />
-                                          <Label text="Blinking Mask: Red LED:" GridPane.rowIndex="6" />
-                                          <Label text="Blinking Mask: Green LED:" GridPane.rowIndex="7" />
-                                          <ChoiceBox fx:id="finalGreenLedCB" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                          <ChoiceBox fx:id="maskRedLedCB" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                                          <ChoiceBox fx:id="maskGreenLedCB" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                                          <ChoiceBox fx:id="blinkingRedLedCB" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-                                          <ChoiceBox fx:id="blinkingGreenLedCB" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-                                          <ChoiceBox fx:id="blinkingMaskRedLedCB" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-                                          <ChoiceBox fx:id="blinkingMaskGreenLedCB" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="7" />
-                                          <Separator GridPane.columnSpan="2147483647" GridPane.rowIndex="8">
-                                             <padding>
-                                                <Insets bottom="10.0" top="10.0" />
-                                             </padding>
-                                          </Separator>
-                                          <Label text="T1 Duration (unit = 100ms):" GridPane.rowIndex="9" />
-                                          <Label text="T2 Duration (unit = 100ms):" GridPane.rowIndex="10" />
-                                          <Label text="Number of repetitions:" GridPane.rowIndex="11" />
-                                          <Label text="Link to Buzzer:" GridPane.rowIndex="12" />
-                                          <Spinner fx:id="t1Spinner" GridPane.columnIndex="2" GridPane.rowIndex="9" />
-                                          <Spinner fx:id="t2Spinner" GridPane.columnIndex="2" GridPane.rowIndex="10" />
-                                          <Spinner fx:id="repetitionsSpinner" GridPane.columnIndex="2" GridPane.rowIndex="11" />
-                                          <ChoiceBox fx:id="linkToBuzzerCB" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="12" />
-                                          <Separator GridPane.columnSpan="2147483647" GridPane.rowIndex="13">
-                                             <padding>
-                                                <Insets bottom="10.0" top="10.0" />
-                                             </padding>
-                                          </Separator>
-                                          <HBox alignment="CENTER_RIGHT" GridPane.columnSpan="2147483647" GridPane.rowIndex="14">
-                                             <children>
-                                                <Button mnemonicParsing="false" onAction="#sendBlinkBuzzCommand" text="Send command" />
-                                             </children>
-                                          </HBox>
-                                       </children>
-                                    </GridPane>
-                                 </children>
-                              </AnchorPane>
-                          </content>
-                        </TitledPane>
-                     </children>
-                  </VBox>
-                  <TitledPane animated="false" collapsible="false" text="PICC Parameters">
+<AnchorPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="pl.marcinchwedczuk.rfid.gui.SettingsWindow">
+    <children>
+        <VBox spacing="10.0">
+            <children>
+                <TitledPane fx:id="remarksPane" animated="false" text="Remarks" VBox.vgrow="NEVER">
                     <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0">
-                           <children>
-                              <GridPane layoutX="-44.0" layoutY="-34.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                <columnConstraints>
-                                    <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" />
-                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0" minWidth="10.0" prefWidth="15.0" />
-                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                                </columnConstraints>
-                                <rowConstraints>
-                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints vgrow="SOMETIMES" />
-                                    <RowConstraints vgrow="SOMETIMES" />
-                                </rowConstraints>
-                                 <children>
-                                    <Label text="Auto PICC Polling:" />
-                                    <Label text="Auto ATS Generation:" GridPane.rowIndex="1" />
-                                    <Label text="Polling Interval:" GridPane.rowIndex="2" />
-                                    <Label text="FeliCa 424K:" GridPane.rowIndex="3" />
-                                    <Label text="FeliCa 212K:" GridPane.rowIndex="4" />
-                                    <Label text="Topaz:" GridPane.rowIndex="5" />
-                                    <Label text="ISO 14443 Type B:" GridPane.rowIndex="6" />
-                                    <Label text="ISO 14443 Type A:" GridPane.rowIndex="7">
-                                       <tooltip>
-                                          <Tooltip text="To detect the MIFARE Tags, the Auto ATS Generation must be disabled first.To detect the MIFARE Tags, the Auto ATS Generation must be disabled first." wrapText="true" />
-                                       </tooltip>
-                                    </Label>
-                                    <ChoiceBox fx:id="autoPiccPoolingCB" prefWidth="150.0" GridPane.columnIndex="2" />
-                                    <ChoiceBox fx:id="autoAtsGenerationCB" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                    <ChoiceBox fx:id="pollingIntervalCB" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                                    <ChoiceBox fx:id="feliCa424KCB" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                                    <ChoiceBox fx:id="feliCa212KCB" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-                                    <ChoiceBox fx:id="topazCB" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-                                    <ChoiceBox fx:id="isoTypeB_CB" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-                                    <ChoiceBox fx:id="isoTypeA_CB" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="7" />
-                                    <Separator GridPane.columnSpan="2147483647" GridPane.rowIndex="8">
-                                       <padding>
-                                          <Insets bottom="10.0" top="10.0" />
-                                       </padding>
-                                    </Separator>
-                                    <HBox alignment="CENTER_RIGHT" spacing="10.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="9">
-                                       <children>
-                                          <Button minWidth="100.0" mnemonicParsing="false" onAction="#refreshPICC" text="Refresh" />
-                                          <Button minWidth="100.0" mnemonicParsing="false" onAction="#savePICC" text="Save" />
-                                       </children>
-                                    </HBox>
-                                 </children>
-                              </GridPane>
-                           </children>
+                        <AnchorPane minHeight="0.0" minWidth="0.0">
+                            <children>
+                                <ScrollPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0"
+                                            AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                            AnchorPane.topAnchor="0.0">
+                                    <content>
+                                        <Text strokeType="OUTSIDE" strokeWidth="0.0"
+                                              text="To understand settings provided on this form please check the Application Programming Interface document, provided on both the manufacturer site and in the docs folder of application repository.&#10;&#10;Sending Blinking &amp; Buzzing command that lasts longer than 2 seconds can result in terminal restart. It's best to send at most 3 repetitions of a given pattern. After command timeouts the reader may no longer respond properly. Unplugging the reader and plugging it again will fix this problem.&#10;&#10;Setting PICC parameters to incorrect values may result in bricking the terminal.&#10;Usually unplugging the reader and plugging it again is enough to reset the reader configuration.&#10;If this does not help, you will need to install official ACR122 drivers and sample applications. They will allow you to reset PICC parameters to their original values.&#10;You can find more details on the producer webpage: https://www.acs.com.hk/en/products/3/acr122u-usb-nfc-reader/https://www.acs.com.hk/en/products/3/acr122u-usb-nfc-reader/"
+                                              wrappingWidth="600.0"/>
+                                    </content>
+                                </ScrollPane>
+                            </children>
                         </AnchorPane>
                     </content>
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                  </TitledPane>
-               </children>
-            </HBox>
-            <HBox alignment="CENTER_RIGHT" spacing="10.0" VBox.vgrow="NEVER">
-               <children>
-                  <Button cancelButton="true" minWidth="100.0" mnemonicParsing="false" onAction="#onCancel" text="Close" />
-               </children>
-            </HBox>
-         </children>
-         <padding>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-         </padding>
-      </VBox>
-   </children>
+                </TitledPane>
+                <HBox spacing="10.0" VBox.vgrow="NEVER">
+                    <children>
+                        <VBox>
+                            <children>
+                                <TitledPane animated="false" collapsible="false"
+                                            text="Request LED blinking &amp; Buzzer buzzing...">
+                                    <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0">
+                                            <children>
+                                                <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                                          AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                    <columnConstraints>
+                                                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES"
+                                                                           minWidth="10.0"/>
+                                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0"
+                                                                           minWidth="10.0"
+                                                                           prefWidth="12.999992370605469"/>
+                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+                                                    </columnConstraints>
+                                                    <rowConstraints>
+                                                        <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                                                        vgrow="SOMETIMES"/>
+                                                        <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                                                        vgrow="SOMETIMES"/>
+                                                        <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                                                        vgrow="SOMETIMES"/>
+                                                        <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                                                        vgrow="SOMETIMES"/>
+                                                        <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                                                        vgrow="SOMETIMES"/>
+                                                        <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                                                        vgrow="SOMETIMES"/>
+                                                        <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                                                        vgrow="SOMETIMES"/>
+                                                        <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                                                        vgrow="SOMETIMES"/>
+                                                        <RowConstraints vgrow="SOMETIMES"/>
+                                                        <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                                                        vgrow="SOMETIMES"/>
+                                                        <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                                                        vgrow="SOMETIMES"/>
+                                                        <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                                                        vgrow="SOMETIMES"/>
+                                                        <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                                                        vgrow="SOMETIMES"/>
+                                                        <RowConstraints vgrow="SOMETIMES"/>
+                                                        <RowConstraints vgrow="SOMETIMES"/>
+                                                    </rowConstraints>
+                                                    <children>
+                                                        <Label text="Final State: Red LED:"/>
+                                                        <ChoiceBox fx:id="finalRedLedCB" prefWidth="150.0"
+                                                                   GridPane.columnIndex="2"/>
+                                                        <Label text="Final State: Green LED:" GridPane.rowIndex="1"/>
+                                                        <Label text="State Mask: Red LED:" GridPane.rowIndex="2"/>
+                                                        <Label text="State Mask: Green LED:" GridPane.rowIndex="3"/>
+                                                        <Label text="Initial Blinking State: Red LED:"
+                                                               GridPane.rowIndex="4"/>
+                                                        <Label text="Initial Blinking State: Green LED:"
+                                                               GridPane.rowIndex="5"/>
+                                                        <Label text="Blinking Mask: Red LED:" GridPane.rowIndex="6"/>
+                                                        <Label text="Blinking Mask: Green LED:" GridPane.rowIndex="7"/>
+                                                        <ChoiceBox fx:id="finalGreenLedCB" prefWidth="150.0"
+                                                                   GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                                                        <ChoiceBox fx:id="maskRedLedCB" prefWidth="150.0"
+                                                                   GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                                                        <ChoiceBox fx:id="maskGreenLedCB" prefWidth="150.0"
+                                                                   GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+                                                        <ChoiceBox fx:id="blinkingRedLedCB" prefWidth="150.0"
+                                                                   GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+                                                        <ChoiceBox fx:id="blinkingGreenLedCB" prefWidth="150.0"
+                                                                   GridPane.columnIndex="2" GridPane.rowIndex="5"/>
+                                                        <ChoiceBox fx:id="blinkingMaskRedLedCB" prefWidth="150.0"
+                                                                   GridPane.columnIndex="2" GridPane.rowIndex="6"/>
+                                                        <ChoiceBox fx:id="blinkingMaskGreenLedCB" prefWidth="150.0"
+                                                                   GridPane.columnIndex="2" GridPane.rowIndex="7"/>
+                                                        <Separator GridPane.columnSpan="2147483647"
+                                                                   GridPane.rowIndex="8">
+                                                            <padding>
+                                                                <Insets bottom="10.0" top="10.0"/>
+                                                            </padding>
+                                                        </Separator>
+                                                        <Label text="T1 Duration (unit = 100ms):"
+                                                               GridPane.rowIndex="9"/>
+                                                        <Label text="T2 Duration (unit = 100ms):"
+                                                               GridPane.rowIndex="10"/>
+                                                        <Label text="Number of repetitions:" GridPane.rowIndex="11"/>
+                                                        <Label text="Link to Buzzer:" GridPane.rowIndex="12"/>
+                                                        <Spinner fx:id="t1Spinner" GridPane.columnIndex="2"
+                                                                 GridPane.rowIndex="9"/>
+                                                        <Spinner fx:id="t2Spinner" GridPane.columnIndex="2"
+                                                                 GridPane.rowIndex="10"/>
+                                                        <Spinner fx:id="repetitionsSpinner" GridPane.columnIndex="2"
+                                                                 GridPane.rowIndex="11"/>
+                                                        <ChoiceBox fx:id="linkToBuzzerCB" prefWidth="150.0"
+                                                                   GridPane.columnIndex="2" GridPane.rowIndex="12"/>
+                                                        <Separator GridPane.columnSpan="2147483647"
+                                                                   GridPane.rowIndex="13">
+                                                            <padding>
+                                                                <Insets bottom="10.0" top="10.0"/>
+                                                            </padding>
+                                                        </Separator>
+                                                        <HBox alignment="CENTER_RIGHT" GridPane.columnSpan="2147483647"
+                                                              GridPane.rowIndex="14">
+                                                            <children>
+                                                                <Button mnemonicParsing="false"
+                                                                        onAction="#sendBlinkBuzzCommand"
+                                                                        text="Send command"/>
+                                                            </children>
+                                                        </HBox>
+                                                    </children>
+                                                </GridPane>
+                                            </children>
+                                        </AnchorPane>
+                                    </content>
+                                </TitledPane>
+                            </children>
+                        </VBox>
+                        <TitledPane animated="false" collapsible="false" text="PICC Parameters">
+                            <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0">
+                                    <children>
+                                        <GridPane layoutX="-44.0" layoutY="-34.0" AnchorPane.bottomAnchor="0.0"
+                                                  AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                                  AnchorPane.topAnchor="0.0">
+                                            <columnConstraints>
+                                                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES"
+                                                                   minWidth="10.0"/>
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0" minWidth="10.0"
+                                                                   prefWidth="15.0"/>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                                <RowConstraints vgrow="SOMETIMES"/>
+                                                <RowConstraints vgrow="SOMETIMES"/>
+                                            </rowConstraints>
+                                            <children>
+                                                <Label text="Auto PICC Polling:"/>
+                                                <Label text="Auto ATS Generation:" GridPane.rowIndex="1"/>
+                                                <Label text="Polling Interval:" GridPane.rowIndex="2"/>
+                                                <Label text="FeliCa 424K:" GridPane.rowIndex="3"/>
+                                                <Label text="FeliCa 212K:" GridPane.rowIndex="4"/>
+                                                <Label text="Topaz:" GridPane.rowIndex="5"/>
+                                                <Label text="ISO 14443 Type B:" GridPane.rowIndex="6"/>
+                                                <Label text="ISO 14443 Type A:" GridPane.rowIndex="7">
+                                                    <tooltip>
+                                                        <Tooltip
+                                                                text="To detect the MIFARE Tags, the Auto ATS Generation must be disabled first.To detect the MIFARE Tags, the Auto ATS Generation must be disabled first."
+                                                                wrapText="true"/>
+                                                    </tooltip>
+                                                </Label>
+                                                <ChoiceBox fx:id="autoPiccPoolingCB" prefWidth="150.0"
+                                                           GridPane.columnIndex="2"/>
+                                                <ChoiceBox fx:id="autoAtsGenerationCB" prefWidth="150.0"
+                                                           GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                                                <ChoiceBox fx:id="pollingIntervalCB" prefWidth="150.0"
+                                                           GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                                                <ChoiceBox fx:id="feliCa424KCB" prefWidth="150.0"
+                                                           GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+                                                <ChoiceBox fx:id="feliCa212KCB" prefWidth="150.0"
+                                                           GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+                                                <ChoiceBox fx:id="topazCB" prefWidth="150.0" GridPane.columnIndex="2"
+                                                           GridPane.rowIndex="5"/>
+                                                <ChoiceBox fx:id="isoTypeB_CB" prefWidth="150.0"
+                                                           GridPane.columnIndex="2" GridPane.rowIndex="6"/>
+                                                <ChoiceBox fx:id="isoTypeA_CB" prefWidth="150.0"
+                                                           GridPane.columnIndex="2" GridPane.rowIndex="7"/>
+                                                <Separator GridPane.columnSpan="2147483647" GridPane.rowIndex="8">
+                                                    <padding>
+                                                        <Insets bottom="10.0" top="10.0"/>
+                                                    </padding>
+                                                </Separator>
+                                                <HBox alignment="CENTER_RIGHT" spacing="10.0"
+                                                      GridPane.columnSpan="2147483647" GridPane.rowIndex="9">
+                                                    <children>
+                                                        <Button minWidth="100.0" mnemonicParsing="false"
+                                                                onAction="#refreshPICC" text="Refresh"/>
+                                                        <Button minWidth="100.0" mnemonicParsing="false"
+                                                                onAction="#savePICC" text="Save"/>
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </GridPane>
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                            <HBox.margin>
+                                <Insets/>
+                            </HBox.margin>
+                        </TitledPane>
+                    </children>
+                </HBox>
+                <HBox alignment="CENTER_RIGHT" spacing="10.0" VBox.vgrow="NEVER">
+                    <children>
+                        <Button cancelButton="true" minWidth="100.0" mnemonicParsing="false" onAction="#onCancel"
+                                text="Close"/>
+                    </children>
+                </HBox>
+            </children>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
+        </VBox>
+    </children>
 </AnchorPane>

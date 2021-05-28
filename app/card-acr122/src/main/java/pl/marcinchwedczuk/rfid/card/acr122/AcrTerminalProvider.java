@@ -18,7 +18,9 @@ public class AcrTerminalProvider {
     private static final Logger logger = LoggerFactory.getLogger(AcrTerminalProvider.class);
 
     public static final AcrTerminalProvider INSTANCE = new AcrTerminalProvider();
-    private AcrTerminalProvider() {}
+
+    private AcrTerminalProvider() {
+    }
 
     private static CardTerminal fakeTerminal = null;
 

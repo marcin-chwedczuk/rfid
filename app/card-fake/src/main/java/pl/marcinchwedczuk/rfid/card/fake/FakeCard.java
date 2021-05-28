@@ -7,7 +7,7 @@ import javax.smartcardio.CardException;
 
 /**
  * Fake MIFARE 1K Card.
- *
+ * <p>
  * All data is based on ACR API specification document
  * (see docs/ folder in this repository).
  */

@@ -1,81 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
-
-<AnchorPane stylesheets="@MainWindow.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.marcinchwedczuk.rfid.gui.MainWindow">
-   <children>
-      <GridPane layoutX="11.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="10.0" minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="-Infinity" minHeight="10.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="10.0" minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="-Infinity" minHeight="10.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="10.0" minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="-Infinity" minHeight="10.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="10.0" minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <VBox id="infoPane" alignment="CENTER" minHeight="200.0" minWidth="400.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
-               <children>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@img/acr122u.png" />
-                     </image>
-                  </ImageView>
-                  <Label id="infoText" fx:id="infoScreen" text="Select terminal to start...." />
-               </children>
-               <padding>
-                  <Insets bottom="5.0" left="20.0" right="20.0" top="5.0" />
-               </padding>
-            </VBox>
-            <MenuBar GridPane.columnSpan="2147483647">
-              <menus>
-                  <Menu text="_App">
-                    <items>
-                      <MenuItem onAction="#closeMainWindow" text="E_xit" />
-                    </items>
-                  </Menu>
-                <Menu text="_Terminal">
-                  <items>
-                    <MenuItem fx:id="settingsMenuItem" onAction="#showSettings" text="Settings..." />
-                  </items>
-                </Menu>
-                  <Menu text="_Help">
-                     <items>
-                        <MenuItem onAction="#showAboutDialog" text="About..." />
-                     </items>
-                  </Menu>
-              </menus>
-            </MenuBar>
-            <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-               <children>
-                  <Label text="Terminal:" />
-                  <ComboBox fx:id="terminalsList" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                  <Button mnemonicParsing="false" onAction="#refreshTerminalList" text="Refresh" />
-               </children>
-            </HBox>
-            <Button mnemonicParsing="false" onAction="#closeMainWindow" prefHeight="34.0" prefWidth="125.0" text="Close" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
-         </children>
-      </GridPane>
-   </children>
+<?import javafx.scene.layout.*?>
+<AnchorPane stylesheets="@MainWindow.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="pl.marcinchwedczuk.rfid.gui.MainWindow">
+    <children>
+        <GridPane layoutX="11.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                  AnchorPane.topAnchor="0.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints maxHeight="10.0" minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES"/>
+                <RowConstraints maxHeight="-Infinity" minHeight="10.0" vgrow="SOMETIMES"/>
+                <RowConstraints maxHeight="10.0" minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES"/>
+                <RowConstraints maxHeight="-Infinity" minHeight="10.0" vgrow="SOMETIMES"/>
+                <RowConstraints maxHeight="10.0" minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES"/>
+                <RowConstraints maxHeight="-Infinity" minHeight="10.0" vgrow="SOMETIMES"/>
+                <RowConstraints maxHeight="10.0" minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES"/>
+            </rowConstraints>
+            <children>
+                <VBox id="infoPane" alignment="CENTER" minHeight="200.0" minWidth="400.0" GridPane.columnIndex="1"
+                      GridPane.rowIndex="4">
+                    <children>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@img/acr122u.png"/>
+                            </image>
+                        </ImageView>
+                        <Label id="infoText" fx:id="infoScreen" text="Select terminal to start...."/>
+                    </children>
+                    <padding>
+                        <Insets bottom="5.0" left="20.0" right="20.0" top="5.0"/>
+                    </padding>
+                </VBox>
+                <MenuBar GridPane.columnSpan="2147483647">
+                    <menus>
+                        <Menu text="_App">
+                            <items>
+                                <MenuItem onAction="#closeMainWindow" text="E_xit"/>
+                            </items>
+                        </Menu>
+                        <Menu text="_Terminal">
+                            <items>
+                                <MenuItem fx:id="settingsMenuItem" onAction="#showSettings" text="Settings..."/>
+                            </items>
+                        </Menu>
+                        <Menu text="_Help">
+                            <items>
+                                <MenuItem onAction="#showAboutDialog" text="About..."/>
+                            </items>
+                        </Menu>
+                    </menus>
+                </MenuBar>
+                <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                    <children>
+                        <Label text="Terminal:"/>
+                        <ComboBox fx:id="terminalsList" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS"/>
+                        <Button mnemonicParsing="false" onAction="#refreshTerminalList" text="Refresh"/>
+                    </children>
+                </HBox>
+                <Button mnemonicParsing="false" onAction="#closeMainWindow" prefHeight="34.0" prefWidth="125.0"
+                        text="Close" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="6"/>
+            </children>
+        </GridPane>
+    </children>
 </AnchorPane>

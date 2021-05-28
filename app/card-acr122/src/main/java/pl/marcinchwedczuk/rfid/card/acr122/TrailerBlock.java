@@ -3,16 +3,16 @@ package pl.marcinchwedczuk.rfid.card.acr122;
 import java.util.Arrays;
 
 public class TrailerBlock {
-    private static final byte FF = (byte)0xff;
+    private static final byte FF = (byte) 0xff;
 
     public byte[] keyA;
     public byte[] keyB;
     public AccessBits accessBits;
 
     public TrailerBlock() {
-        this(new byte[] {
+        this(new byte[]{
                 FF, FF, FF, FF, FF, FF,
-                FF, 0x07, (byte)0x80, 0x69,
+                FF, 0x07, (byte) 0x80, 0x69,
                 FF, FF, FF, FF, FF, FF,
         });
     }

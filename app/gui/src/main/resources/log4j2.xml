@@ -10,9 +10,9 @@
                 <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
             </PatternLayout>
             <Policies>
-                <SizeBasedTriggeringPolicy size="1MB" />
+                <SizeBasedTriggeringPolicy size="1MB"/>
             </Policies>
-            <DefaultRolloverStrategy max="3" />
+            <DefaultRolloverStrategy max="3"/>
         </RollingFile>
         <Console name="LogToConsole" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
@@ -20,8 +20,8 @@
     </Appenders>
     <Loggers>
         <Root level="DEBUG">
-            <AppenderRef ref="LogToFile" />
-            <AppenderRef ref="LogToConsole" />
+            <AppenderRef ref="LogToFile"/>
+            <AppenderRef ref="LogToConsole"/>
         </Root>
     </Loggers>
 </Configuration>

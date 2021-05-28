@@ -36,7 +36,7 @@ public class WritePermissionsCommand extends BaseUiCommand<Sector> {
 
     @Override
     protected String operationName() {
-        if (fromSector == toSector-1) {
+        if (fromSector == toSector - 1) {
             return String.format("Writing permissions for sector %d...", fromSector);
         } else {
             return String.format("Writing permissions for sectors %d - %d...",
@@ -72,11 +72,10 @@ public class WritePermissionsCommand extends BaseUiCommand<Sector> {
     }
 
     private void verifyWriteSuccessful(
-            DataAddress dataAddress, byte[] trailerBytes, byte[] dataOnCard)
-    {
+            DataAddress dataAddress, byte[] trailerBytes, byte[] dataOnCard) {
         if (!Arrays.equals(dataOnCard, trailerBytes)) {
             failWith("Sector trailer write verification failed " +
-                    "for sector %s and block %s.",
+                            "for sector %s and block %s.",
                     dataAddress.sector, dataAddress.block);
         }
     }

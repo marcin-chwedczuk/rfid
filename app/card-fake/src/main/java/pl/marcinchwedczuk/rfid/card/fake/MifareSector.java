@@ -46,24 +46,23 @@ class MifareSector {
             }
 
             return Arrays.copyOf(blocks[blockIndex], nBytes);
-        }
-        else {
+        } else {
             // Sector trailer
             TrailerBlockAccess access = TrailerBlockAccess.fromBits(accessBits[3]);
             byte[] trailerCopy = blocks[3].clone();
 
             if (!access.readAccessToKeyA.allowedUsingKey(key)) {
                 // Zero key A
-                Arrays.fill(trailerCopy, 0, 6, (byte)0x00);
+                Arrays.fill(trailerCopy, 0, 6, (byte) 0x00);
             }
 
             if (!access.readAccessToAccessBits.allowedUsingKey(key)) {
-                Arrays.fill(trailerCopy, 7, 10, (byte)0x00);
+                Arrays.fill(trailerCopy, 7, 10, (byte) 0x00);
             }
 
             if (!access.readAccessToKeyB.allowedUsingKey(key)) {
                 // Zero key B
-                Arrays.fill(trailerCopy, 10, 16, (byte)0x00);
+                Arrays.fill(trailerCopy, 10, 16, (byte) 0x00);
             }
 
             return Arrays.copyOf(trailerCopy, nBytes);
@@ -83,8 +82,7 @@ class MifareSector {
 
             System.arraycopy(blockData, 0, blocks[blockIndex], 0, blocks[blockIndex].length);
             return true;
-        }
-        else {
+        } else {
             // Sector trailer
             TrailerBlockAccess access = TrailerBlockAccess.fromBits(accessBits[3]);
             byte[] trailerCopy = blocks[3].clone();

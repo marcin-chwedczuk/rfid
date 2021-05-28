@@ -53,7 +53,7 @@ public class ReadDataCommand extends BaseUiCommand<Sector> {
     protected void doWork(Sector sector) {
         cardService.authenticateSector(sector, selectedKey);
 
-        for (Block block: Block.allBlocksInSector()) {
+        for (Block block : Block.allBlocksInSector()) {
             byte[] blockBytes = cardService.readBlockData(DataAddress.of(sector, block));
             DataRow dataRow = new DataRow(sector, block, blockBytes);
             resultContainer.add(dataRow);

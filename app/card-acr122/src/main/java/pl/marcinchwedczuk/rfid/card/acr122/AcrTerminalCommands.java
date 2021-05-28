@@ -15,15 +15,15 @@ public abstract class AcrTerminalCommands {
     public PiccOperatingParameter readPiccOperatingParameter() {
         logger.info("readPiccOperatingParameter()");
 
-        byte[] commandBytes = new byte[] {
-                (byte)0xFF, 0x00, 0x50, 0x00, 0x00
+        byte[] commandBytes = new byte[]{
+                (byte) 0xFF, 0x00, 0x50, 0x00, 0x00
         };
 
         try {
             byte[] responseBytes = this.sendCommandToTerminal(commandBytes);
 
             // Format: [0x90, PICC byte]
-            if (responseBytes.length != 2 || responseBytes[0] != (byte)0x90) {
+            if (responseBytes.length != 2 || responseBytes[0] != (byte) 0x90) {
                 logger.error("Unexpected bytes returned from terminal {}.", responseBytes);
                 throw AcrStandardErrors.unexpectedResponseBytes(responseBytes);
             }
@@ -39,14 +39,14 @@ public abstract class AcrTerminalCommands {
 
         byte parameterByte = parameter.toByte();
 
-        byte[] commandBytes = new byte[] {
-                (byte)0xFF, 0x00, 0x51, parameterByte, 0x00
+        byte[] commandBytes = new byte[]{
+                (byte) 0xFF, 0x00, 0x51, parameterByte, 0x00
         };
 
         try {
             byte[] responseBytes = sendCommandToTerminal(commandBytes);
 
-            if (responseBytes.length != 2 || responseBytes[0] != (byte)0x90) {
+            if (responseBytes.length != 2 || responseBytes[0] != (byte) 0x90) {
                 logger.error("Unexpected bytes returned from terminal {}.", responseBytes);
                 throw AcrStandardErrors.unexpectedResponseBytes(responseBytes);
             }
@@ -61,8 +61,8 @@ public abstract class AcrTerminalCommands {
 
         byte[] bdc = settings.toControlBytes();
 
-        byte[] commandBytes = new byte[] {
-                (byte)0xFF, 0x00, 0x40,
+        byte[] commandBytes = new byte[]{
+                (byte) 0xFF, 0x00, 0x40,
                 settings.getLedSettings().toControlByte(),
                 0x04, bdc[0], bdc[1], bdc[2], bdc[3]
         };
@@ -75,8 +75,7 @@ public abstract class AcrTerminalCommands {
             int sw = response.getSW();
             if (sw == 0x6300) {
                 throw AcrStandardErrors.operationFailed();
-            }
-            else if (response.getSW1() != 0x90) {
+            } else if (response.getSW1() != 0x90) {
                 throw AcrStandardErrors.unexpectedResponseCode(sw);
             }
             // Success
@@ -86,9 +85,9 @@ public abstract class AcrTerminalCommands {
     }
 
     public void configureBuzzerOnCartDetection(boolean buzzOnCartDetection) {
-        byte param = buzzOnCartDetection ? (byte)0xFF : 0x00;
-        byte[] commandBytes = new byte[] {
-                (byte)0xFF, 0x00, 0x52, param, 0x00
+        byte param = buzzOnCartDetection ? (byte) 0xFF : 0x00;
+        byte[] commandBytes = new byte[]{
+                (byte) 0xFF, 0x00, 0x52, param, 0x00
         };
 
         try {
@@ -111,14 +110,14 @@ public abstract class AcrTerminalCommands {
 
     public static final int DISABLE_TIMEOUT = 0x00;
     public static final int WAIT_INDEFINITELY = 0xFF;
+
     /**
      * Sets how long terminal will wait for a card to respond
      * to the request in seconds.
      *
-     * @param seconds
-     *      Timeout must be multiple of 5 seconds, e.g. 5, 10, 15 but not 12.
-     *      Use {@link #DISABLE_TIMEOUT} to disable timeout check.
-     *      Use {@link #WAIT_INDEFINITELY} to wait for a response without timing out.
+     * @param seconds Timeout must be multiple of 5 seconds, e.g. 5, 10, 15 but not 12.
+     *                Use {@link #DISABLE_TIMEOUT} to disable timeout check.
+     *                Use {@link #WAIT_INDEFINITELY} to wait for a response without timing out.
      */
     public void setTimeout(int seconds) {
         logger.info("setTimeout({})", seconds);
@@ -129,10 +128,10 @@ public abstract class AcrTerminalCommands {
 
         // Timeout is measured in 5 seconds unit. We round up
         // to the closed unit.
-        byte roundedUpUnits = (byte)((seconds + 4) / 5);
+        byte roundedUpUnits = (byte) ((seconds + 4) / 5);
 
-        byte[] commandBytes = new byte[] {
-                (byte)0xFF, 0x00, 0x41, roundedUpUnits, 0x00
+        byte[] commandBytes = new byte[]{
+                (byte) 0xFF, 0x00, 0x41, roundedUpUnits, 0x00
         };
 
         try {
@@ -142,8 +141,7 @@ public abstract class AcrTerminalCommands {
             int sw = response.getSW();
             if (sw == 0x6300) {
                 throw AcrStandardErrors.operationFailed();
-            }
-            else if (sw != 0x9000) {
+            } else if (sw != 0x9000) {
                 throw AcrStandardErrors.unexpectedResponseCode(sw);
             }
             // Success
@@ -155,8 +153,8 @@ public abstract class AcrTerminalCommands {
     public String getReaderFirmwareVersion() {
         logger.info("getReaderFirmwareVersion()");
 
-        byte[] commandBytes = new byte[] {
-                (byte)0xFF, 0x00, 0x48, 0x00, 0x00
+        byte[] commandBytes = new byte[]{
+                (byte) 0xFF, 0x00, 0x48, 0x00, 0x00
         };
 
         try {

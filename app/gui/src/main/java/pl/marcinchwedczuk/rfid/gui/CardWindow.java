@@ -38,22 +38,32 @@ public class CardWindow implements Initializable {
 
     private final FileChooser fileChooser = new FileChooser();
 
-    @FXML private TextField cardId;
-    @FXML private TextField cardStandard;
+    @FXML
+    private TextField cardId;
+    @FXML
+    private TextField cardStandard;
 
-    @FXML private KeyBox key;
-    @FXML private ChoiceBox<SelectedKey> useAsKeyChoiceBox;
+    @FXML
+    private KeyBox key;
+    @FXML
+    private ChoiceBox<SelectedKey> useAsKeyChoiceBox;
 
     private final SimpleObjectProperty<KeyForm> displayDataEncoding = new SimpleObjectProperty<>(KeyForm.Hex);
-    @FXML private ToggleButton displayDataAsHex;
+    @FXML
+    private ToggleButton displayDataAsHex;
 
-    @FXML private Spinner<Integer> fromSector;
-    @FXML private Spinner<Integer> toSector;
+    @FXML
+    private Spinner<Integer> fromSector;
+    @FXML
+    private Spinner<Integer> toSector;
 
-    @FXML private TableView<DataRow> dataTable;
+    @FXML
+    private TableView<DataRow> dataTable;
 
-    @FXML private TableView<DataAccessInfoTable.DataAccessInfoBean> dataAccessInfo;
-    @FXML private TableView<SectorTrailerAccessInfoTable.SectorTrailerAccessInfoBean> trailerAccessInfo;
+    @FXML
+    private TableView<DataAccessInfoTable.DataAccessInfoBean> dataAccessInfo;
+    @FXML
+    private TableView<SectorTrailerAccessInfoTable.SectorTrailerAccessInfoBean> trailerAccessInfo;
 
     private final TableColumn<DataRow, Integer> sectorColumn = new TableColumn<>("SECTOR");
     private final TableColumn<DataRow, Integer> blockColumn = new TableColumn<>("BLOCK");
@@ -61,15 +71,22 @@ public class CardWindow implements Initializable {
 
     private final ObservableList<DataRow> rows = FXCollections.observableArrayList();
 
-    @FXML private ChoiceBox<String> secBlock0Perms;
-    @FXML private ChoiceBox<String> secBlock1Perms;
-    @FXML private ChoiceBox<String> secBlock2Perms;
-    @FXML private ChoiceBox<String> secTrailerPerms;
+    @FXML
+    private ChoiceBox<String> secBlock0Perms;
+    @FXML
+    private ChoiceBox<String> secBlock1Perms;
+    @FXML
+    private ChoiceBox<String> secBlock2Perms;
+    @FXML
+    private ChoiceBox<String> secTrailerPerms;
 
-    @FXML private MaskedTextField secSector;
+    @FXML
+    private MaskedTextField secSector;
 
-    @FXML private KeyBox secKeyA;
-    @FXML private KeyBox secKeyB;
+    @FXML
+    private KeyBox secKeyA;
+    @FXML
+    private KeyBox secKeyB;
 
     private AcrCard card;
     private UiServices uiServices;
@@ -349,9 +366,9 @@ public class CardWindow implements Initializable {
                 uiServices,
                 card,
                 key.getKeyBytes(), useAsKeyChoiceBox.getValue(),
-                sectorIndex, sectorIndex+1,
+                sectorIndex, sectorIndex + 1,
                 trailerBlock
-            ).runCommandAsync();
+        ).runCommandAsync();
     }
 
     public void secWriteForEntireCard(ActionEvent actionEvent) {
@@ -369,7 +386,7 @@ public class CardWindow implements Initializable {
 
             FxDialogBoxes.info(String.format(
                     "Terminal name: %s" + System.lineSeparator() +
-                    "Firmware version: %s.",
+                            "Firmware version: %s.",
                     terminalName, firmware));
         } catch (Exception e) {
             FxDialogBoxes.error(
@@ -384,7 +401,7 @@ public class CardWindow implements Initializable {
     }
 
     public void closeWindow() {
-        ((Stage)getScene().getWindow()).close();
+        ((Stage) getScene().getWindow()).close();
     }
 
     public static CardWindow show(AcrCard card, Window owner) {
@@ -404,7 +421,7 @@ public class CardWindow implements Initializable {
 
             childWindow.setOnCloseRequest(we -> card.disconnect());
 
-            CardWindow controller = (CardWindow)loader.getController();
+            CardWindow controller = (CardWindow) loader.getController();
             controller.setCard(card);
 
             childWindow.sizeToScene();

@@ -4,13 +4,11 @@ import java.util.Arrays;
 
 class AccessBitsParser {
     /**
-     * @param bytes
-     *  Trailer sector bytes. Should be `byte[16]` array.
-     * @return
-     *  Returns array which at index `i` contains access bits for sector `i`.
-     *  For example array may contain value `"010"` at index `1`.
-     *  That means that we have access control bits for sector `1`:
-     *  `C1_1 ... C3_1` set to values `0`, `1` and `0`.
+     * @param bytes Trailer sector bytes. Should be `byte[16]` array.
+     * @return Returns array which at index `i` contains access bits for sector `i`.
+     * For example array may contain value `"010"` at index `1`.
+     * That means that we have access control bits for sector `1`:
+     * `C1_1 ... C3_1` set to values `0`, `1` and `0`.
      */
     public String[] parse(byte[] bytes) {
         char[][] map = new char[4][3];
@@ -23,7 +21,7 @@ class AccessBitsParser {
 
         int byteIndex = 6;
         int bitIndex = 7;
-        for (String bitName: bitsNames) {
+        for (String bitName : bitsNames) {
             if (bitName.startsWith("c")) {
 
                 int bitPosition = charValue(bitName.charAt(1)) - 1; // Make it zero-based

@@ -4,7 +4,10 @@ package pl.marcinchwedczuk.rfid.card.acr122;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.smartcardio.*;
+import javax.smartcardio.Card;
+import javax.smartcardio.CardException;
+import javax.smartcardio.CardTerminal;
+import javax.smartcardio.TerminalFactory;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.List;
@@ -16,7 +19,7 @@ import static java.util.stream.Collectors.toList;
  */
 public class AcrTerminal extends AcrTerminalCommands {
     private static final Logger logger = LoggerFactory.getLogger(AcrTerminal.class);
-    private static final byte FF = (byte)0xFF;
+    private static final byte FF = (byte) 0xFF;
 
     private final CardTerminal cardTerminal;
 

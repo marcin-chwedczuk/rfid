@@ -19,6 +19,7 @@ public class App extends Application {
     private static final Logger logger = LoggerFactory.getLogger(App.class);
 
     private static HostServices hostServices = null;
+
     public static HostServices hostServices() {
         if (hostServices == null) {
             throw new IllegalStateException();

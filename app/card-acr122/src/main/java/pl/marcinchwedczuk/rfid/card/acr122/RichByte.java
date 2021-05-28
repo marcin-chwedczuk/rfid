@@ -31,7 +31,7 @@ class RichByte {
     }
 
     public byte asByte() {
-        return (byte)b;
+        return (byte) b;
     }
 
     @Override

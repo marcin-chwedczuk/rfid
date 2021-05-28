@@ -6,14 +6,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
-import javafx.stage.Modality;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Optional;
 
 public class FxDialogBoxes {
-    private FxDialogBoxes() { }
+    private FxDialogBoxes() {
+    }
 
     public static boolean ask(String question) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);

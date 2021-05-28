@@ -12,11 +12,11 @@ public class XmlByte {
     }
 
     public XmlByte(byte b) {
-        this.hexByte = String.format("%02X", ((int)b & 0xFF));
+        this.hexByte = String.format("%02X", ((int) b & 0xFF));
     }
 
     public byte toByte() {
-        return (byte)Integer.parseInt(hexByte, 16);
+        return (byte) Integer.parseInt(hexByte, 16);
     }
 
     @JsonValue

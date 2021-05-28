@@ -1,6 +1,7 @@
 package pl.marcinchwedczuk.rfid.card.acr122;
 
-import static pl.marcinchwedczuk.rfid.card.acr122.PiccOperatingParameter.EnableDisable.*;
+import static pl.marcinchwedczuk.rfid.card.acr122.PiccOperatingParameter.EnableDisable.DISABLE;
+import static pl.marcinchwedczuk.rfid.card.acr122.PiccOperatingParameter.EnableDisable.ENABLE;
 import static pl.marcinchwedczuk.rfid.card.acr122.PiccOperatingParameter.PoolingInterval.INTERVAL_250_MILLIS;
 import static pl.marcinchwedczuk.rfid.card.acr122.PiccOperatingParameter.PoolingInterval.INTERVAL_500_MILLIS;
 import static pl.marcinchwedczuk.rfid.card.acr122.PiccOperatingParameter.SkipDetect.DETECT;
@@ -20,6 +21,7 @@ public class PiccOperatingParameter {
         INTERVAL_250_MILLIS,
         INTERVAL_500_MILLIS
     }
+
     private PoolingInterval pollingInterval;
 
     /* The Tag Types to be detected during PICC Polling. */
@@ -34,7 +36,7 @@ public class PiccOperatingParameter {
     private SkipDetect iso14443TypeA;
 
     public PiccOperatingParameter() {
-        this((byte)0);
+        this((byte) 0);
     }
 
     private PiccOperatingParameter(byte bits) {
@@ -134,14 +136,14 @@ public class PiccOperatingParameter {
     @Override
     public String toString() {
         return "PiccOperatingParameter{" + "\n" +
-                "enableAutoPiccPolling=" + autoPiccPolling +"\n" +
-                ", enableAutoAtsGeneration=" + autoAtsGeneration +"\n" +
-                ", pollingInterval=" + pollingInterval +"\n" +
-                ", detectFeliCa424K=" + feliCa424K +"\n" +
-                ", detectFeliCa212K=" + feliCa212K +"\n" +
-                ", detectTopaz=" + topaz +"\n" +
-                ", detectISO14443TypeB=" + iso14443TypeB +"\n" +
-                ", detectISO14443TypeA=" + iso14443TypeA +"\n" +
+                "enableAutoPiccPolling=" + autoPiccPolling + "\n" +
+                ", enableAutoAtsGeneration=" + autoAtsGeneration + "\n" +
+                ", pollingInterval=" + pollingInterval + "\n" +
+                ", detectFeliCa424K=" + feliCa424K + "\n" +
+                ", detectFeliCa212K=" + feliCa212K + "\n" +
+                ", detectTopaz=" + topaz + "\n" +
+                ", detectISO14443TypeB=" + iso14443TypeB + "\n" +
+                ", detectISO14443TypeA=" + iso14443TypeA + "\n" +
                 '}';
     }
 
@@ -154,5 +156,6 @@ public class PiccOperatingParameter {
         ENABLE,
         DISABLE
     }
-    public enum SkipDetect { SKIP, DETECT }
+
+    public enum SkipDetect {SKIP, DETECT}
 }

@@ -5,7 +5,6 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.scene.control.cell.TextFieldTableCell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.marcinchwedczuk.rfid.gui.commands.BaseUiCommand;
 
 public class DataRowByteTableCell extends TextFieldTableCell<DataRow, Byte> {
     private static final Logger logger = LoggerFactory.getLogger(DataRowByteTableCell.class);
@@ -59,11 +58,11 @@ public class DataRowByteTableCell extends TextFieldTableCell<DataRow, Byte> {
             }
         }
 
-        if (rowIndex == -1 || columnIndex == -1 )
+        if (rowIndex == -1 || columnIndex == -1)
             return;
 
         columnIndex += 1; // Select next column
-        if (columnIndex >= allColumns.size()-1)
+        if (columnIndex >= allColumns.size() - 1)
             return;
 
         int finalRowIndex = rowIndex, finalColumnIndex = columnIndex;

@@ -3,18 +3,19 @@ package pl.marcinchwedczuk.rfid.gui;
 // Taken from: https://raw.githubusercontent.com/gbfragoso/MaskedTextField
 // All credits goes to @gbfragoso
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
-
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.TextField;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
+
 /**
  * This component receives a mask that dictate the valid input for this field.
+ *
  * @author gbfragoso
  * @version 2.1
  */
@@ -61,7 +62,7 @@ public class MaskedTextField extends TextField {
 
         // When MaskedTextField gains focus caret goes to first placeholder position
         focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue) {
+            if (newValue) {
                 Platform.runLater(() -> {
                     int pos = firstPlaceholderPosition();
                     selectRange(pos, pos);
@@ -98,6 +99,7 @@ public class MaskedTextField extends TextField {
 
     /**
      * Set input mask, rebuild internal mask and update view.
+     *
      * @param mask Mask dictating legal character values.
      */
     public void setMask(String mask) {
@@ -143,7 +145,7 @@ public class MaskedTextField extends TextField {
         semanticMask.clear();
 
         MaskFactory factory = new MaskFactory();
-        while(i < length) {
+        while (i < length) {
             char maskValue = newMask[i];
 
             // If the actual char is MASK_ESCAPE look the next char as literal
@@ -162,7 +164,7 @@ public class MaskedTextField extends TextField {
     }
 
     private void resetSemanticMask() {
-        semanticMask.stream().forEach(maskCharacter-> maskCharacter.setValue(placeholder));
+        semanticMask.stream().forEach(maskCharacter -> maskCharacter.setValue(placeholder));
     }
 
     private void updateSemanticMask(String newText) {
@@ -212,7 +214,7 @@ public class MaskedTextField extends TextField {
     /**
      * Return true if a given char isn't a mask.
      */
-    private boolean isLiteral(char c){
+    private boolean isLiteral(char c) {
         return (c != MASK_ANYTHING &&
                 c != MASK_CHARACTER &&
                 c != MASK_ESCAPE &&
@@ -248,6 +250,7 @@ public class MaskedTextField extends TextField {
 
     /**
      * Insert values on semantic mask.
+     *
      * @param text Plain text to be inserted
      */
     private void stringToValue(String text) {
@@ -265,7 +268,7 @@ public class MaskedTextField extends TextField {
                 if (!maskCharacter.isLiteral()) {
                     char ch = inputText.charAt(textPosition);
 
-                    if(maskCharacter.accept(ch)) {
+                    if (maskCharacter.accept(ch)) {
                         maskCharacter.setValue(ch);
                         validText.append(maskCharacter.getValue());
                         maskPosition++;

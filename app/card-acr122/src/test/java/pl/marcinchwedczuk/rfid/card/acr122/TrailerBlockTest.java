@@ -1,30 +1,29 @@
 package pl.marcinchwedczuk.rfid.card.acr122;
 
 import org.junit.jupiter.api.Test;
-import pl.marcinchwedczuk.rfid.card.acr122.AccessBits;
-import pl.marcinchwedczuk.rfid.card.acr122.TrailerBlock;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TrailerBlockTest {
-    private static final byte FF = (byte)0xFF;
+    private static final byte FF = (byte) 0xFF;
     private static final byte[] SECTOR_TRAILER = {
-        // key A
-        FF, FF, FF, FF, FF, FF,
+            // key A
+            FF, FF, FF, FF, FF, FF,
 
-        // Access bits
-        FF, 0x07, (byte)0x80, 0x69,
+            // Access bits
+            FF, 0x07, (byte) 0x80, 0x69,
 
-        // key B
-        0x12, FF, FF, FF, FF, 0x12,
+            // key B
+            0x12, FF, FF, FF, FF, 0x12,
     };
 
     @Test
     void readAccessFromBytes() {
         TrailerBlock tb = new TrailerBlock(SECTOR_TRAILER.clone());
 
-        assertArrayEquals(new byte[] { FF, FF, FF, FF, FF, FF }, tb.keyA);
-        assertArrayEquals(new byte[] { 0x12, FF, FF, FF, FF, 0x12 }, tb.keyB);
+        assertArrayEquals(new byte[]{FF, FF, FF, FF, FF, FF}, tb.keyA);
+        assertArrayEquals(new byte[]{0x12, FF, FF, FF, FF, 0x12}, tb.keyB);
 
         AccessBits ab = tb.accessBits;
 

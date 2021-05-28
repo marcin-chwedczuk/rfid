@@ -1,332 +1,467 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.control.Spinner?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.control.ToggleButton?>
-<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
 <?import pl.marcinchwedczuk.rfid.gui.KeyBox?>
 <?import pl.marcinchwedczuk.rfid.gui.MaskedTextField?>
+<AnchorPane stylesheets="@CardWindow.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="pl.marcinchwedczuk.rfid.gui.CardWindow">
+    <children>
+        <VBox layoutX="280.0" layoutY="55.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+              AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <MenuBar fx:id="menuBar" VBox.vgrow="NEVER">
+                    <menus>
+                        <Menu text="_Terminal">
+                            <items>
+                                <MenuItem onAction="#displayFirmwareVersion" text="Get _firmware version..."/>
+                                <SeparatorMenuItem mnemonicParsing="false"/>
+                                <MenuItem onAction="#showSettingsDialog" text="_Settings..."/>
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Help">
+                            <items>
+                                <MenuItem onAction="#showAboutDialog" text="_About..."/>
+                            </items>
+                        </Menu>
+                    </menus>
+                </MenuBar>
+                <GridPane VBox.vgrow="NEVER">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" valignment="CENTER"
+                                        vgrow="SOMETIMES"/>
+                    </rowConstraints>
+                    <children>
+                        <Label text="Card Name:" GridPane.columnIndex="1"/>
+                        <TextField fx:id="cardId" disable="true" editable="false" maxWidth="-Infinity"
+                                   minWidth="-Infinity" text="AA:BB:CC:DD:EE:FF" GridPane.columnIndex="3"/>
+                        <Label text="Card Standard:" GridPane.columnIndex="5"/>
+                        <TextField fx:id="cardStandard" disable="true" editable="false"
+                                   maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefColumnCount="30"
+                                   GridPane.columnIndex="7"/>
+                    </children>
+                </GridPane>
+                <GridPane VBox.vgrow="NEVER">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity"/>
+                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308"
+                                           minWidth="-Infinity"/>
+                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0"
+                                           prefWidth="10.0"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" valignment="CENTER"
+                                        vgrow="SOMETIMES"/>
+                    </rowConstraints>
+                    <children>
+                        <ImageView fitHeight="36.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true"
+                                   GridPane.columnIndex="1">
+                            <image>
+                                <Image url="@img/key.png"/>
+                            </image>
+                        </ImageView>
+                        <Label text="Key:" GridPane.columnIndex="3"/>
+                        <KeyBox fx:id="key" alignment="CENTER" GridPane.columnIndex="5"/>
+                        <Label text="Use Key As:" GridPane.columnIndex="7"/>
+                        <ChoiceBox fx:id="useAsKeyChoiceBox" GridPane.columnIndex="9"/>
+                        <Button mnemonicParsing="false" onAction="#loadDefaultFactoryKey"
+                                text="Load Default Factory Key" GridPane.columnIndex="10"/>
+                    </children>
+                </GridPane>
+                <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+                    <tabs>
+                        <Tab text="READ / WRITE">
+                            <content>
+                                <AnchorPane>
+                                    <children>
+                                        <HBox layoutX="108.0" layoutY="151.0" spacing="20.0"
+                                              AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                              AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <children>
+                                                <GridPane HBox.hgrow="NEVER">
+                                                    <columnConstraints>
+                                                        <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+                                                    </columnConstraints>
+                                                    <rowConstraints>
+                                                        <RowConstraints minHeight="-Infinity" vgrow="NEVER"/>
+                                                        <RowConstraints minHeight="-Infinity" vgrow="NEVER"/>
+                                                        <RowConstraints minHeight="-Infinity" vgrow="NEVER"/>
+                                                        <RowConstraints maxHeight="10.0" minHeight="10.0"
+                                                                        prefHeight="10.0" vgrow="SOMETIMES"/>
+                                                        <RowConstraints minHeight="-Infinity" vgrow="NEVER"/>
+                                                        <RowConstraints minHeight="-Infinity" vgrow="NEVER"/>
+                                                        <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                                                        vgrow="ALWAYS"/>
+                                                    </rowConstraints>
+                                                    <children>
+                                                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                            <children>
+                                                                <Label text="Display Data As:"/>
+                                                                <ToggleButton fx:id="displayDataAsHex"
+                                                                              mnemonicParsing="false" selected="true"
+                                                                              text="HEX">
+                                                                    <toggleGroup>
+                                                                        <ToggleGroup fx:id="displayDataAs"/>
+                                                                    </toggleGroup>
+                                                                </ToggleButton>
+                                                                <ToggleButton mnemonicParsing="false" text="ASCII"
+                                                                              toggleGroup="$displayDataAs"/>
+                                                            </children>
+                                                            <padding>
+                                                                <Insets bottom="10.0"/>
+                                                            </padding>
+                                                        </HBox>
+                                                        <VBox minHeight="-Infinity" minWidth="-Infinity" spacing="4.0"
+                                                              GridPane.rowIndex="1">
+                                                            <children>
+                                                                <Label text="From Sector:"/>
+                                                                <Spinner fx:id="fromSector" editable="true"
+                                                                         minHeight="-Infinity" minWidth="-Infinity"/>
+                                                            </children>
+                                                            <padding>
+                                                                <Insets bottom="10.0"/>
+                                                            </padding>
+                                                        </VBox>
+                                                        <VBox minHeight="-Infinity" minWidth="-Infinity" spacing="4.0"
+                                                              GridPane.rowIndex="2">
+                                                            <children>
+                                                                <Label text="To Sector:"/>
+                                                                <Spinner fx:id="toSector" editable="true"
+                                                                         minHeight="-Infinity" minWidth="-Infinity"/>
+                                                            </children>
+                                                            <padding>
+                                                                <Insets bottom="10.0"/>
+                                                            </padding>
+                                                        </VBox>
+                                                        <Button mnemonicParsing="false" onAction="#selectAllSectors"
+                                                                text="Entire Card" GridPane.rowIndex="4"/>
+                                                        <HBox alignment="TOP_RIGHT" minHeight="-Infinity"
+                                                              minWidth="-Infinity" spacing="10.0" GridPane.rowIndex="5">
+                                                            <children>
+                                                                <Button fx:id="writeCardData" mnemonicParsing="false"
+                                                                        onAction="#writeSectors" prefHeight="40.0"
+                                                                        prefWidth="135.0" styleClass="write-button"
+                                                                        text="WRITE"/>
+                                                                <Button fx:id="readCardData" mnemonicParsing="false"
+                                                                        onAction="#readSectors" prefHeight="40.0"
+                                                                        prefWidth="144.0" styleClass="read-button"
+                                                                        text="READ"/>
+                                                            </children>
+                                                            <opaqueInsets>
+                                                                <Insets/>
+                                                            </opaqueInsets>
+                                                            <padding>
+                                                                <Insets top="30.0"/>
+                                                            </padding>
+                                                        </HBox>
+                                                        <VBox alignment="BOTTOM_RIGHT" minHeight="-Infinity"
+                                                              minWidth="-Infinity" spacing="10.0" GridPane.hgrow="NEVER"
+                                                              GridPane.rowIndex="6">
+                                                            <children>
+                                                                <Button minHeight="-Infinity" minWidth="-Infinity"
+                                                                        mnemonicParsing="false" onAction="#exportToXml"
+                                                                        prefWidth="200.0" text="EXPORT DATA TO XML"
+                                                                        VBox.vgrow="NEVER"/>
+                                                                <Button mnemonicParsing="false"
+                                                                        onAction="#importFromXml" prefWidth="200.0"
+                                                                        text="IMPORT DATA FROM XML"/>
+                                                            </children>
+                                                        </VBox>
+                                                    </children>
+                                                </GridPane>
+                                                <TableView fx:id="dataTable" editable="true" styleClass="data-table"
+                                                           HBox.hgrow="ALWAYS">
 
-<AnchorPane stylesheets="@CardWindow.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.marcinchwedczuk.rfid.gui.CardWindow">
-   <children>
-      <VBox layoutX="280.0" layoutY="55.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <MenuBar fx:id="menuBar" VBox.vgrow="NEVER">
-              <menus>
-                <Menu text="_Terminal">
-                  <items>
-                    <MenuItem onAction="#displayFirmwareVersion" text="Get _firmware version..." />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem onAction="#showSettingsDialog" text="_Settings..." />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Help">
-                  <items>
-                    <MenuItem onAction="#showAboutDialog" text="_About..." />
-                  </items>
-                </Menu>
-              </menus>
-            </MenuBar>
-            <GridPane VBox.vgrow="NEVER">
-              <columnConstraints>
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" valignment="CENTER" vgrow="SOMETIMES" />
-              </rowConstraints>
-               <children>
-                  <Label text="Card Name:" GridPane.columnIndex="1" />
-                  <TextField fx:id="cardId" disable="true" editable="false" maxWidth="-Infinity" minWidth="-Infinity" text="AA:BB:CC:DD:EE:FF" GridPane.columnIndex="3" />
-                  <Label text="Card Standard:" GridPane.columnIndex="5" />
-                  <TextField fx:id="cardStandard" disable="true" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefColumnCount="30" GridPane.columnIndex="7" />
-               </children>
-            </GridPane>
-            <GridPane VBox.vgrow="NEVER">
-              <columnConstraints>
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" />
-                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="-Infinity" />
-                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" valignment="CENTER" vgrow="SOMETIMES" />
-              </rowConstraints>
-               <children>
-                  <ImageView fitHeight="36.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
-                     <image>
-                        <Image url="@img/key.png" />
-                     </image>
-                  </ImageView>
-                  <Label text="Key:" GridPane.columnIndex="3" />
-                  <KeyBox fx:id="key" alignment="CENTER" GridPane.columnIndex="5" />
-                  <Label text="Use Key As:" GridPane.columnIndex="7" />
-                  <ChoiceBox fx:id="useAsKeyChoiceBox" GridPane.columnIndex="9" />
-                  <Button mnemonicParsing="false" onAction="#loadDefaultFactoryKey" text="Load Default Factory Key" GridPane.columnIndex="10" />
-               </children>
-            </GridPane>
-            <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
-              <tabs>
-                <Tab text="READ / WRITE">
-                  <content>
-                    <AnchorPane>
-                           <children>
-                              <HBox layoutX="108.0" layoutY="151.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                 <children>
-                                    <GridPane HBox.hgrow="NEVER">
-                                      <columnConstraints>
-                                        <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" />
-                                      </columnConstraints>
-                                      <rowConstraints>
-                                        <RowConstraints minHeight="-Infinity" vgrow="NEVER" />
-                                        <RowConstraints minHeight="-Infinity" vgrow="NEVER" />
-                                        <RowConstraints minHeight="-Infinity" vgrow="NEVER" />
-                                          <RowConstraints maxHeight="10.0" minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="-Infinity" vgrow="NEVER" />
-                                          <RowConstraints minHeight="-Infinity" vgrow="NEVER" />
-                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
-                                      </rowConstraints>
-                                       <children>
-                                          <HBox alignment="CENTER_LEFT" spacing="10.0">
-                                             <children>
-                                                <Label text="Display Data As:" />
-                                                <ToggleButton fx:id="displayDataAsHex" mnemonicParsing="false" selected="true" text="HEX">
-                                                   <toggleGroup>
-                                                      <ToggleGroup fx:id="displayDataAs" />
-                                                   </toggleGroup>
-                                                </ToggleButton>
-                                                <ToggleButton mnemonicParsing="false" text="ASCII" toggleGroup="$displayDataAs" />
-                                             </children>
-                                             <padding>
-                                                <Insets bottom="10.0" />
-                                             </padding>
-                                          </HBox>
-                                          <VBox minHeight="-Infinity" minWidth="-Infinity" spacing="4.0" GridPane.rowIndex="1">
-                                             <children>
-                                                <Label text="From Sector:" />
-                                                <Spinner fx:id="fromSector" editable="true" minHeight="-Infinity" minWidth="-Infinity" />
-                                             </children>
-                                             <padding>
-                                                <Insets bottom="10.0" />
-                                             </padding>
-                                          </VBox>
-                                          <VBox minHeight="-Infinity" minWidth="-Infinity" spacing="4.0" GridPane.rowIndex="2">
-                                             <children>
-                                                <Label text="To Sector:" />
-                                                <Spinner fx:id="toSector" editable="true" minHeight="-Infinity" minWidth="-Infinity" />
-                                             </children>
-                                             <padding>
-                                                <Insets bottom="10.0" />
-                                             </padding>
-                                          </VBox>
-                                          <Button mnemonicParsing="false" onAction="#selectAllSectors" text="Entire Card" GridPane.rowIndex="4" />
-                                          <HBox alignment="TOP_RIGHT" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" GridPane.rowIndex="5">
-                                             <children>
-                                                <Button fx:id="writeCardData" mnemonicParsing="false" onAction="#writeSectors" prefHeight="40.0" prefWidth="135.0" styleClass="write-button" text="WRITE" />
-                                                <Button fx:id="readCardData" mnemonicParsing="false" onAction="#readSectors" prefHeight="40.0" prefWidth="144.0" styleClass="read-button" text="READ" />
-                                             </children>
-                                             <opaqueInsets>
-                                                <Insets />
-                                             </opaqueInsets>
-                                             <padding>
-                                                <Insets top="30.0" />
-                                             </padding>
-                                          </HBox>
-                                          <VBox alignment="BOTTOM_RIGHT" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" GridPane.hgrow="NEVER" GridPane.rowIndex="6">
-                                             <children>
-                                                <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#exportToXml" prefWidth="200.0" text="EXPORT DATA TO XML" VBox.vgrow="NEVER" />
-                                                <Button mnemonicParsing="false" onAction="#importFromXml" prefWidth="200.0" text="IMPORT DATA FROM XML" />
-                                             </children>
-                                          </VBox>
-                                       </children>
-                                    </GridPane>
-                                    <TableView fx:id="dataTable" editable="true" styleClass="data-table" HBox.hgrow="ALWAYS">
-
-                        </TableView>
-                                 </children>
-                                 <padding>
-                                    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                                 </padding>
-                              </HBox>
-                           </children>
-                        </AnchorPane>
-                  </content>
-                </Tab>
-                  <Tab text="SECURITY">
-                    <content>
-                      <AnchorPane>
-                           <children>
-                              <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                <columnConstraints>
-                                  <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" />
-                                  <ColumnConstraints hgrow="ALWAYS" maxWidth="800.0" minWidth="-Infinity" />
-                                </columnConstraints>
-                                <rowConstraints>
-                                  <RowConstraints minHeight="-Infinity" valignment="TOP" vgrow="ALWAYS" />
-                                </rowConstraints>
-                                 <children>
-                                    <VBox spacing="10.0">
-                                       <children>
-                                          <HBox alignment="CENTER_LEFT" spacing="10.0">
-                                             <children>
-                                                <Label text="Sector:" />
-                                                <MaskedTextField fx:id="secSector" mask="##" minHeight="-Infinity" minWidth="-Infinity" promptText="Sector" />
-                                                <Button mnemonicParsing="false" onAction="#secReadPermissions" prefHeight="26.0" prefWidth="250.0" text="Read Keys &amp; Permissions" />
-                                             </children>
-                                          </HBox>
-                                          <TitledPane animated="false" collapsible="false" text="KEYS">
-                                            <content>
-                                              <AnchorPane>
-                                                   <children>
-                                                      <GridPane layoutX="76.0" layoutY="145.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                                        <columnConstraints>
-                                                          <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" />
-                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
-                                                            <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" />
-                                                            <ColumnConstraints hgrow="ALWAYS" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
-                                                        </columnConstraints>
-                                                        <rowConstraints>
-                                                          <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-                                                          <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-                                                          <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-                                                        </rowConstraints>
-                                                         <children>
-                                                            <Label text="NOTE: Not readable key will be read as 6 zero bytes.&#10;" GridPane.columnSpan="2147483647" />
-                                                            <Label text="Key A:" GridPane.rowIndex="1" />
-                                                            <Label text="Key B:" GridPane.rowIndex="2" />
-                                                            <KeyBox fx:id="secKeyA" minHeight="-Infinity" minWidth="-Infinity" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                                            <KeyBox fx:id="secKeyB" minHeight="-Infinity" minWidth="-Infinity" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                                                         </children>
-                                                      </GridPane>
-                                                   </children>
-                                                </AnchorPane>
-                                            </content>
-                                          </TitledPane>
-                                          <TitledPane animated="false" collapsible="false" text="PERMISSIONS">
-                                            <content>
-                                              <AnchorPane>
-                                                   <children>
-                                                      <GridPane layoutX="37.0" layoutY="72.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                                        <columnConstraints>
-                                                          <ColumnConstraints halignment="CENTER" hgrow="NEVER" minWidth="-Infinity" />
-                                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
-                                                            <ColumnConstraints halignment="CENTER" hgrow="NEVER" minWidth="-Infinity" />
-                                                            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="0.0" prefWidth="0.0" />
-                                                        </columnConstraints>
-                                                        <rowConstraints>
-                                                            <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
-                                                            <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                            <RowConstraints maxHeight="10.0" minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
-                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                        </rowConstraints>
-                                                         <children>
-                                                            <Label text="Data Block 0:" GridPane.rowIndex="2" />
-                                                            <ChoiceBox fx:id="secBlock0Perms" prefWidth="150.0" styleClass="cbits" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                                                            <Label text="Data Block 1:" GridPane.rowIndex="3" />
-                                                            <ChoiceBox fx:id="secBlock1Perms" prefWidth="150.0" styleClass="cbits" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                                                            <Label text="Data Block 2:" GridPane.rowIndex="4" />
-                                                            <ChoiceBox fx:id="secBlock2Perms" prefWidth="150.0" styleClass="cbits" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-                                                            <Label text="Sector Trailer:" GridPane.rowIndex="6" />
-                                                            <ChoiceBox fx:id="secTrailerPerms" prefWidth="150.0" styleClass="cbits" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-                                                            <Label minHeight="-Infinity" minWidth="-Infinity" styleClass="permWarningText" text="Setting these values incorrectly may make your card unusable." wrapText="true" GridPane.columnSpan="2147483647" />
-                                                         </children>
-                                                      </GridPane>
-                                                   </children>
-                                                </AnchorPane>
-                                            </content>
-                                          </TitledPane>
-                                          <TitledPane animated="false" collapsible="false" text="SETTINGS">
-                                            <content>
-                                              <AnchorPane>
-                                                   <children>
-                                                      <CheckBox layoutX="14.0" layoutY="21.0" mnemonicParsing="false" text="Ignore sectors that cannot be changed" />
-                                                   </children>
-                                                </AnchorPane>
-                                            </content>
-                                          </TitledPane>
-                                          <HBox alignment="CENTER_RIGHT" spacing="10.0">
-                                             <children>
-                                                <Button alignment="CENTER" mnemonicParsing="false" onAction="#secWriteForEntireCard" prefHeight="50.0" prefWidth="240.0" styleClass="write-button" text="Write Permissions for &#10;Entire Card" />
-                                                <Button alignment="CENTER" mnemonicParsing="false" onAction="#secWriteForSector" prefHeight="50.0" prefWidth="240.0" styleClass="write-button" text="Write Permissions for &#10;Selected Sector Only" />
-                                             </children>
-                                          </HBox>
-                                       </children>
-                                       <padding>
-                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                       </padding>
-                                    </VBox>
-                                    <VBox spacing="10.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
-                                       <children>
-                                          <TitledPane animated="false" collapsible="false" text="Access conditions for data  blocks:" VBox.vgrow="ALWAYS">
-                                            <content>
-                                              <AnchorPane>
-                                                   <children>
-                                                      <TableView fx:id="dataAccessInfo" layoutX="21.4" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                                   </children>
-                                                </AnchorPane>
-                                            </content>
-                                          </TitledPane>
-                                          <TitledPane animated="false" collapsible="false" text="Access conditions for the sector trailer:" VBox.vgrow="ALWAYS">
-                                            <content>
-                                              <AnchorPane>
-                                                   <children>
-                                                      <TableView fx:id="trailerAccessInfo" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                                   </children>
-                                                </AnchorPane>
-                                            </content>
-                                          </TitledPane>
-                                       </children>
-                                       <padding>
-                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                       </padding>
-                                    </VBox>
-                                 </children>
-                              </GridPane>
-                           </children>
-                        </AnchorPane>
-                    </content>
-                  </Tab>
-              </tabs>
-            </TabPane>
-         </children>
-      </VBox>
-   </children>
+                                                </TableView>
+                                            </children>
+                                            <padding>
+                                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+                                            </padding>
+                                        </HBox>
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </Tab>
+                        <Tab text="SECURITY">
+                            <content>
+                                <AnchorPane>
+                                    <children>
+                                        <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                                  AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <columnConstraints>
+                                                <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+                                                <ColumnConstraints hgrow="ALWAYS" maxWidth="800.0"
+                                                                   minWidth="-Infinity"/>
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints minHeight="-Infinity" valignment="TOP" vgrow="ALWAYS"/>
+                                            </rowConstraints>
+                                            <children>
+                                                <VBox spacing="10.0">
+                                                    <children>
+                                                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                            <children>
+                                                                <Label text="Sector:"/>
+                                                                <MaskedTextField fx:id="secSector" mask="##"
+                                                                                 minHeight="-Infinity"
+                                                                                 minWidth="-Infinity"
+                                                                                 promptText="Sector"/>
+                                                                <Button mnemonicParsing="false"
+                                                                        onAction="#secReadPermissions" prefHeight="26.0"
+                                                                        prefWidth="250.0"
+                                                                        text="Read Keys &amp; Permissions"/>
+                                                            </children>
+                                                        </HBox>
+                                                        <TitledPane animated="false" collapsible="false" text="KEYS">
+                                                            <content>
+                                                                <AnchorPane>
+                                                                    <children>
+                                                                        <GridPane layoutX="76.0" layoutY="145.0"
+                                                                                  AnchorPane.bottomAnchor="0.0"
+                                                                                  AnchorPane.leftAnchor="0.0"
+                                                                                  AnchorPane.rightAnchor="0.0"
+                                                                                  AnchorPane.topAnchor="0.0">
+                                                                            <columnConstraints>
+                                                                                <ColumnConstraints hgrow="NEVER"
+                                                                                                   minWidth="-Infinity"/>
+                                                                                <ColumnConstraints hgrow="SOMETIMES"
+                                                                                                   maxWidth="10.0"
+                                                                                                   minWidth="10.0"
+                                                                                                   prefWidth="10.0"/>
+                                                                                <ColumnConstraints hgrow="NEVER"
+                                                                                                   minWidth="-Infinity"/>
+                                                                                <ColumnConstraints hgrow="ALWAYS"
+                                                                                                   maxWidth="10.0"
+                                                                                                   minWidth="10.0"
+                                                                                                   prefWidth="10.0"/>
+                                                                            </columnConstraints>
+                                                                            <rowConstraints>
+                                                                                <RowConstraints minHeight="10.0"
+                                                                                                prefHeight="30.0"
+                                                                                                valignment="CENTER"
+                                                                                                vgrow="SOMETIMES"/>
+                                                                                <RowConstraints minHeight="10.0"
+                                                                                                prefHeight="30.0"
+                                                                                                valignment="CENTER"
+                                                                                                vgrow="SOMETIMES"/>
+                                                                                <RowConstraints minHeight="10.0"
+                                                                                                prefHeight="30.0"
+                                                                                                valignment="CENTER"
+                                                                                                vgrow="SOMETIMES"/>
+                                                                            </rowConstraints>
+                                                                            <children>
+                                                                                <Label text="NOTE: Not readable key will be read as 6 zero bytes.&#10;"
+                                                                                       GridPane.columnSpan="2147483647"/>
+                                                                                <Label text="Key A:"
+                                                                                       GridPane.rowIndex="1"/>
+                                                                                <Label text="Key B:"
+                                                                                       GridPane.rowIndex="2"/>
+                                                                                <KeyBox fx:id="secKeyA"
+                                                                                        minHeight="-Infinity"
+                                                                                        minWidth="-Infinity"
+                                                                                        GridPane.columnIndex="2"
+                                                                                        GridPane.rowIndex="1"/>
+                                                                                <KeyBox fx:id="secKeyB"
+                                                                                        minHeight="-Infinity"
+                                                                                        minWidth="-Infinity"
+                                                                                        GridPane.columnIndex="2"
+                                                                                        GridPane.rowIndex="2"/>
+                                                                            </children>
+                                                                        </GridPane>
+                                                                    </children>
+                                                                </AnchorPane>
+                                                            </content>
+                                                        </TitledPane>
+                                                        <TitledPane animated="false" collapsible="false"
+                                                                    text="PERMISSIONS">
+                                                            <content>
+                                                                <AnchorPane>
+                                                                    <children>
+                                                                        <GridPane layoutX="37.0" layoutY="72.0"
+                                                                                  AnchorPane.bottomAnchor="0.0"
+                                                                                  AnchorPane.leftAnchor="0.0"
+                                                                                  AnchorPane.rightAnchor="0.0"
+                                                                                  AnchorPane.topAnchor="0.0">
+                                                                            <columnConstraints>
+                                                                                <ColumnConstraints halignment="CENTER"
+                                                                                                   hgrow="NEVER"
+                                                                                                   minWidth="-Infinity"/>
+                                                                                <ColumnConstraints hgrow="SOMETIMES"
+                                                                                                   maxWidth="10.0"
+                                                                                                   minWidth="10.0"
+                                                                                                   prefWidth="10.0"/>
+                                                                                <ColumnConstraints halignment="CENTER"
+                                                                                                   hgrow="NEVER"
+                                                                                                   minWidth="-Infinity"/>
+                                                                                <ColumnConstraints halignment="CENTER"
+                                                                                                   hgrow="ALWAYS"
+                                                                                                   minWidth="0.0"
+                                                                                                   prefWidth="0.0"/>
+                                                                            </columnConstraints>
+                                                                            <rowConstraints>
+                                                                                <RowConstraints minHeight="-Infinity"
+                                                                                                vgrow="SOMETIMES"/>
+                                                                                <RowConstraints maxHeight="30.0"
+                                                                                                minHeight="30.0"
+                                                                                                prefHeight="30.0"
+                                                                                                vgrow="SOMETIMES"/>
+                                                                                <RowConstraints minHeight="10.0"
+                                                                                                prefHeight="30.0"
+                                                                                                vgrow="SOMETIMES"/>
+                                                                                <RowConstraints minHeight="10.0"
+                                                                                                prefHeight="30.0"
+                                                                                                vgrow="SOMETIMES"/>
+                                                                                <RowConstraints minHeight="10.0"
+                                                                                                prefHeight="30.0"
+                                                                                                vgrow="SOMETIMES"/>
+                                                                                <RowConstraints maxHeight="10.0"
+                                                                                                minHeight="10.0"
+                                                                                                prefHeight="10.0"
+                                                                                                vgrow="SOMETIMES"/>
+                                                                                <RowConstraints minHeight="10.0"
+                                                                                                prefHeight="30.0"
+                                                                                                vgrow="SOMETIMES"/>
+                                                                            </rowConstraints>
+                                                                            <children>
+                                                                                <Label text="Data Block 0:"
+                                                                                       GridPane.rowIndex="2"/>
+                                                                                <ChoiceBox fx:id="secBlock0Perms"
+                                                                                           prefWidth="150.0"
+                                                                                           styleClass="cbits"
+                                                                                           GridPane.columnIndex="2"
+                                                                                           GridPane.rowIndex="2"/>
+                                                                                <Label text="Data Block 1:"
+                                                                                       GridPane.rowIndex="3"/>
+                                                                                <ChoiceBox fx:id="secBlock1Perms"
+                                                                                           prefWidth="150.0"
+                                                                                           styleClass="cbits"
+                                                                                           GridPane.columnIndex="2"
+                                                                                           GridPane.rowIndex="3"/>
+                                                                                <Label text="Data Block 2:"
+                                                                                       GridPane.rowIndex="4"/>
+                                                                                <ChoiceBox fx:id="secBlock2Perms"
+                                                                                           prefWidth="150.0"
+                                                                                           styleClass="cbits"
+                                                                                           GridPane.columnIndex="2"
+                                                                                           GridPane.rowIndex="4"/>
+                                                                                <Label text="Sector Trailer:"
+                                                                                       GridPane.rowIndex="6"/>
+                                                                                <ChoiceBox fx:id="secTrailerPerms"
+                                                                                           prefWidth="150.0"
+                                                                                           styleClass="cbits"
+                                                                                           GridPane.columnIndex="2"
+                                                                                           GridPane.rowIndex="6"/>
+                                                                                <Label minHeight="-Infinity"
+                                                                                       minWidth="-Infinity"
+                                                                                       styleClass="permWarningText"
+                                                                                       text="Setting these values incorrectly may make your card unusable."
+                                                                                       wrapText="true"
+                                                                                       GridPane.columnSpan="2147483647"/>
+                                                                            </children>
+                                                                        </GridPane>
+                                                                    </children>
+                                                                </AnchorPane>
+                                                            </content>
+                                                        </TitledPane>
+                                                        <TitledPane animated="false" collapsible="false"
+                                                                    text="SETTINGS">
+                                                            <content>
+                                                                <AnchorPane>
+                                                                    <children>
+                                                                        <CheckBox layoutX="14.0" layoutY="21.0"
+                                                                                  mnemonicParsing="false"
+                                                                                  text="Ignore sectors that cannot be changed"/>
+                                                                    </children>
+                                                                </AnchorPane>
+                                                            </content>
+                                                        </TitledPane>
+                                                        <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                                                            <children>
+                                                                <Button alignment="CENTER" mnemonicParsing="false"
+                                                                        onAction="#secWriteForEntireCard"
+                                                                        prefHeight="50.0" prefWidth="240.0"
+                                                                        styleClass="write-button"
+                                                                        text="Write Permissions for &#10;Entire Card"/>
+                                                                <Button alignment="CENTER" mnemonicParsing="false"
+                                                                        onAction="#secWriteForSector" prefHeight="50.0"
+                                                                        prefWidth="240.0" styleClass="write-button"
+                                                                        text="Write Permissions for &#10;Selected Sector Only"/>
+                                                            </children>
+                                                        </HBox>
+                                                    </children>
+                                                    <padding>
+                                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                                                    </padding>
+                                                </VBox>
+                                                <VBox spacing="10.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"
+                                                      GridPane.vgrow="ALWAYS">
+                                                    <children>
+                                                        <TitledPane animated="false" collapsible="false"
+                                                                    text="Access conditions for data  blocks:"
+                                                                    VBox.vgrow="ALWAYS">
+                                                            <content>
+                                                                <AnchorPane>
+                                                                    <children>
+                                                                        <TableView fx:id="dataAccessInfo" layoutX="21.4"
+                                                                                   AnchorPane.bottomAnchor="0.0"
+                                                                                   AnchorPane.leftAnchor="0.0"
+                                                                                   AnchorPane.rightAnchor="0.0"
+                                                                                   AnchorPane.topAnchor="0.0"/>
+                                                                    </children>
+                                                                </AnchorPane>
+                                                            </content>
+                                                        </TitledPane>
+                                                        <TitledPane animated="false" collapsible="false"
+                                                                    text="Access conditions for the sector trailer:"
+                                                                    VBox.vgrow="ALWAYS">
+                                                            <content>
+                                                                <AnchorPane>
+                                                                    <children>
+                                                                        <TableView fx:id="trailerAccessInfo"
+                                                                                   AnchorPane.bottomAnchor="0.0"
+                                                                                   AnchorPane.leftAnchor="0.0"
+                                                                                   AnchorPane.rightAnchor="0.0"
+                                                                                   AnchorPane.topAnchor="0.0"/>
+                                                                    </children>
+                                                                </AnchorPane>
+                                                            </content>
+                                                        </TitledPane>
+                                                    </children>
+                                                    <padding>
+                                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                                                    </padding>
+                                                </VBox>
+                                            </children>
+                                        </GridPane>
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </Tab>
+                    </tabs>
+                </TabPane>
+            </children>
+        </VBox>
+    </children>
 </AnchorPane>

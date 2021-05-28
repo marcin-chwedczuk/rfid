@@ -10,7 +10,7 @@ import static pl.marcinchwedczuk.rfid.card.acr122.Block.BLOCK_0;
 
 public class AcrCard extends AcrTerminalCommands {
     private static final Logger logger = LoggerFactory.getLogger(AcrCard.class);
-    private static final byte FF = (byte)0xFF;
+    private static final byte FF = (byte) 0xFF;
 
     private final AcrTerminal terminal;
     private final Card card;
@@ -26,7 +26,9 @@ public class AcrCard extends AcrTerminalCommands {
                 .getBytes();
     }
 
-    public AcrTerminal terminal() { return terminal; }
+    public AcrTerminal terminal() {
+        return terminal;
+    }
 
     public AtrInfo atrInfo() {
         ATR atr = card.getATR();
@@ -41,8 +43,8 @@ public class AcrCard extends AcrTerminalCommands {
 
     // TODO: Refactor this can only return ATS or serial number of the tag
     private byte[] getData(int p1, int p2, int len) {
-        byte[] commandBytes = new byte[] {
-                (byte)0xFF, (byte)0xCA, (byte)(p1 & 0xFF), (byte)(p2 & 0xFF), (byte)(len & 0xFF)
+        byte[] commandBytes = new byte[]{
+                (byte) 0xFF, (byte) 0xCA, (byte) (p1 & 0xFF), (byte) (p2 & 0xFF), (byte) (len & 0xFF)
         };
 
         try {
@@ -52,11 +54,9 @@ public class AcrCard extends AcrTerminalCommands {
             int sw = response.getSW();
             if (sw == 0x6300) {
                 throw AcrStandardErrors.operationFailed();
-            }
-            else if (sw == 0x6A81) {
+            } else if (sw == 0x6A81) {
                 throw AcrStandardErrors.functionNotSupported();
-            }
-            else if (sw != 0x9000) {
+            } else if (sw != 0x9000) {
                 throw AcrStandardErrors.unexpectedResponseCode(sw);
             }
 
@@ -74,8 +74,8 @@ public class AcrCard extends AcrTerminalCommands {
             throw new IllegalArgumentException("Invalid key length (key should be 6 bytes long).");
         }
 
-        byte[] commandBytes = new byte[] {
-                (byte)0xFF, (byte)0x82, 0x00, (byte)register.index(), 0x06,
+        byte[] commandBytes = new byte[]{
+                (byte) 0xFF, (byte) 0x82, 0x00, (byte) register.index(), 0x06,
                 key[0], key[1], key[2], key[3], key[4], key[5]
         };
         try {
@@ -85,8 +85,7 @@ public class AcrCard extends AcrTerminalCommands {
             int sw = response.getSW();
             if (sw == 0x6300) {
                 throw AcrStandardErrors.operationFailed();
-            }
-            else if (sw != 0x9000) {
+            } else if (sw != 0x9000) {
                 throw AcrStandardErrors.unexpectedResponseCode(sw);
             }
             // Success
@@ -102,11 +101,11 @@ public class AcrCard extends AcrTerminalCommands {
             throw new NullPointerException("keyType");
         }
 
-        byte[] commandBytes = new byte[] {
-                (byte)0xFF, (byte)0x86, 0x00, 0x00, 0x05,
+        byte[] commandBytes = new byte[]{
+                (byte) 0xFF, (byte) 0x86, 0x00, 0x00, 0x05,
                 0x01, 0x00, (byte) DataAddress.of(sector, BLOCK_0).blockNumber(),
-                (byte)(selectedKey == SelectedKey.KEY_A ? 0x60 : 0x61),
-                (byte)registerWithKey.index()
+                (byte) (selectedKey == SelectedKey.KEY_A ? 0x60 : 0x61),
+                (byte) registerWithKey.index()
         };
 
         try {
@@ -116,8 +115,7 @@ public class AcrCard extends AcrTerminalCommands {
             int sw = response.getSW();
             if (sw == 0x6300) {
                 throw AcrStandardErrors.operationFailed();
-            }
-            else if (sw != 0x9000) {
+            } else if (sw != 0x9000) {
                 throw AcrStandardErrors.unexpectedResponseCode(sw);
             }
             // Success
@@ -129,8 +127,8 @@ public class AcrCard extends AcrTerminalCommands {
     public byte[] readBinaryBlock(DataAddress block, int numberOfBytes) {
         logger.info("reading binary block {} (bytes {})", block, numberOfBytes);
 
-        byte[] commandBytes = new byte[] {
-                (byte)0xFF, (byte)0xB0, 0x00, (byte)block.blockNumber(), (byte)numberOfBytes
+        byte[] commandBytes = new byte[]{
+                (byte) 0xFF, (byte) 0xB0, 0x00, (byte) block.blockNumber(), (byte) numberOfBytes
         };
 
         try {
@@ -140,8 +138,7 @@ public class AcrCard extends AcrTerminalCommands {
             int sw = response.getSW();
             if (sw == 0x6300) {
                 throw AcrStandardErrors.operationFailed();
-            }
-            else if (sw != 0x9000) {
+            } else if (sw != 0x9000) {
                 throw AcrStandardErrors.unexpectedResponseCode(sw);
             }
             // Success
@@ -159,9 +156,9 @@ public class AcrCard extends AcrTerminalCommands {
             throw new IllegalArgumentException("Block is 16 bytes long for Mifare 1K/4K.");
         }
 
-        byte[] commandBytes = new byte[] {
-                (byte)0xFF, (byte)0xD6, 0x00, (byte)block.blockNumber(),
-                (byte)data16.length, // must be 16 for Mifare 1K/4K
+        byte[] commandBytes = new byte[]{
+                (byte) 0xFF, (byte) 0xD6, 0x00, (byte) block.blockNumber(),
+                (byte) data16.length, // must be 16 for Mifare 1K/4K
                 data16[0], data16[1], data16[2], data16[3],
                 data16[4], data16[5], data16[6], data16[7],
                 data16[8], data16[9], data16[10], data16[11],
@@ -175,8 +172,7 @@ public class AcrCard extends AcrTerminalCommands {
             int sw = response.getSW();
             if (sw == 0x6300) {
                 throw AcrStandardErrors.operationFailed();
-            }
-            else if (sw != 0x9000) {
+            } else if (sw != 0x9000) {
                 throw AcrStandardErrors.unexpectedResponseCode(sw);
             }
             // Success

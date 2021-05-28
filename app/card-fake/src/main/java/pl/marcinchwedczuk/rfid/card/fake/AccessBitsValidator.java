@@ -19,7 +19,7 @@ class AccessBitsValidator {
 
         int byteIndex = 6;
         int bitIndex = 7;
-        for (String bitName: bitsNames) {
+        for (String bitName : bitsNames) {
             boolean bit = getBit(byteIndex, bitIndex);
 
             if (bitName.startsWith("C")) {
@@ -30,10 +30,9 @@ class AccessBitsValidator {
                 boolean expected = bitValues.get(bitName);
                 if (expected != bit) {
                     throw new CardException(
-                        "Sector trailer's access bits contain invalid pattern on bit: " + bitName);
+                            "Sector trailer's access bits contain invalid pattern on bit: " + bitName);
                 }
-            }
-            else {
+            } else {
                 bitValues.put(bitName, bit);
             }
 

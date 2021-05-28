@@ -40,10 +40,10 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
-       <dependency>
+        <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
-           <scope>runtime</scope>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -81,7 +81,8 @@
                     <mainClass>pl.marcinchwedczuk.rfid.gui.App</mainClass>
                     <options>
                         <!-- Workaround for BUG (macOS only): https://stackoverflow.com/a/65062759/1779504 -->
-                        <option>-Dsun.security.smartcardio.library=/System/Library/Frameworks/PCSC.framework/PCSC</option>
+                        <option>-Dsun.security.smartcardio.library=/System/Library/Frameworks/PCSC.framework/PCSC
+                        </option>
                         <option>${extra-jvm-options-when-running-gui-app}</option>
                     </options>
                 </configuration>

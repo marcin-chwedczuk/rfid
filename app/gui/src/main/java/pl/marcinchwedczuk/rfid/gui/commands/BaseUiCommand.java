@@ -23,16 +23,29 @@ public abstract class BaseUiCommand<W> {
         this.uiServices = uiServices;
     }
 
-    protected boolean wasCanceled() { return canceled; }
-    protected Exception error() { return error; }
+    protected boolean wasCanceled() {
+        return canceled;
+    }
 
-    protected UiServices uiServices() { return uiServices; }
+    protected Exception error() {
+        return error;
+    }
+
+    protected UiServices uiServices() {
+        return uiServices;
+    }
 
     protected abstract String operationName();
+
     protected abstract List<W> defineWorkItems();
-    protected void before() { }
+
+    protected void before() {
+    }
+
     protected abstract void doWork(W item);
-    protected void after() { }
+
+    protected void after() {
+    }
 
     /**
      * @return Return true if exception was handled and execution should proceed.

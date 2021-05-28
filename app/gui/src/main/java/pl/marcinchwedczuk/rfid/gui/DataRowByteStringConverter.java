@@ -40,7 +40,7 @@ class DataRowByteStringConverter extends StringConverter<Byte> {
         }
 
         try {
-            return (byte)Integer.parseInt(string, 16);
+            return (byte) Integer.parseInt(string, 16);
         } catch (NumberFormatException e) {
             return null;
         }
@@ -51,11 +51,11 @@ class DataRowByteStringConverter extends StringConverter<Byte> {
             return null;
         }
 
-        return isAsciiPrintable(string.charAt(0)) ? (Byte)(byte)string.charAt(0) : null;
+        return isAsciiPrintable(string.charAt(0)) ? (Byte) (byte) string.charAt(0) : null;
     }
 
     private String byteToPrintableAscii(Byte b) {
-        char c = (char)(byte)b;
+        char c = (char) (byte) b;
         return isAsciiPrintable(c) ? Character.toString(c) : NON_PRINTABLE_CHARACTER_PLACEHOLDER;
     }
 
@@ -64,6 +64,6 @@ class DataRowByteStringConverter extends StringConverter<Byte> {
     }
 
     private String byteToHex(Byte b) {
-        return String.format("%02X", 0xFF & (int)(byte)b);
+        return String.format("%02X", 0xFF & (int) (byte) b);
     }
 }

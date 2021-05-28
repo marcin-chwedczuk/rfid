@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 /**
  * ATR (Answer To Reset) information.
- *
+ * <p>
  * This info is send by card to the reader upon first contact.
  */
 public class AtrInfo {
@@ -32,12 +32,12 @@ public class AtrInfo {
         assertByte(historicalBytes[2], 0x0C, "H3 (Length to follow - 12 bytes)");
 
         byte[] registeredAppProviderId = new byte[5];
-        byte[] expectedRegisteredAppProviderId = new byte[] { (byte)0xA0, 0x00, 0x00, 0x03, 0x06 };
+        byte[] expectedRegisteredAppProviderId = new byte[]{(byte) 0xA0, 0x00, 0x00, 0x03, 0x06};
         System.arraycopy(historicalBytes, 3, registeredAppProviderId, 0, 5);
         assertCond(
                 Arrays.equals(registeredAppProviderId, expectedRegisteredAppProviderId),
                 "Registered Application Provider Identifier is not the expected 'PC/SC workgroup'. " +
-                "Expected bytes %s but got bytes %s.",
+                        "Expected bytes %s but got bytes %s.",
                 ByteArrays.toHexString(registeredAppProviderId, ":"),
                 ByteArrays.toHexString(expectedRegisteredAppProviderId, ":"));
 

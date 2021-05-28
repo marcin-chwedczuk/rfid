@@ -1,16 +1,11 @@
 package pl.marcinchwedczuk.rfid.gui;
 
 import javafx.animation.*;
-import javafx.application.HostServices;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -21,7 +16,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class AboutWindow implements Initializable {
-    @FXML private Label javaFxLabel;
+    @FXML
+    private Label javaFxLabel;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

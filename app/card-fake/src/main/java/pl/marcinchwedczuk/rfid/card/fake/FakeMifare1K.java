@@ -7,7 +7,6 @@ import javax.smartcardio.ATR;
 import javax.smartcardio.CardException;
 import javax.smartcardio.CommandAPDU;
 import javax.smartcardio.ResponseAPDU;
-
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
@@ -22,10 +21,11 @@ class FakeMifare1K {
      */
     public static final String ACCESS_BITS_POSITIONS =
             "C23 C22 C21 C20 C13 C12 C11 C10 " +
-            "c13 c12 c11 c10 C33 C32 C31 C30 " +
-            "c33 c32 c31 c30 c23 c22 c21 c20";
+                    "c13 c12 c11 c10 C33 C32 C31 C30 " +
+                    "c33 c32 c31 c30 c23 c22 c21 c20";
 
     private MifareSector[] sectors = new MifareSector[16];
+
     {
         for (int i = 0; i < sectors.length; i++) {
             sectors[i] = new MifareSector();
@@ -47,7 +47,7 @@ class FakeMifare1K {
     }
 
     public ResponseAPDU execute(CommandAPDU cmd) throws CardException {
-        if (matchesPattern(cmd, "FF CA 00 00 04") ) {
+        if (matchesPattern(cmd, "FF CA 00 00 04")) {
             // Get Card ID
             return new ResponseAPDU(byteArrayFromHexString(
                     // Card ID LSB - MSB, SW1, SW2
@@ -60,7 +60,7 @@ class FakeMifare1K {
             throw new RuntimeException("Not implemented.");
         }
 
-        if(matchesPattern(cmd, "FF 82 00 (00|01) 06 .. .. .. .. .. ..")) {
+        if (matchesPattern(cmd, "FF 82 00 (00|01) 06 .. .. .. .. .. ..")) {
             // Load key into register
             byte[] key = cmd.getData().clone();
 
@@ -91,8 +91,7 @@ class FakeMifare1K {
                 authenticatedSectorIndex = sectorIndex;
                 authenticatedUsingKey = keyA ? KeyType.KEY_A : KeyType.KEY_B;
                 return new ResponseAPDU(byteArrayFromHexString("90 00"));
-            }
-            else {
+            } else {
                 authenticatedSectorIndex = -1;
                 return new ResponseAPDU(byteArrayFromHexString("63 00"));
             }
@@ -124,7 +123,7 @@ class FakeMifare1K {
             }
 
             return new ResponseAPDU(byteArrayFromHexString(
-                    toHexString(dataToReturn) +  " 90 00"));
+                    toHexString(dataToReturn) + " 90 00"));
         }
 
         if (matchesPattern(cmd, "FF D6 00 .. .." +
@@ -165,19 +164,19 @@ class FakeMifare1K {
 
         if (matchesPattern(cmd, "FF 00 50 00 00")) {
             // Get PICC operating parameter
-            return new ResponseAPDU(new byte[] { (byte)0x90, (byte)piccOperatingParameter });
+            return new ResponseAPDU(new byte[]{(byte) 0x90, (byte) piccOperatingParameter});
         }
 
         if (matchesPattern(cmd, "FF 00 51 .. 00")) {
             // Save PICC operating parameter
             byte newPicc = cmd.getBytes()[3];
             this.piccOperatingParameter = newPicc & 0xFF;
-            return new ResponseAPDU(new byte[] { (byte)0x90, (byte)piccOperatingParameter });
+            return new ResponseAPDU(new byte[]{(byte) 0x90, (byte) piccOperatingParameter});
         }
 
         if (matchesPattern(cmd, "FF 00 40 .. 04 .. .. .. ..")) {
             // Let & Buzzer settings - return failure, fake card does not supports it
-            return new ResponseAPDU(new byte[] { (byte)0x63, (byte)0x00 });
+            return new ResponseAPDU(new byte[]{(byte) 0x63, (byte) 0x00});
         }
 
         logger.error("Unknown sequence of bytes: {}", toHexString(cmd.getBytes()));

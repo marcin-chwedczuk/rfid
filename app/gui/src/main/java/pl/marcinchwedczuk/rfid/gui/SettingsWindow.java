@@ -25,7 +25,6 @@ import pl.marcinchwedczuk.rfid.card.acr122.PiccOperatingParameter;
 import pl.marcinchwedczuk.rfid.card.acr122.PiccOperatingParameter.EnableDisable;
 import pl.marcinchwedczuk.rfid.card.acr122.PiccOperatingParameter.PoolingInterval;
 import pl.marcinchwedczuk.rfid.card.acr122.PiccOperatingParameter.SkipDetect;
-import pl.marcinchwedczuk.rfid.gui.commands.BaseUiCommand;
 
 import java.io.IOException;
 import java.net.URL;
@@ -36,32 +35,53 @@ public class SettingsWindow implements Initializable {
     private static final Logger logger = LoggerFactory.getLogger(SettingsWindow.class);
 
     // LED Settings
-    @FXML private ChoiceBox<LedState> finalRedLedCB;
-    @FXML private ChoiceBox<LedState> finalGreenLedCB;
-    @FXML private ChoiceBox<StateMask> maskRedLedCB;
-    @FXML private ChoiceBox<StateMask> maskGreenLedCB;
-    @FXML private ChoiceBox<LedState> blinkingRedLedCB;
-    @FXML private ChoiceBox<LedState> blinkingGreenLedCB;
-    @FXML private ChoiceBox<LedBlinkingMask> blinkingMaskRedLedCB;
-    @FXML private ChoiceBox<LedBlinkingMask> blinkingMaskGreenLedCB;
+    @FXML
+    private ChoiceBox<LedState> finalRedLedCB;
+    @FXML
+    private ChoiceBox<LedState> finalGreenLedCB;
+    @FXML
+    private ChoiceBox<StateMask> maskRedLedCB;
+    @FXML
+    private ChoiceBox<StateMask> maskGreenLedCB;
+    @FXML
+    private ChoiceBox<LedState> blinkingRedLedCB;
+    @FXML
+    private ChoiceBox<LedState> blinkingGreenLedCB;
+    @FXML
+    private ChoiceBox<LedBlinkingMask> blinkingMaskRedLedCB;
+    @FXML
+    private ChoiceBox<LedBlinkingMask> blinkingMaskGreenLedCB;
 
     // Buzzer Settings
-    @FXML private Spinner<Integer> t1Spinner;
-    @FXML private Spinner<Integer> t2Spinner;
-    @FXML private Spinner<Integer> repetitionsSpinner;
-    @FXML private ChoiceBox<Buzzer> linkToBuzzerCB;
+    @FXML
+    private Spinner<Integer> t1Spinner;
+    @FXML
+    private Spinner<Integer> t2Spinner;
+    @FXML
+    private Spinner<Integer> repetitionsSpinner;
+    @FXML
+    private ChoiceBox<Buzzer> linkToBuzzerCB;
 
     // PICC Parameter Settings
-    @FXML private ChoiceBox<EnableDisable> autoPiccPoolingCB;
-    @FXML private ChoiceBox<EnableDisable> autoAtsGenerationCB;
-    @FXML private ChoiceBox<PoolingInterval> pollingIntervalCB;
-    @FXML private ChoiceBox<SkipDetect> feliCa424KCB;
-    @FXML private ChoiceBox<SkipDetect> feliCa212KCB;
-    @FXML private ChoiceBox<SkipDetect> topazCB;
-    @FXML private ChoiceBox<SkipDetect> isoTypeB_CB;
-    @FXML private ChoiceBox<SkipDetect> isoTypeA_CB;
+    @FXML
+    private ChoiceBox<EnableDisable> autoPiccPoolingCB;
+    @FXML
+    private ChoiceBox<EnableDisable> autoAtsGenerationCB;
+    @FXML
+    private ChoiceBox<PoolingInterval> pollingIntervalCB;
+    @FXML
+    private ChoiceBox<SkipDetect> feliCa424KCB;
+    @FXML
+    private ChoiceBox<SkipDetect> feliCa212KCB;
+    @FXML
+    private ChoiceBox<SkipDetect> topazCB;
+    @FXML
+    private ChoiceBox<SkipDetect> isoTypeB_CB;
+    @FXML
+    private ChoiceBox<SkipDetect> isoTypeA_CB;
 
-    @FXML private TitledPane remarksPane;
+    @FXML
+    private TitledPane remarksPane;
 
     private AcrTerminalCommands terminalCommands;
 
@@ -225,7 +245,7 @@ public class SettingsWindow implements Initializable {
             return null;
         }
 
-        return (Stage)window;
+        return (Stage) window;
     }
 
     public static SettingsWindow show(AcrTerminalCommands card) {
@@ -239,7 +259,7 @@ public class SettingsWindow implements Initializable {
             childWindow.initModality(Modality.APPLICATION_MODAL);
             childWindow.setResizable(false);
 
-            SettingsWindow controller = (SettingsWindow)loader.getController();
+            SettingsWindow controller = (SettingsWindow) loader.getController();
             controller.setTerminalCommands(card);
             childWindow.sizeToScene();
 

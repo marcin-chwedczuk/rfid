@@ -10,7 +10,7 @@ public class DataAddress {
     }
 
     public int blockNumber() {
-        return sector.index *4 + block.index;
+        return sector.index * 4 + block.index;
     }
 
     @Override

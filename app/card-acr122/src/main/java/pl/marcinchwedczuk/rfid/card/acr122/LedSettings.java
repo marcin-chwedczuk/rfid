@@ -85,7 +85,9 @@ public class LedSettings {
         return new LedSettings(b);
     }
 
-    public enum LedState { ON, OFF }
-    public enum StateMask { UPDATE, NO_CHANGE }
-    public enum LedBlinkingMask { BLINK, NOT_BLINK }
+    public enum LedState {ON, OFF}
+
+    public enum StateMask {UPDATE, NO_CHANGE}
+
+    public enum LedBlinkingMask {BLINK, NOT_BLINK}
 }

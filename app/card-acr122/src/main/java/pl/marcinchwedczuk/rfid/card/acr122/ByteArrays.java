@@ -22,7 +22,7 @@ public class ByteArrays {
         List<Byte> bytes = new ArrayList<>();
 
         for (int i = 0; i <= withoutSeparator.length() - 2; i += 2) {
-            byte b = (byte)Integer.parseInt(withoutSeparator.substring(i, i + 2), 16);
+            byte b = (byte) Integer.parseInt(withoutSeparator.substring(i, i + 2), 16);
             bytes.add(b);
         }
 
@@ -44,7 +44,7 @@ public class ByteArrays {
 
         StringBuilder sb = new StringBuilder(
                 // XX<separator>XX<separator>XX
-                bytes.length*2 + (bytes.length - 1) * separator.length()
+                bytes.length * 2 + (bytes.length - 1) * separator.length()
         );
 
         for (int i = 0; i < bytes.length; i++) {

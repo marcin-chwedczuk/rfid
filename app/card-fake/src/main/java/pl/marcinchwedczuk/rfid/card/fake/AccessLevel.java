@@ -5,11 +5,16 @@ enum AccessLevel {
 
     public boolean allowedUsingKey(KeyType keyType) {
         switch (this) {
-            case KEY_A: return (keyType == KeyType.KEY_A);
-            case KEY_B: return (keyType == KeyType.KEY_B);
-            case KEY_A_OR_B: return true;
-            case NEVER: return false;
-            default: throw new AssertionError();
+            case KEY_A:
+                return (keyType == KeyType.KEY_A);
+            case KEY_B:
+                return (keyType == KeyType.KEY_B);
+            case KEY_A_OR_B:
+                return true;
+            case NEVER:
+                return false;
+            default:
+                throw new AssertionError();
         }
     }
 }

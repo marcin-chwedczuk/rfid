@@ -1,7 +1,8 @@
 package pl.marcinchwedczuk.rfid.card.acr122;
 
 public class AcrStandardErrors {
-    private AcrStandardErrors() { }
+    private AcrStandardErrors() {
+    }
 
     public static AcrException unexpectedResponseCode(int swCode) {
         return new AcrException(String.format("Unexpected response SW code 0x%04x.", swCode));

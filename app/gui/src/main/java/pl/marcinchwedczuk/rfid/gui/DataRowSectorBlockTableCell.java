@@ -4,7 +4,6 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.IntegerStringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.marcinchwedczuk.rfid.gui.commands.BaseUiCommand;
 
 public class DataRowSectorBlockTableCell extends TextFieldTableCell<DataRow, Integer> {
     private static final Logger logger = LoggerFactory.getLogger(DataRowSectorBlockTableCell.class);

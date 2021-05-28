@@ -40,8 +40,7 @@ public class AccessBits {
 
             if (blockNo < 3) {
                 dataBlockAccesses.add(DataBlockAccess.fromBits(block_c1, block_c2, block_c3));
-            }
-            else {
+            } else {
                 tmp = SectorTrailerAccess.fromCBits(block_c1, block_c2, block_c3);
             }
         }
@@ -74,19 +73,19 @@ public class AccessBits {
 
         byte byte_9 = 0x69; // Lol
 
-        return new byte[] { byte_6, byte_7, byte_8, byte_9 };
+        return new byte[]{byte_6, byte_7, byte_8, byte_9};
     }
 
     private byte fromBits(int msb, int b6, int b5, int b4, int b3, int b2, int b1, int lsb) {
-        return (byte)(
-            ((msb & 1) << 7) |
-            ((b6 & 1) << 6) |
-            ((b5 & 1) << 5) |
-            ((b4 & 1) << 4) |
-            ((b3 & 1) << 3) |
-            ((b2 & 1) << 2) |
-            ((b1 & 1) << 1) |
-            ((lsb & 1) << 0)
+        return (byte) (
+                ((msb & 1) << 7) |
+                        ((b6 & 1) << 6) |
+                        ((b5 & 1) << 5) |
+                        ((b4 & 1) << 4) |
+                        ((b3 & 1) << 3) |
+                        ((b2 & 1) << 2) |
+                        ((b1 & 1) << 1) |
+                        ((lsb & 1) << 0)
         );
     }
 

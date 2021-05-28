@@ -56,11 +56,11 @@ public class WriteDataCommand extends BaseUiCommand<DataRow> {
 
         // TODO: Add better validation
         if (data[0].sector != fromSector ||
-                data[data.length-1].sector != toSector-1) {
+                data[data.length - 1].sector != toSector - 1) {
             failWith(
-                "Number of sectors in the data grid is different then " +
-                "number of sectors to be written to the card. " +
-                "Please read the requested number of sectors first, before writing them to the card.");
+                    "Number of sectors in the data grid is different then " +
+                            "number of sectors to be written to the card. " +
+                            "Please read the requested number of sectors first, before writing them to the card.");
         }
 
         cardService.loadKey(key);
@@ -81,8 +81,7 @@ public class WriteDataCommand extends BaseUiCommand<DataRow> {
     }
 
     private void verifyWriteSuccessful(
-            DataAddress dataAddress, DataRow dataRow, byte[] dataOnCard)
-    {
+            DataAddress dataAddress, DataRow dataRow, byte[] dataOnCard) {
         if (!Arrays.equals(dataOnCard, dataRow.bytes)) {
             failWith("Write data verification failed for sector %s and block %s.",
                     dataAddress.sector, dataAddress.block);

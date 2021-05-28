@@ -1,10 +1,9 @@
 package pl.marcinchwedczuk.rfid.card.fake;
 
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import pl.marcinchwedczuk.rfid.card.commons.StringUtils;
-import static org.assertj.core.api.Assertions.*;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class FakeCardTest {
     FakeCard fake = new FakeCard();
