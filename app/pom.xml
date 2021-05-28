@@ -28,7 +28,6 @@
         <junit.version>5.3.0</junit.version>
         <assertj.version>3.19.0</assertj.version>
         <testfx.version>4.0.16-alpha</testfx.version>
-        <!-- jdk-11+26 for Java 11, jdk-9+181 for Java 9, 8u76-b04 for Java 8 -->
         <openjfx-monocle.version>jdk-11+26</openjfx-monocle.version>
 
         <!-- Placeholders to be customized by child projects or profiles -->

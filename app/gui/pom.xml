@@ -15,6 +15,7 @@
         <extra-jvm-options-when-running-tests>
             --add-exports javafx.graphics/com.sun.javafx.application=ALL-UNNAMED
             --add-opens javafx.graphics/com.sun.glass.ui=ALL-UNNAMED
+            --add-opens pl.marcinchwedczuk.rfid/pl.marcinchwedczuk.rfid.gui=ALL-UNNAMED
             --add-opens pl.marcinchwedczuk.rfid/pl.marcinchwedczuk.rfid.xml=ALL-UNNAMED
         </extra-jvm-options-when-running-tests>
     </properties>
@@ -88,7 +89,6 @@
                     </options>
                 </configuration>
             </plugin>
-
         </plugins>
     </build>
 </project>
