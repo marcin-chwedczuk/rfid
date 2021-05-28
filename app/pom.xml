@@ -24,6 +24,7 @@
         <jackson.version>2.11.1</jackson.version>
         <woodstox.version>5.1.0</woodstox.version>
         <junit.version>5.3.0</junit.version>
+        <assertj.version>3.19.0</assertj.version>
 
         <!-- Placeholders to be customized by child projects or profiles -->
         <extra-jvm-options-when-running-tests></extra-jvm-options-when-running-tests>
@@ -75,6 +76,11 @@
                 <version>${slf4j.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-api</artifactId>
                 <version>${log4j.version}</version>
@@ -110,6 +116,11 @@
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-api</artifactId>
                 <version>${junit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-core</artifactId>
+                <version>${assertj.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -163,6 +174,10 @@
                     <argLine>
                         ${extra-jvm-options-when-running-tests}
                     </argLine>
+                    <systemPropertyVariables>
+                        <org.slf4j.simpleLogger.defaultLogLevel>DEBUG</org.slf4j.simpleLogger.defaultLogLevel>
+                        <org.slf4j.simpleLogger.showDateTime>true</org.slf4j.simpleLogger.showDateTime>
+                    </systemPropertyVariables>
                 </configuration>
                 <dependencies>
                     <dependency>

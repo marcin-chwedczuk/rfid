@@ -8,7 +8,7 @@ If you are a MacOS user, and the application reports error (check the logs):
 ```
 Caused by: java.io.IOException: No PC/SC library found on this system
 ```
-please make sure that the following line is uncommented in `pom.xml`:
+please make sure that the following line is uncommented in `gui/pom.xml`:
 ```xml
 <options>
     <!-- Workaround for BUG: https://stackoverflow.com/a/65062759/1779504 -->
@@ -23,7 +23,7 @@ $ ./mvnw clean install
 $ ./mvnw javafx:run -pl gui
 ```
 
-I tested the app with both JDK 11 and JDK 14.
+I tested the app with JDK 11 on macOS and Linux.
 
 # Setup ACR122U Reader
 

@@ -10,7 +10,7 @@ public class AcrStandardErrors {
     public static AcrException unexpectedResponseBytes(byte[] bytes) {
         return new AcrException(String.format(
                 "Terminal returned unexpected response bytes: %s.",
-                ByteUtils.asHexString(bytes, "")));
+                ByteArrays.toHexString(bytes, "")));
     }
 
     public static AcrException functionNotSupported() {

@@ -29,11 +29,11 @@ public class TrailerBlock {
     }
 
     public String keyAHexString() {
-        return ByteUtils.asHexString(keyA, ":");
+        return ByteArrays.toHexString(keyA, ":");
     }
 
     public String keyBHexString() {
-        return ByteUtils.asHexString(keyB, ":");
+        return ByteArrays.toHexString(keyB, ":");
     }
 
     public void setKeyA(byte[] key) {

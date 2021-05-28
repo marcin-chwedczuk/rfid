@@ -36,7 +36,7 @@ public class AcrCard extends AcrTerminalCommands {
     public String getCardUID() {
         logger.info("Getting card UID (via ATR)");
         byte[] uid = getData(0x00, 0x00, 0x00);
-        return ByteUtils.asHexString(uid, ":");
+        return ByteArrays.toHexString(uid, ":");
     }
 
     // TODO: Refactor this can only return ATS or serial number of the tag

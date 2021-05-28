@@ -7,7 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import pl.marcinchwedczuk.rfid.card.acr122.ByteUtils;
+import pl.marcinchwedczuk.rfid.card.acr122.ByteArrays;
 
 import java.io.IOException;
 import java.net.URL;
@@ -75,7 +75,7 @@ public class KeyBox extends HBox implements Initializable {
     public byte[] getKeyBytes() {
         String key = getKey();
         if (key == null) return null;
-        return ByteUtils.fromHexString(key, ":");
+        return ByteArrays.fromHexString(key, ":");
     }
 
     public KeyForm getEncoding() {

@@ -227,7 +227,7 @@ public class CardWindow implements Initializable {
 
         try {
             byte[] keyBytes = keyForm == KeyForm.Hex
-                    ? ByteUtils.fromHexString(keyString, ":")
+                    ? ByteArrays.fromHexString(keyString, ":")
                     : keyString.getBytes(StandardCharsets.US_ASCII);
 
             if (keyBytes.length != 6) {

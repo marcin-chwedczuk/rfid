@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class ByteUtils {
+public class ByteArrays {
     public static final String DEFAULT_SEPARATOR = ":";
 
     public static byte[] fromHexString(String s) throws NumberFormatException {
@@ -33,11 +33,11 @@ public class ByteUtils {
         return result;
     }
 
-    public static String asHexString(byte[] bytes) {
-        return asHexString(bytes, DEFAULT_SEPARATOR);
+    public static String toHexString(byte[] bytes) {
+        return toHexString(bytes, DEFAULT_SEPARATOR);
     }
 
-    public static String asHexString(byte[] bytes, String separator) {
+    public static String toHexString(byte[] bytes, String separator) {
         if (bytes.length == 0) {
             return "";
         }

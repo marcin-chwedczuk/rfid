@@ -38,8 +38,8 @@ public class AtrInfo {
                 Arrays.equals(registeredAppProviderId, expectedRegisteredAppProviderId),
                 "Registered Application Provider Identifier is not the expected 'PC/SC workgroup'. " +
                 "Expected bytes %s but got bytes %s.",
-                ByteUtils.asHexString(registeredAppProviderId, ":"),
-                ByteUtils.asHexString(expectedRegisteredAppProviderId, ":"));
+                ByteArrays.toHexString(registeredAppProviderId, ":"),
+                ByteArrays.toHexString(expectedRegisteredAppProviderId, ":"));
 
         int pixSS = historicalBytes[8];
         CardStandard cardStandard = CardStandard.fromPixSS(pixSS);
