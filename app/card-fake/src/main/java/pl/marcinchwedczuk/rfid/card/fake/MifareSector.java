@@ -1,5 +1,8 @@
 package pl.marcinchwedczuk.rfid.card.fake;
 
+import pl.marcinchwedczuk.rfid.card.commons.StringUtils;
+
+import javax.smartcardio.CardException;
 import java.util.Arrays;
 
 public class MifareSector {
@@ -37,6 +40,8 @@ public class MifareSector {
     }
 
     public byte[] read(int blockIndex, byte nBytes, KeyType key) {
+        // TODO: Disallow reading manufacturer block
+
         String[] accessBits = new AccessBitsParser().parse(blocks[3]);
 
         if (blockIndex < 3) {
@@ -71,7 +76,8 @@ public class MifareSector {
         }
     }
 
-    public boolean write(int blockIndex, byte[] blockData, KeyType key) {
+    public boolean write(int blockIndex, byte[] blockData, KeyType key) throws CardException {
+        new AccessBitsValidator(blockData).throwIfInvalid();
         String[] accessBits = new AccessBitsParser().parse(blocks[3]);
 
         if (blockIndex < 3) {

@@ -1,8 +1,7 @@
 package pl.marcinchwedczuk.rfid.card.acr122;
 
 import org.junit.jupiter.api.Test;
-import pl.marcinchwedczuk.rfid.card.acr122.RichByte;
-import pl.marcinchwedczuk.rfid.card.acr122.StringUtils;
+import pl.marcinchwedczuk.rfid.card.commons.StringUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
 

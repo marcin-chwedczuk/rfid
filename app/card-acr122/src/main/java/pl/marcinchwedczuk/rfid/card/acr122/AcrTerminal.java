@@ -75,7 +75,7 @@ public class AcrTerminal extends AcrTerminalCommands {
     public AcrCard connect() {
         try {
             Card card = cardTerminal.connect("T=0");
-            return new AcrCard(this, card);
+            return new AcrCard(this, new LoggingCardDecorator(card));
         } catch (CardException e) {
             throw new AcrException(e);
         }

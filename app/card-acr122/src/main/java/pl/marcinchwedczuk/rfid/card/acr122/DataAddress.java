@@ -13,6 +13,11 @@ public class DataAddress {
         return sector.index *4 + block.index;
     }
 
+    @Override
+    public String toString() {
+        return String.format("DataAddress(sector=%s, block=%s)", sector, block);
+    }
+
     public static DataAddress of(Sector sector, Block block) {
         return new DataAddress(sector, block);
     }

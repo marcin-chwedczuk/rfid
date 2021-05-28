@@ -8,10 +8,11 @@ import javax.smartcardio.CardException;
 import javax.smartcardio.CommandAPDU;
 import javax.smartcardio.ResponseAPDU;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
-import static pl.marcinchwedczuk.rfid.card.fake.StringUtils.byteArrayFromHexString;
-import static pl.marcinchwedczuk.rfid.card.fake.StringUtils.byteArrayToHexString;
+import static pl.marcinchwedczuk.rfid.card.commons.StringUtils.byteArrayFromHexString;
+import static pl.marcinchwedczuk.rfid.card.commons.StringUtils.toHexString;
 
 public class FakeMifare1K {
     private static final Logger logger = LoggerFactory.getLogger(FakeMifare1K.class);
@@ -30,6 +31,8 @@ public class FakeMifare1K {
             sectors[i] = new MifareSector();
         }
     }
+
+    private int piccOperatingParameter = 0xff;
 
     private byte[] keyRegister0 = null;
     private byte[] keyRegister1 = null;
@@ -121,7 +124,7 @@ public class FakeMifare1K {
             }
 
             return new ResponseAPDU(byteArrayFromHexString(
-                    byteArrayToHexString(dataToReturn) +  " 90 00"));
+                    toHexString(dataToReturn) +  " 90 00"));
         }
 
         if (matchesPattern(cmd, "FF D6 00 .. .." +
@@ -155,12 +158,34 @@ public class FakeMifare1K {
             return new ResponseAPDU(byteArrayFromHexString("90 00"));
         }
 
-        logger.error("Unknown sequence of bytes: {}", byteArrayToHexString(cmd.getBytes()));
+        if (matchesPattern(cmd, "FF 00 48 00 00")) {
+            // Get firmware version
+            return new ResponseAPDU("FAKE1.0".getBytes(StandardCharsets.US_ASCII));
+        }
+
+        if (matchesPattern(cmd, "FF 00 50 00 00")) {
+            // Get PICC operating parameter
+            return new ResponseAPDU(new byte[] { (byte)0x90, (byte)piccOperatingParameter });
+        }
+
+        if (matchesPattern(cmd, "FF 00 51 .. 00")) {
+            // Save PICC operating parameter
+            byte newPicc = cmd.getBytes()[3];
+            this.piccOperatingParameter = newPicc & 0xFF;
+            return new ResponseAPDU(new byte[] { (byte)0x90, (byte)piccOperatingParameter });
+        }
+
+        if (matchesPattern(cmd, "FF 00 40 .. 04 .. .. .. ..")) {
+            // Let & Buzzer settings - return failure, fake card does not supports it
+            return new ResponseAPDU(new byte[] { (byte)0x63, (byte)0x00 });
+        }
+
+        logger.error("Unknown sequence of bytes: {}", toHexString(cmd.getBytes()));
         throw new CardException("Not implemented in fake card!");
     }
 
     private boolean matchesPattern(CommandAPDU cmd, String regex) {
-        String bytes = byteArrayToHexString(cmd.getBytes());
+        String bytes = toHexString(cmd.getBytes());
         return bytes.matches(regex);
     }
 }

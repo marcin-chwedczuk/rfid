@@ -13,6 +13,8 @@ public abstract class AcrTerminalCommands {
     protected abstract byte[] sendCommandToTerminal(byte[] commandBytes) throws CardException;
 
     public PiccOperatingParameter readPiccOperatingParameter() {
+        logger.info("readPiccOperatingParameter()");
+
         byte[] commandBytes = new byte[] {
                 (byte)0xFF, 0x00, 0x50, 0x00, 0x00
         };
@@ -33,6 +35,8 @@ public abstract class AcrTerminalCommands {
     }
 
     public void savePiccOperatingParameter(PiccOperatingParameter parameter) {
+        logger.info("savePiccOperatingParameter({})", parameter);
+
         byte parameterByte = parameter.toByte();
 
         byte[] commandBytes = new byte[] {
@@ -53,6 +57,8 @@ public abstract class AcrTerminalCommands {
     }
 
     public void configureLedAndBuzzer(LedBuzzerSettings settings) {
+        logger.info("configureLedAndBuzzer({})", settings);
+
         byte[] bdc = settings.toControlBytes();
 
         byte[] commandBytes = new byte[] {
@@ -115,6 +121,8 @@ public abstract class AcrTerminalCommands {
      *      Use {@link #WAIT_INDEFINITELY} to wait for a response without timing out.
      */
     public void setTimeout(int seconds) {
+        logger.info("setTimeout({})", seconds);
+
         if (seconds < 0 || seconds > 0xFF) {
             throw new IllegalArgumentException("seconds");
         }
@@ -145,6 +153,8 @@ public abstract class AcrTerminalCommands {
     }
 
     public String getReaderFirmwareVersion() {
+        logger.info("getReaderFirmwareVersion()");
+
         byte[] commandBytes = new byte[] {
                 (byte)0xFF, 0x00, 0x48, 0x00, 0x00
         };
