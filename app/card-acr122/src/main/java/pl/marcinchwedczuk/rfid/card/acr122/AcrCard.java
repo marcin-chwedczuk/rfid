@@ -36,7 +36,7 @@ public class AcrCard extends AcrTerminalCommands {
     }
 
     public String getCardUID() {
-        logger.info("Getting card UID (via ATR)");
+        logger.debug("Getting card UID (via ATR)");
         byte[] uid = getData(0x00, 0x00, 0x00);
         return ByteArrays.toHexString(uid, ":");
     }
@@ -68,7 +68,7 @@ public class AcrCard extends AcrTerminalCommands {
 
 
     public void loadKeyToRegister(byte[] key, KeyRegister register) {
-        logger.info("Load key {} to register {}.", StringUtils.toHexString(key), register);
+        logger.debug("Load key {} to register {}.", StringUtils.toHexString(key), register);
 
         if (key.length != 6) {
             throw new IllegalArgumentException("Invalid key length (key should be 6 bytes long).");
@@ -95,7 +95,7 @@ public class AcrCard extends AcrTerminalCommands {
     }
 
     public void authenticateSector(Sector sector, SelectedKey selectedKey, KeyRegister registerWithKey) {
-        logger.info("Authenticate sector {} with key {} (register {}).", sector, selectedKey, registerWithKey);
+        logger.debug("Authenticate sector {} with key {} (register {}).", sector, selectedKey, registerWithKey);
 
         if (selectedKey == null) {
             throw new NullPointerException("keyType");
@@ -125,7 +125,7 @@ public class AcrCard extends AcrTerminalCommands {
     }
 
     public byte[] readBinaryBlock(DataAddress block, int numberOfBytes) {
-        logger.info("reading binary block {} (bytes {})", block, numberOfBytes);
+        logger.debug("reading binary block {} (bytes {})", block, numberOfBytes);
 
         byte[] commandBytes = new byte[]{
                 (byte) 0xFF, (byte) 0xB0, 0x00, (byte) block.blockNumber(), (byte) numberOfBytes
@@ -150,7 +150,7 @@ public class AcrCard extends AcrTerminalCommands {
     }
 
     public void writeBinaryBlock(DataAddress block, byte[] data16) {
-        logger.info("Writing binary block {} (bytes {})", block, StringUtils.toHexString(data16));
+        logger.debug("Writing binary block {} (bytes {})", block, StringUtils.toHexString(data16));
 
         if (data16.length != 16) {
             throw new IllegalArgumentException("Block is 16 bytes long for Mifare 1K/4K.");

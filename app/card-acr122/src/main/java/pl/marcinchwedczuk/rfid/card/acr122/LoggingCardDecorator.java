@@ -20,14 +20,14 @@ public class LoggingCardDecorator extends Card {
     @Override
     public ATR getATR() {
         ATR atr = card.getATR();
-        logger.info("getATR() returns {}", StringUtils.toHexString(atr.getBytes()));
+        logger.debug("getATR() returns {}", StringUtils.toHexString(atr.getBytes()));
         return atr;
     }
 
     @Override
     public String getProtocol() {
         String proto = card.getProtocol();
-        logger.info("getProtocol() returns {}", proto);
+        logger.debug("getProtocol() returns {}", proto);
         return proto;
     }
 
@@ -43,25 +43,25 @@ public class LoggingCardDecorator extends Card {
 
     @Override
     public void beginExclusive() throws CardException {
-        logger.info("beginExclusive()");
+        logger.debug("beginExclusive()");
         card.beginExclusive();
     }
 
     @Override
     public void endExclusive() throws CardException {
         card.endExclusive();
-        logger.info("endExclusive()");
+        logger.debug("endExclusive()");
     }
 
     @Override
     public byte[] transmitControlCommand(int controlCode, byte[] command) throws CardException {
-        logger.info(String.format("transmitControlCommand(%08x, %s)", controlCode, StringUtils.toHexString(command)));
+        logger.debug(String.format("transmitControlCommand(%08x, %s)", controlCode, StringUtils.toHexString(command)));
         return card.transmitControlCommand(controlCode, command);
     }
 
     @Override
     public void disconnect(boolean reset) throws CardException {
-        logger.info("disconnect({})", reset);
+        logger.debug("disconnect({})", reset);
         card.disconnect(reset);
     }
 
@@ -82,16 +82,16 @@ public class LoggingCardDecorator extends Card {
         @Override
         public int getChannelNumber() {
             int num = cardChannel.getChannelNumber();
-            logger.info("getChannelNumber() returns {}", num);
+            logger.debug("getChannelNumber() returns {}", num);
             return num;
         }
 
         @Override
         public ResponseAPDU transmit(CommandAPDU command) throws CardException {
             try {
-                logger.info("transmit({})", StringUtils.toHexString(command.getBytes()));
+                logger.debug("transmit({})", StringUtils.toHexString(command.getBytes()));
                 ResponseAPDU response = cardChannel.transmit(command);
-                logger.info("transmit(...) returns {}", StringUtils.toHexString(response.getBytes()));
+                logger.debug("transmit(...) returns {}", StringUtils.toHexString(response.getBytes()));
                 return response;
             } catch (CardException e) {
                 logger.error("transmit(...) throws", e);
@@ -104,13 +104,13 @@ public class LoggingCardDecorator extends Card {
             try {
                 byte[] tmp = new byte[command.remaining()];
                 command.get(tmp);
-                logger.info("transmit({}, response)", StringUtils.toHexString(tmp));
+                logger.debug("transmit({}, response)", StringUtils.toHexString(tmp));
 
                 int result = cardChannel.transmit(command, response);
 
                 tmp = new byte[response.remaining()];
                 command.get(tmp);
-                logger.info("transmit(...) returns {}, {}", result, StringUtils.toHexString(tmp));
+                logger.debug("transmit(...) returns {}, {}", result, StringUtils.toHexString(tmp));
 
                 return result;
             } catch (CardException e) {
@@ -121,7 +121,7 @@ public class LoggingCardDecorator extends Card {
 
         @Override
         public void close() throws CardException {
-            logger.info("close()");
+            logger.debug("close()");
             cardChannel.close();
         }
     }

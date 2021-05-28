@@ -19,7 +19,7 @@
         </Console>
     </Appenders>
     <Loggers>
-        <Root level="DEBUG">
+        <Root level="${sys:log.level:-INFO}">
             <AppenderRef ref="LogToFile"/>
             <AppenderRef ref="LogToConsole"/>
         </Root>

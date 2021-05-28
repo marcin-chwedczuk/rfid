@@ -197,9 +197,11 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <!-- enable debugging -->
                 <extra-jvm-options-when-running-gui-app>
+                    <!-- enable debugging -->
                     -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=1044
+                    <!-- set logging level to DEBUG -->
+                    -Dlog.level=DEBUG
                 </extra-jvm-options-when-running-gui-app>
             </properties>
         </profile>
