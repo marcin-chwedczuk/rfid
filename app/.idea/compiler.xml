@@ -7,7 +7,6 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="card-acr122" />
-        <module name="card-api" />
         <module name="card-commons" />
         <module name="acr122" />
         <module name="card-fake" />
@@ -23,5 +22,10 @@
       <module name="gui" target="11" />
       <module name="rfid" target="11" />
     </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="card-fake" options="--add-modules java.smartcardio" />
+    </option>
   </component>
 </project>

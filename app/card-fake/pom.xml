@@ -11,11 +11,13 @@
 
     <artifactId>card-fake</artifactId>
 
+    <properties>
+        <extra-jvm-options-when-running-tests>
+            --add-opens pl.marcinchwedczuk.rfid.card.fake/pl.marcinchwedczuk.rfid.card.fake=ALL-UNNAMED
+        </extra-jvm-options-when-running-tests>
+    </properties>
+
     <dependencies>
-        <dependency>
-            <groupId>pl.marcinchwedczuk</groupId>
-            <artifactId>card-api</artifactId>
-        </dependency>
         <dependency>
             <groupId>pl.marcinchwedczuk</groupId>
             <artifactId>card-commons</artifactId>

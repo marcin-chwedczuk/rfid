@@ -15,12 +15,6 @@
         <extra-jvm-options-when-running-tests>
             --add-opens pl.marcinchwedczuk.rfid/pl.marcinchwedczuk.rfid.xml=ALL-UNNAMED
         </extra-jvm-options-when-running-tests>
-
-
-        <dependency.org.apache.logging.log4j.log4j-api>2.13.3</dependency.org.apache.logging.log4j.log4j-api>
-        <dependency.org.apache.logging.log4j.log4j-slf4j-impl>2.13.3</dependency.org.apache.logging.log4j.log4j-slf4j-impl>
-        <dependency.org.apache.logging.log4j.log4j-core>2.13.3</dependency.org.apache.logging.log4j.log4j-core>
-        <dependency.org.slf4j.slf4j-api>1.7.30</dependency.org.slf4j.slf4j-api>
     </properties>
 
     <dependencies>
@@ -45,22 +39,16 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>${dependency.org.slf4j.slf4j-api}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>${dependency.org.apache.logging.log4j.log4j-api}</version>
-        </dependency>
-        <dependency>
+       <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
-            <version>${dependency.org.apache.logging.log4j.log4j-core}</version>
+           <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j-impl</artifactId>
-            <version>${dependency.org.apache.logging.log4j.log4j-slf4j-impl}</version>
+            <scope>runtime</scope>
         </dependency>
 
         <dependency>
@@ -89,14 +77,12 @@
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.6</version>
                 <configuration>
                     <mainClass>pl.marcinchwedczuk.rfid.gui.App</mainClass>
                     <options>
                         <!-- Workaround for BUG (macOS only): https://stackoverflow.com/a/65062759/1779504 -->
-
                         <option>-Dsun.security.smartcardio.library=/System/Library/Frameworks/PCSC.framework/PCSC</option>
-                        <option>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=1044</option>
+                        <option>${extra-jvm-options-when-running-gui-app}</option>
                     </options>
                 </configuration>
             </plugin>
