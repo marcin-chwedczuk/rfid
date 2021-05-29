@@ -1,5 +1,6 @@
 package pl.marcinchwedczuk.rfid.card.fake;
 
+import pl.marcinchwedczuk.rfid.card.commons.ByteArrays;
 import pl.marcinchwedczuk.rfid.card.commons.StringUtils;
 
 import javax.smartcardio.CardException;
@@ -11,7 +12,7 @@ class MifareSector {
 
     public MifareSector() {
         // Default sector trailer aka transport configuration
-        blocks[3] = StringUtils.byteArrayFromHexString(
+        blocks[3] = ByteArrays.fromHexString(
                 "FF FF FF FF FF FF FF 07 80 69 FF FF FF FF FF FF");
     }
 

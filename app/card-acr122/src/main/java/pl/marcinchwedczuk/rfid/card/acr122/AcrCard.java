@@ -68,7 +68,7 @@ public class AcrCard extends AcrTerminalCommands {
 
 
     public void loadKeyToRegister(byte[] key, KeyRegister register) {
-        logger.debug("Load key {} to register {}.", StringUtils.toHexString(key), register);
+        logger.debug("Load key {} to register {}.", ByteArrays.toHexString(key), register);
 
         if (key.length != 6) {
             throw new IllegalArgumentException("Invalid key length (key should be 6 bytes long).");
@@ -150,7 +150,7 @@ public class AcrCard extends AcrTerminalCommands {
     }
 
     public void writeBinaryBlock(DataAddress block, byte[] data16) {
-        logger.debug("Writing binary block {} (bytes {})", block, StringUtils.toHexString(data16));
+        logger.debug("Writing binary block {} (bytes {})", block, ByteArrays.toHexString(data16));
 
         if (data16.length != 16) {
             throw new IllegalArgumentException("Block is 16 bytes long for Mifare 1K/4K.");

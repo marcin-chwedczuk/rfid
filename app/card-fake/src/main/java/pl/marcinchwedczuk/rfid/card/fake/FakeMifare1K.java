@@ -2,6 +2,7 @@ package pl.marcinchwedczuk.rfid.card.fake;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.marcinchwedczuk.rfid.card.commons.ByteArrays;
 
 import javax.smartcardio.ATR;
 import javax.smartcardio.CardException;
@@ -9,9 +10,6 @@ import javax.smartcardio.CommandAPDU;
 import javax.smartcardio.ResponseAPDU;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-
-import static pl.marcinchwedczuk.rfid.card.commons.StringUtils.byteArrayFromHexString;
-import static pl.marcinchwedczuk.rfid.card.commons.StringUtils.toHexString;
 
 class FakeMifare1K {
     private static final Logger logger = LoggerFactory.getLogger(FakeMifare1K.class);
@@ -41,7 +39,7 @@ class FakeMifare1K {
     private int authenticatedSectorIndex = -1;
 
     public ATR getATR() {
-        return new ATR(byteArrayFromHexString(
+        return new ATR(ByteArrays.fromHexString(
                 "3B 8F 80 01 80 4F 0C A0 00 00 03 06 03 00 01 00 00 00 00 6A"
         ));
     }
@@ -49,7 +47,7 @@ class FakeMifare1K {
     public ResponseAPDU execute(CommandAPDU cmd) throws CardException {
         if (matchesPattern(cmd, "FF CA 00 00 04")) {
             // Get Card ID
-            return new ResponseAPDU(byteArrayFromHexString(
+            return new ResponseAPDU(ByteArrays.fromHexString(
                     // Card ID LSB - MSB, SW1, SW2
                     "AA BB CC DD EE FF 90 00"
             ));
@@ -71,7 +69,7 @@ class FakeMifare1K {
                 keyRegister1 = key;
             }
 
-            return new ResponseAPDU(byteArrayFromHexString("90 00"));
+            return new ResponseAPDU(ByteArrays.fromHexString("90 00"));
         }
 
         if (matchesPattern(cmd, "FF 86 00 00 05 01 00 .. .. ..")) {
@@ -90,10 +88,10 @@ class FakeMifare1K {
             if (success) {
                 authenticatedSectorIndex = sectorIndex;
                 authenticatedUsingKey = keyA ? KeyType.KEY_A : KeyType.KEY_B;
-                return new ResponseAPDU(byteArrayFromHexString("90 00"));
+                return new ResponseAPDU(ByteArrays.fromHexString("90 00"));
             } else {
                 authenticatedSectorIndex = -1;
-                return new ResponseAPDU(byteArrayFromHexString("63 00"));
+                return new ResponseAPDU(ByteArrays.fromHexString("63 00"));
             }
         }
 
@@ -109,7 +107,7 @@ class FakeMifare1K {
 
             if (authenticatedSectorIndex != sectorIndex) {
                 // Not authenticated
-                return new ResponseAPDU(byteArrayFromHexString("63 00"));
+                return new ResponseAPDU(ByteArrays.fromHexString("63 00"));
             }
 
             byte[] dataToReturn = sectors[sectorIndex].read(
@@ -119,11 +117,11 @@ class FakeMifare1K {
 
             if (dataToReturn == null) {
                 // Access not allowed
-                return new ResponseAPDU(byteArrayFromHexString("63 00"));
+                return new ResponseAPDU(ByteArrays.fromHexString("63 00"));
             }
 
-            return new ResponseAPDU(byteArrayFromHexString(
-                    toHexString(dataToReturn) + " 90 00"));
+            return new ResponseAPDU(ByteArrays.fromHexString(
+                    ByteArrays.toHexString(dataToReturn) + " 90 00"));
         }
 
         if (matchesPattern(cmd, "FF D6 00 .. .." +
@@ -140,21 +138,21 @@ class FakeMifare1K {
             byte[] blockData = Arrays.copyOfRange(data, 5, 5 + 16);
             if (blockData.length != 16) {
                 // Invalid block data length
-                return new ResponseAPDU(byteArrayFromHexString("63 00"));
+                return new ResponseAPDU(ByteArrays.fromHexString("63 00"));
             }
 
             if (authenticatedSectorIndex != sectorIndex) {
                 // Not authenticated
-                return new ResponseAPDU(byteArrayFromHexString("63 00"));
+                return new ResponseAPDU(ByteArrays.fromHexString("63 00"));
             }
 
             boolean success = sectors[sectorIndex].write(blockIndex, blockData, authenticatedUsingKey);
             if (!success) {
                 // Write failed
-                return new ResponseAPDU(byteArrayFromHexString("63 00"));
+                return new ResponseAPDU(ByteArrays.fromHexString("63 00"));
             }
 
-            return new ResponseAPDU(byteArrayFromHexString("90 00"));
+            return new ResponseAPDU(ByteArrays.fromHexString("90 00"));
         }
 
         if (matchesPattern(cmd, "FF 00 48 00 00")) {
@@ -179,12 +177,12 @@ class FakeMifare1K {
             return new ResponseAPDU(new byte[]{(byte) 0x63, (byte) 0x00});
         }
 
-        logger.error("Unknown sequence of bytes: {}", toHexString(cmd.getBytes()));
+        logger.error("Unknown sequence of bytes: {}", ByteArrays.toHexString(cmd.getBytes()));
         throw new CardException("Not implemented in fake card!");
     }
 
     private boolean matchesPattern(CommandAPDU cmd, String regex) {
-        String bytes = toHexString(cmd.getBytes());
+        String bytes = ByteArrays.toHexString(cmd.getBytes());
         return bytes.matches(regex);
     }
 }

@@ -20,7 +20,7 @@ public class LoggingCardDecorator extends Card {
     @Override
     public ATR getATR() {
         ATR atr = card.getATR();
-        logger.debug("getATR() returns {}", StringUtils.toHexString(atr.getBytes()));
+        logger.debug("getATR() returns {}", ByteArrays.toHexString(atr.getBytes()));
         return atr;
     }
 
@@ -55,7 +55,7 @@ public class LoggingCardDecorator extends Card {
 
     @Override
     public byte[] transmitControlCommand(int controlCode, byte[] command) throws CardException {
-        logger.debug(String.format("transmitControlCommand(%08x, %s)", controlCode, StringUtils.toHexString(command)));
+        logger.debug(String.format("transmitControlCommand(%08x, %s)", controlCode, ByteArrays.toHexString(command)));
         return card.transmitControlCommand(controlCode, command);
     }
 
@@ -89,9 +89,9 @@ public class LoggingCardDecorator extends Card {
         @Override
         public ResponseAPDU transmit(CommandAPDU command) throws CardException {
             try {
-                logger.debug("transmit({})", StringUtils.toHexString(command.getBytes()));
+                logger.debug("transmit({})", ByteArrays.toHexString(command.getBytes()));
                 ResponseAPDU response = cardChannel.transmit(command);
-                logger.debug("transmit(...) returns {}", StringUtils.toHexString(response.getBytes()));
+                logger.debug("transmit(...) returns {}", ByteArrays.toHexString(response.getBytes()));
                 return response;
             } catch (CardException e) {
                 logger.error("transmit(...) throws", e);
@@ -104,13 +104,13 @@ public class LoggingCardDecorator extends Card {
             try {
                 byte[] tmp = new byte[command.remaining()];
                 command.get(tmp);
-                logger.debug("transmit({}, response)", StringUtils.toHexString(tmp));
+                logger.debug("transmit({}, response)", ByteArrays.toHexString(tmp));
 
                 int result = cardChannel.transmit(command, response);
 
                 tmp = new byte[response.remaining()];
                 command.get(tmp);
-                logger.debug("transmit(...) returns {}, {}", result, StringUtils.toHexString(tmp));
+                logger.debug("transmit(...) returns {}, {}", result, ByteArrays.toHexString(tmp));
 
                 return result;
             } catch (CardException e) {
