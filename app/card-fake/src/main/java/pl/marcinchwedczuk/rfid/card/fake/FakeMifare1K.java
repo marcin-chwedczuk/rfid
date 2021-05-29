@@ -146,6 +146,11 @@ class FakeMifare1K {
                 return new ResponseAPDU(ByteArrays.fromHexString("63 00"));
             }
 
+            if (blockNumber == 0) {
+                // Attempt to write to read-only manufacturer data
+                return new ResponseAPDU(ByteArrays.fromHexString("63 00"));
+            }
+
             boolean success = sectors[sectorIndex].write(blockIndex, blockData, authenticatedUsingKey);
             if (!success) {
                 // Write failed

@@ -400,8 +400,14 @@ public class CardWindow implements Initializable {
         SettingsWindow.show(card);
     }
 
+    @FXML
     public void closeWindow() {
         ((Stage) getScene().getWindow()).close();
+    }
+
+    @FXML
+    private void showSenderDialog() {
+        SenderWindow.show(card);
     }
 
     public static CardWindow show(AcrCard card, Window owner) {
@@ -432,5 +438,4 @@ public class CardWindow implements Initializable {
             throw new RuntimeException(e);
         }
     }
-
 }

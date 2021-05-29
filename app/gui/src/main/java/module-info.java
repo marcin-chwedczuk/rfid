@@ -14,6 +14,7 @@ module pl.marcinchwedczuk.rfid {
 
     requires pl.marcinchwedczuk.rfid.card.acr122;
     requires pl.marcinchwedczuk.rfid.card.fake;
+    requires pl.marcinchwedczuk.rfid.card.commons;
 
     exports pl.marcinchwedczuk.rfid.gui;
 

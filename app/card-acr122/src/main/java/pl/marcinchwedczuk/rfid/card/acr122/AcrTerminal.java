@@ -33,7 +33,7 @@ public class AcrTerminal extends AcrTerminalCommands {
      * No card should be on reader while executing this command
      * (DIRECT mode is used to connect).
      */
-    protected byte[] sendCommandToTerminal(byte[] bytes) throws CardException {
+    public byte[] sendRawCommand(byte[] bytes) throws CardException {
         if (isCardPresent()) {
             // TODO: Switch to card mode when card is present
             throw new IllegalStateException(

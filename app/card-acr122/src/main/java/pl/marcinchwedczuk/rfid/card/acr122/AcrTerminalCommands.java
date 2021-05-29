@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 public abstract class AcrTerminalCommands {
     private static final Logger logger = LoggerFactory.getLogger(AcrTerminal.class);
 
-    protected abstract byte[] sendCommandToTerminal(byte[] commandBytes) throws CardException;
+    public abstract byte[] sendRawCommand(byte[] commandBytes) throws CardException;
 
     public PiccOperatingParameter readPiccOperatingParameter() {
         logger.info("readPiccOperatingParameter()");
@@ -20,7 +20,7 @@ public abstract class AcrTerminalCommands {
         };
 
         try {
-            byte[] responseBytes = this.sendCommandToTerminal(commandBytes);
+            byte[] responseBytes = this.sendRawCommand(commandBytes);
 
             // Format: [0x90, PICC byte]
             if (responseBytes.length != 2 || responseBytes[0] != (byte) 0x90) {
@@ -44,7 +44,7 @@ public abstract class AcrTerminalCommands {
         };
 
         try {
-            byte[] responseBytes = sendCommandToTerminal(commandBytes);
+            byte[] responseBytes = sendRawCommand(commandBytes);
 
             if (responseBytes.length != 2 || responseBytes[0] != (byte) 0x90) {
                 logger.error("Unexpected bytes returned from terminal {}.", responseBytes);
@@ -69,7 +69,7 @@ public abstract class AcrTerminalCommands {
 
         try {
             ResponseAPDU response = new ResponseAPDU(
-                    this.sendCommandToTerminal(commandBytes)
+                    this.sendRawCommand(commandBytes)
             );
 
             int sw = response.getSW();
@@ -92,7 +92,7 @@ public abstract class AcrTerminalCommands {
 
         try {
             ResponseAPDU response = new ResponseAPDU(
-                    sendCommandToTerminal(commandBytes));
+                    sendRawCommand(commandBytes));
 
             int sw = response.getSW();
             if (sw == 0x6300) {
@@ -136,7 +136,7 @@ public abstract class AcrTerminalCommands {
 
         try {
             ResponseAPDU response = new ResponseAPDU(
-                    sendCommandToTerminal(commandBytes));
+                    sendRawCommand(commandBytes));
 
             int sw = response.getSW();
             if (sw == 0x6300) {
@@ -159,7 +159,7 @@ public abstract class AcrTerminalCommands {
 
         try {
             ResponseAPDU response = new ResponseAPDU(
-                    sendCommandToTerminal(commandBytes));
+                    sendRawCommand(commandBytes));
 
             return new String(response.getBytes(), StandardCharsets.US_ASCII);
         } catch (CardException e) {

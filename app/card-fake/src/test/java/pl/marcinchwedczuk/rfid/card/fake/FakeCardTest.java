@@ -1,5 +1,6 @@
 package pl.marcinchwedczuk.rfid.card.fake;
 
+import org.assertj.core.api.AbstractStringAssert;
 import org.junit.jupiter.api.*;
 import pl.marcinchwedczuk.rfid.card.commons.ByteArrays;
 import pl.marcinchwedczuk.rfid.card.commons.StringUtils;
@@ -47,8 +48,8 @@ public class FakeCardTest {
                 .transmit(getPiccCmd);
 
         // Default value of Picc is 0xff
-        assertThat(response.getBytes())
-                .isEqualTo(new byte[] { (byte)0x90, (byte)0xFF });
+        assertThatResponseBytes(response)
+                .isEqualTo("90 FF");
     }
 
     @Test
@@ -59,8 +60,8 @@ public class FakeCardTest {
         ResponseAPDU response = fake
                 .getBasicChannel()
                 .transmit(changePiccCmd);
-        assertThat(response.getBytes())
-                .isEqualTo(new byte[] { (byte)0x90, (byte)0xCC });
+        assertThatResponseBytes(response)
+                .isEqualTo("90 CC");
 
         // Read PICC after change
         CommandAPDU getPiccCmd = cmd("FF 00 50 00 00");
@@ -69,8 +70,8 @@ public class FakeCardTest {
                 .getBasicChannel()
                 .transmit(getPiccCmd);
 
-        assertThat(response.getBytes())
-                .isEqualTo(new byte[] { (byte)0x90, (byte)0xCC });
+        assertThatResponseBytes(response)
+                .isEqualTo("90 CC");
     }
 
     @Test
@@ -82,8 +83,8 @@ public class FakeCardTest {
                 .transmit(ledBuzzCmd);
 
         // 0x63 == failure
-        assertThat(response.getBytes())
-                .isEqualTo(new byte[] { (byte)0x63, (byte)0x00 });
+        assertThatResponseBytes(response)
+                .isEqualTo("63 00");
     }
 
     @Test
@@ -94,8 +95,8 @@ public class FakeCardTest {
                 .getBasicChannel()
                 .transmit(ledBuzzCmd);
 
-        assertThat(response.getBytes())
-                .isEqualTo(new byte[] { (byte)0x90, (byte)0x00 });
+        assertThatResponseBytes(response)
+                .isEqualTo("90 00");
     }
 
     @Test
@@ -106,8 +107,8 @@ public class FakeCardTest {
                 .getBasicChannel()
                 .transmit(ledBuzzCmd);
 
-        assertThat(response.getBytes())
-                .isEqualTo(new byte[] { (byte)0x90, (byte)0x00 });
+        assertThatResponseBytes(response)
+                .isEqualTo("90 00");
     }
 
     @Nested
@@ -127,8 +128,8 @@ public class FakeCardTest {
                     .getBasicChannel()
                     .transmit(loadKey0Cmd);
 
-            assertThat(response.getBytes())
-                    .isEqualTo(new byte[] { (byte)0x90, (byte)0x00 });
+            assertThatResponseBytes(response)
+                    .isEqualTo("90 00");
         }
 
         @Test
@@ -141,8 +142,8 @@ public class FakeCardTest {
                     .getBasicChannel()
                     .transmit(authBlock0Cmd);
 
-            assertThat(response.getBytes())
-                    .isEqualTo(new byte[] { (byte)0x90, (byte)0x00 });
+            assertThatResponseBytes(response)
+                    .isEqualTo("90 00");
         }
 
         @Test
@@ -169,21 +170,23 @@ public class FakeCardTest {
                     .getBasicChannel()
                     .transmit(authBlock0Cmd);
 
-            assertThat(response.getBytes())
-                    .isEqualTo(ByteArrays.fromHexString(expectedData + " 90 00"));
+            assertThatResponseBytes(response)
+                    .isEqualTo(expectedData + " 90 00");
         }
 
         @Test
         @Order(40)
-        @Disabled("To verify on real card")
         void cannot_write_data_to_manufacturer_data_section() throws CardException {
             // Block 0 of sector 0 is manufacturer data (including card id)
-            writeData("00", "00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F");
+            CommandAPDU authBlock0Cmd = cmd("FF D6 00 00 10 " +
+                    "00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F");
 
-            // Check data actually not changed
-            // TODO: Verify on real card
+            ResponseAPDU response = fake
+                    .getBasicChannel()
+                    .transmit(authBlock0Cmd);
 
-            assertCanRead("00", "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00");
+            assertThatResponseBytes(response)
+                    .isEqualTo("63 00");
         }
 
         @Test
@@ -200,13 +203,17 @@ public class FakeCardTest {
                     .getBasicChannel()
                     .transmit(authBlock0Cmd);
 
-            assertThat(response.getBytes())
-                    .isEqualTo(new byte[] { (byte)0x90, (byte)0x00 });
+            assertThatResponseBytes(response)
+                    .isEqualTo("90 00");
 
         }
     }
 
     private static CommandAPDU cmd(String bytesHexString) {
         return new CommandAPDU(ByteArrays.fromHexString(bytesHexString));
+    }
+
+    private static AbstractStringAssert<?> assertThatResponseBytes(ResponseAPDU r) {
+        return assertThat(ByteArrays.toHexString(r.getBytes()));
     }
 }
