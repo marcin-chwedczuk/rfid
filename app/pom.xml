@@ -25,7 +25,7 @@
         <jackson.version>2.11.1</jackson.version>
         <woodstox.version>5.1.0</woodstox.version>
 
-        <junit.version>5.3.0</junit.version>
+        <junit.version>5.4.0</junit.version>
         <assertj.version>3.19.0</assertj.version>
         <testfx.version>4.0.16-alpha</testfx.version>
         <openjfx-monocle.version>jdk-11+26</openjfx-monocle.version>

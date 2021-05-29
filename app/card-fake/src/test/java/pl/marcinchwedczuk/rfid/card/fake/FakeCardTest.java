@@ -1,9 +1,14 @@
 package pl.marcinchwedczuk.rfid.card.fake;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import pl.marcinchwedczuk.rfid.card.commons.ByteArrays;
 import pl.marcinchwedczuk.rfid.card.commons.StringUtils;
-
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import javax.smartcardio.CardException;
 import javax.smartcardio.CommandAPDU;
 import javax.smartcardio.ResponseAPDU;
@@ -106,6 +111,70 @@ public class FakeCardTest {
 
         assertThat(response.getBytes())
                 .isEqualTo(new byte[] { (byte)0x90, (byte)0x00 });
+    }
+
+    @Nested
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @TestMethodOrder(OrderAnnotation.class)
+    class write_data_to_card {
+        // Card has default transport configuration
+        FakeCard writableCard = new FakeCard();
+
+        @Test
+        @Order(10)
+        void can_load_keyA_into_register_1() throws CardException {
+            // Load key FF:::FF into register 1
+            CommandAPDU loadKey0Cmd = cmd("FF 82 00 01 06 FF FF FF FF FF FF");
+
+            ResponseAPDU response = fake
+                    .getBasicChannel()
+                    .transmit(loadKey0Cmd);
+
+            assertThat(response.getBytes())
+                    .isEqualTo(new byte[] { (byte)0x90, (byte)0x00 });
+        }
+
+        @Test
+        @Order(20)
+        void authenticate_using_keyA_in_reg_1_to_sector_0() throws CardException {
+            // Authenticate to block 0
+            CommandAPDU authBlock0Cmd = cmd("FF 86 00 00 05 01 00 00 60 01");
+
+            ResponseAPDU response = fake
+                    .getBasicChannel()
+                    .transmit(authBlock0Cmd);
+
+            assertThat(response.getBytes())
+                    .isEqualTo(new byte[] { (byte)0x90, (byte)0x00 });
+        }
+
+        @Test
+        @Order(30)
+        void read_all_data_from_sector_0() throws CardException {
+            String emptyBlock =
+                    "00 00 00 00 00 00 00 00 " +
+                    "00 00 00 00 00 00 00 00";
+
+            assertCanRead("00", emptyBlock);
+            assertCanRead("01", emptyBlock);
+            assertCanRead("02", emptyBlock);
+
+            // Notice keyA was zero'ed
+            String defaultTrailerBlock = "00 00 00 00 00 00 FF 07 80 69 FF FF FF FF FF FF";
+
+            assertCanRead("03", defaultTrailerBlock);
+        }
+
+        private void assertCanRead(String block, String expectedData) throws CardException {
+            CommandAPDU authBlock0Cmd = cmd("FF B0 00 " + block + " 10");
+
+            ResponseAPDU response = fake
+                    .getBasicChannel()
+                    .transmit(authBlock0Cmd);
+
+            assertThat(response.getBytes())
+                    .isEqualTo(ByteArrays.fromHexString(expectedData + " 90 00"));
+        }
     }
 
     private static CommandAPDU cmd(String bytesHexString) {
