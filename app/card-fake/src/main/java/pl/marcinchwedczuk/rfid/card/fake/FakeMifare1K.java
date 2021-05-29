@@ -177,6 +177,23 @@ class FakeMifare1K {
             return new ResponseAPDU(new byte[]{(byte) 0x63, (byte) 0x00});
         }
 
+        if (matchesPattern(cmd, "FF 00 41 .. 00")) {
+            // Set timeout
+            return new ResponseAPDU(new byte[]{(byte) 0x90, (byte) 0x00});
+        }
+
+        if (matchesPattern(cmd, "FF 00 52 .. 00")) {
+            // set enabled buzzer during card detection
+            boolean valid = (
+                    cmd.getBytes()[3] == 0x00 ||
+                    cmd.getBytes()[3] == (byte)0xff);
+
+            if (valid)
+                return new ResponseAPDU(new byte[]{(byte) 0x90, (byte) 0x00});
+
+            return new ResponseAPDU(new byte[]{(byte) 0x63, (byte) 0x00});
+        }
+
         logger.error("Unknown sequence of bytes: {}", ByteArrays.toHexString(cmd.getBytes()));
         throw new CardException("Not implemented in fake card!");
     }

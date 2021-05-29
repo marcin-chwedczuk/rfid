@@ -3,6 +3,8 @@ package pl.marcinchwedczuk.rfid.card.commons;
 public class ByteArrays {
     private ByteArrays() {}
 
+    public static final byte[] EMPTY = new byte[] { };
+
     public static byte[] fromHexString(String s) {
         String sDigits = s.replaceAll("\\s+", "");
         if (sDigits.length() % 2 != 0) {
