@@ -1,14 +1,11 @@
 package pl.marcinchwedczuk.rfid.card.fake;
 
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import pl.marcinchwedczuk.rfid.card.commons.ByteArrays;
 import pl.marcinchwedczuk.rfid.card.commons.StringUtils;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+
 import javax.smartcardio.CardException;
 import javax.smartcardio.CommandAPDU;
 import javax.smartcardio.ResponseAPDU;
@@ -174,6 +171,38 @@ public class FakeCardTest {
 
             assertThat(response.getBytes())
                     .isEqualTo(ByteArrays.fromHexString(expectedData + " 90 00"));
+        }
+
+        @Test
+        @Order(40)
+        @Disabled("To verify on real card")
+        void cannot_write_data_to_manufacturer_data_section() throws CardException {
+            // Block 0 of sector 0 is manufacturer data (including card id)
+            writeData("00", "00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F");
+
+            // Check data actually not changed
+            // TODO: Verify on real card
+
+            assertCanRead("00", "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00");
+        }
+
+        @Test
+        @Order(50)
+        void can_write_data_to_card() throws CardException {
+            writeData("01", "00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F");
+            assertCanRead("01", "00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F");
+        }
+
+        private void writeData(String block, String data) throws CardException {
+            CommandAPDU authBlock0Cmd = cmd("FF D6 00 " + block + " 10 " + data);
+
+            ResponseAPDU response = fake
+                    .getBasicChannel()
+                    .transmit(authBlock0Cmd);
+
+            assertThat(response.getBytes())
+                    .isEqualTo(new byte[] { (byte)0x90, (byte)0x00 });
+
         }
     }
 
