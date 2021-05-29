@@ -148,14 +148,14 @@ public class FakeCardTest {
             assertCanReadBlock(card, 1, expectedBlockData);
             assertCanReadBlock(card, 2, expectedBlockData);
 
-            // Notice keyA is zero'ed, access bits in transport configuration
+            // Notice keyA is zero'ed, access bits are in the transport configuration
             String expectedTrailerBlock = "00 00 00 00 00 00 FF 07 80 69 FF FF FF FF FF FF";
             assertCanReadBlock(card, 3, expectedTrailerBlock);
         }
 
         @Test
         @Order(40)
-        void cannot_write_data_to_manufacturer_data_section() {
+        void cannot_write_data_to_manufacturer_block() {
             CommandAPDU writeCmd = cmdWriteToBlockNumber(0,
                     "00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F");
 
@@ -179,9 +179,6 @@ public class FakeCardTest {
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     @TestMethodOrder(OrderAnnotation.class)
     class block_authentication_flow {
-        // Card has default transport configuration
-        FakeCard card = new FakeCard(); // Shadow parent, ugly meh...
-
         @Test
         @Order(10)
         void can_load_keys_into_registers() throws CardException {
@@ -215,7 +212,7 @@ public class FakeCardTest {
 
         @Test
         @Order(30)
-        void change_permissions_to_data_row_to_rw_by_keyB_and_set_keyB() throws CardException {
+        void change_permissions_to_block0_rw_by_keyB_and_set_keyB() throws CardException {
             // Data in sector 1 readable by Key B only
             // and keyA = FF:::FF, keyB = AA:BB:CC:DD:EE:FF
             CommandAPDU setSectorTrailer = cmdWriteToBlockNumber(3, "FF FF FF FF FF FF DF 05 A2 69 AA BB CC DD EE FF");
@@ -262,6 +259,8 @@ public class FakeCardTest {
             assertCanReadBlock(card, 1, ZERO_BLOCK);
         }
     }
+
+    // TODO: Auth tests for sector trailer
 
     static void assertCanReadBlock(Card card, int blockNumber, String expectedData) {
         CommandAPDU readCmd = cmd(String.format("FF B0 00 %02X 10", blockNumber));
