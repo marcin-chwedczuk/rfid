@@ -3,98 +3,22 @@ package pl.marcinchwedczuk.rfid.card.fake;
 import static pl.marcinchwedczuk.rfid.card.fake.AccessLevel.*;
 
 enum DataBlockAccess {
-    C000 {
-        @Override
-        AccessLevel readAccess() {
-            return KEY_A_OR_B;
-        }
+    C000(KEY_A_OR_B, KEY_A_OR_B),
+    C010(KEY_A_OR_B, NEVER),
+    C100(KEY_A_OR_B, KEY_B),
+    C110(KEY_A_OR_B, KEY_B),
+    C001(KEY_A_OR_B, NEVER),
+    C011(KEY_B,      KEY_B),
+    C101(KEY_B,      NEVER),
+    C111(NEVER,      NEVER);
 
-        @Override
-        AccessLevel writeAccess() {
-            return KEY_A_OR_B;
-        }
-    },
-    C010 {
-        @Override
-        AccessLevel readAccess() {
-            return KEY_A_OR_B;
-        }
+    public final AccessLevel readAccess;
+    public final AccessLevel writeAccess;
 
-        @Override
-        AccessLevel writeAccess() {
-            return NEVER;
-        }
-    },
-    C100 {
-        @Override
-        AccessLevel readAccess() {
-            return KEY_A_OR_B;
-        }
-
-        @Override
-        AccessLevel writeAccess() {
-            return KEY_B;
-        }
-    },
-    C110 {
-        @Override
-        AccessLevel readAccess() {
-            return KEY_A_OR_B;
-        }
-
-        @Override
-        AccessLevel writeAccess() {
-            return KEY_B;
-        }
-    },
-    C001 {
-        @Override
-        AccessLevel readAccess() {
-            return KEY_A_OR_B;
-        }
-
-        @Override
-        AccessLevel writeAccess() {
-            return NEVER;
-        }
-    },
-    C011 {
-        @Override
-        AccessLevel readAccess() {
-            return KEY_B;
-        }
-
-        @Override
-        AccessLevel writeAccess() {
-            return KEY_B;
-        }
-    },
-    C101 {
-        @Override
-        AccessLevel readAccess() {
-            return KEY_B;
-        }
-
-        @Override
-        AccessLevel writeAccess() {
-            return NEVER;
-        }
-    },
-    C111 {
-        @Override
-        AccessLevel readAccess() {
-            return NEVER;
-        }
-
-        @Override
-        AccessLevel writeAccess() {
-            return NEVER;
-        }
-    };
-
-    abstract AccessLevel readAccess();
-
-    abstract AccessLevel writeAccess();
+    DataBlockAccess(AccessLevel readAccess, AccessLevel writeAccess) {
+        this.readAccess = readAccess;
+        this.writeAccess = writeAccess;
+    }
 
 
     public static DataBlockAccess fromBits(String bits) {

@@ -41,7 +41,7 @@ class MifareSector {
         if (blockIndex < 3) {
             // Normal block
             DataBlockAccess access = DataBlockAccess.fromBits(accessBits[blockIndex]);
-            if (!access.readAccess().allowedUsingKey(key)) {
+            if (!access.readAccess.allowedUsingKey(key)) {
                 return null;
             }
 
@@ -76,7 +76,7 @@ class MifareSector {
         if (blockIndex < 3) {
             // Normal block
             DataBlockAccess access = DataBlockAccess.fromBits(accessBits[blockIndex]);
-            if (!access.writeAccess().allowedUsingKey(key)) {
+            if (!access.writeAccess.allowedUsingKey(key)) {
                 return false;
             }
 

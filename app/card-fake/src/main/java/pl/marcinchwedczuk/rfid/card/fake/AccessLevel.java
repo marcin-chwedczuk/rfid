@@ -1,7 +1,10 @@
 package pl.marcinchwedczuk.rfid.card.fake;
 
 enum AccessLevel {
-    KEY_A, KEY_B, KEY_A_OR_B, NEVER;
+    KEY_A,
+    KEY_B,
+    KEY_A_OR_B,
+    NEVER;
 
     public boolean allowedUsingKey(KeyType keyType) {
         switch (this) {
