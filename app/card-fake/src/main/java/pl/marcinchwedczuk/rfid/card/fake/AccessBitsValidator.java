@@ -13,7 +13,7 @@ class AccessBitsValidator {
         this.trailerSector = Objects.requireNonNull(trailerSector);
     }
 
-    public void throwIfInvalid() throws CardException {
+    public boolean isValid() {
         Map<String, Boolean> bitValues = new HashMap<>();
         String[] bitsNames = FakeMifare1K.ACCESS_BITS_POSITIONS.split("\\s+");
 
@@ -26,14 +26,15 @@ class AccessBitsValidator {
                 bit = !bit;
             }
 
-            if (bitValues.containsKey(bitName)) {
-                boolean expected = bitValues.get(bitName);
+            String normalizedBitName = bitName.toLowerCase();
+
+            if (bitValues.containsKey(normalizedBitName)) {
+                boolean expected = bitValues.get(normalizedBitName);
                 if (expected != bit) {
-                    throw new CardException(
-                            "Sector trailer's access bits contain invalid pattern on bit: " + bitName);
+                    return false;
                 }
             } else {
-                bitValues.put(bitName, bit);
+                bitValues.put(normalizedBitName, bit);
             }
 
             if (bitIndex == 0) {
@@ -43,6 +44,8 @@ class AccessBitsValidator {
                 bitIndex--;
             }
         }
+
+        return true;
     }
 
     private boolean getBit(int byteIndex, int bitIndex) {

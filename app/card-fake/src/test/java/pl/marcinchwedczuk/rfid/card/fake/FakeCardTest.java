@@ -20,6 +20,7 @@ import static pl.marcinchwedczuk.rfid.card.fake.Register.REGISTER_1;
 
 // TODO: Refactor to test data builder
 public class FakeCardTest {
+    static final String _00_00_00_00_00_00 = "00 00 00 00 00 00";
     static final String FF_FF_FF_FF_FF_FF = "FF FF FF FF FF FF";
     static final String AA_BB_CC_DD_EE_FF = "AA BB CC DD EE FF";
     static final String AA_AA_AA_AA_AA_AA = "AA AA AA AA AA AA";
@@ -153,21 +154,21 @@ public class FakeCardTest {
         @Test
         @Order(50)
         void can_write_data_to_block1_of_sector0() throws CardException {
-            int blockNumber = sectorBlockToBlockNumber(0, 1);
+            int blockNumber = blockNumberFromSectorBlock(0, 1);
             assertCanWriteData(card, blockNumber, BLOCK_DATA_00_01_02___0F);
         }
 
         @Test
         @Order(60)
         void cannot_write_data_to_block0_of_sector1_because_we_are_not_authenticated_to_it() {
-            int blockNumber = sectorBlockToBlockNumber(1, 0);
+            int blockNumber = blockNumberFromSectorBlock(1, 0);
             assertCannotWriteData(card, blockNumber);
         }
 
         @Test
         @Order(70)
         void after_authenticating_to_sector1_we_can_write_to_block0() {
-            int blockNumber = sectorBlockToBlockNumber(1, 0);
+            int blockNumber = blockNumberFromSectorBlock(1, 0);
 
             ResponseAPDU response = execAuthenticateToBlockNumber(card, blockNumber, KEY_A, REGISTER_1);
             assertThatResponseBytes(response)
@@ -181,6 +182,8 @@ public class FakeCardTest {
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     @TestMethodOrder(OrderAnnotation.class)
     class access_bits_and_keys_for_data_blocks {
+        // TODO: Use stop at first failed test policy
+
         @Test
         @Order(10)
         void can_load_keys_into_registers() throws CardException {
@@ -214,7 +217,7 @@ public class FakeCardTest {
             // and keyA = FF:::FF, keyB = AA:BB:CC:DD:EE:FF
             ResponseAPDU response = execWriteBlock(
                     card,
-                    sectorBlockToBlockNumber(0, 3),
+                    blockNumberFromSectorBlock(0, 3),
                     "FF FF FF FF FF FF DF 05 A2 69 AA BB CC DD EE FF");
 
             assertThatResponseBytes(response)
@@ -235,8 +238,8 @@ public class FakeCardTest {
 
         @Test
         @Order(40)
-        void cannot_read_data_using_keyA_from_sector0() throws CardException {
-            int blockNumber = sectorBlockToBlockNumber(0, 1);
+        void cannot_read_data_from_sector0_using_keyA() throws CardException {
+            int blockNumber = blockNumberFromSectorBlock(0, 1);
 
             // Authenticate to block 0 using FF key
             ResponseAPDU response = execAuthenticateToBlockNumber(card, blockNumber, KEY_A, REGISTER_0);
@@ -248,8 +251,8 @@ public class FakeCardTest {
 
         @Test
         @Order(50)
-        void can_read_data_using_keyB_from_sector0() {
-            int blockNumber = sectorBlockToBlockNumber(0, 1);
+        void can_read_data_from_sector0_using_keyB() {
+            int blockNumber = blockNumberFromSectorBlock(0, 1);
 
             ResponseAPDU response = execAuthenticateToBlockNumber(card, blockNumber, KEY_B, REGISTER_1);
             assertThatResponseBytes(response)
@@ -259,7 +262,142 @@ public class FakeCardTest {
         }
     }
 
-    // TODO: Auth tests for sector trailer
+    @Nested
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @TestMethodOrder(OrderAnnotation.class)
+    class access_bits_and_keys_for_sector_trailer {
+        int sectorTrailerBlockNumber = blockNumberFromSectorBlock(1, 3);
+
+        @Test
+        @Order(10)
+        void can_load_keys_into_registers() {
+            ResponseAPDU response = execLoadKeyToRegister(card, REGISTER_0, FF_FF_FF_FF_FF_FF);
+            assertThatResponseBytes(response)
+                    .isEqualTo(RESP_OK);
+
+            response = execLoadKeyToRegister(card, REGISTER_1, AA_BB_CC_DD_EE_FF);
+            assertThatResponseBytes(response)
+                    .isEqualTo(RESP_OK);
+        }
+
+        @Test
+        @Order(20)
+        void authenticate_with_default_FF_key() {
+            ResponseAPDU response = execAuthenticateToBlockNumber(card, sectorTrailerBlockNumber, KEY_A, REGISTER_0);
+            assertThatResponseBytes(response)
+                    .isEqualTo(RESP_OK);
+        }
+
+        @Test
+        @Order(25)
+        void change_access_bits_trailer_writable_by_keyB() {
+            // Set configuration C100 - keys writable by keyB, not readable.
+            // Access bits readable by both keys, never writable again.
+            ResponseAPDU response = execWriteBlock(card, sectorTrailerBlockNumber,
+                    FF_FF_FF_FF_FF_FF + " F7 8F 00 69 " + AA_BB_CC_DD_EE_FF);
+            assertThatResponseBytes(response)
+                    .isEqualTo(RESP_OK);
+
+            // Notice keys are not readable
+            assertBlockOnCardContainsData(card, sectorTrailerBlockNumber,
+                    _00_00_00_00_00_00 + " F7 8F 00 69 " + _00_00_00_00_00_00);
+        }
+
+        @Test
+        @Order(30)
+        void can_read_trailer_via_keyA_but_keys_are_zeroed() {
+            ResponseAPDU response = execAuthenticateToBlockNumber(card, sectorTrailerBlockNumber, KEY_A, REGISTER_0);
+            assertThatResponseBytes(response)
+                    .isEqualTo(RESP_OK);
+
+            assertBlockOnCardContainsData(card, sectorTrailerBlockNumber,
+                    _00_00_00_00_00_00 + " F7 8F 00 69 " + _00_00_00_00_00_00);
+        }
+
+        @Test
+        @Order(35)
+        void can_read_trailer_via_keyB_but_keys_are_zeroed() {
+            ResponseAPDU response = execAuthenticateToBlockNumber(card, sectorTrailerBlockNumber, KEY_B, REGISTER_1);
+            assertThatResponseBytes(response)
+                    .isEqualTo(RESP_OK);
+
+            assertBlockOnCardContainsData(card, sectorTrailerBlockNumber,
+                    _00_00_00_00_00_00 + " F7 8F 00 69 " + _00_00_00_00_00_00);
+        }
+
+        @Test
+        @Order(40)
+        void cannot_change_keys_using_keyA() {
+            ResponseAPDU response = execAuthenticateToBlockNumber(card, sectorTrailerBlockNumber, KEY_A, REGISTER_0);
+            assertThatResponseBytes(response)
+                    .isEqualTo(RESP_OK);
+
+            // attempt: change keyA = 00:::00 and keyB = FF:::FF
+            response = execWriteBlock(card, sectorTrailerBlockNumber,
+                    _00_00_00_00_00_00 + " F7 8F 00 69 " + FF_FF_FF_FF_FF_FF);
+            assertThatResponseBytes(response)
+                    .isEqualTo(RESP_ERR);
+
+            assertBlockOnCardContainsData(card, sectorTrailerBlockNumber,
+                    _00_00_00_00_00_00 + " F7 8F 00 69 " + _00_00_00_00_00_00);
+        }
+
+        @Test
+        @Order(50)
+        void can_change_keys_using_keyB() {
+            ResponseAPDU response = execAuthenticateToBlockNumber(card, sectorTrailerBlockNumber, KEY_B, REGISTER_1);
+            assertThatResponseBytes(response)
+                    .isEqualTo(RESP_OK);
+
+            response = execWriteBlock(card, sectorTrailerBlockNumber,
+                    AA_AA_AA_AA_AA_AA + " F7 8F 00 69 " + FF_FF_FF_FF_FF_FF);
+            assertThatResponseBytes(response)
+                    .isEqualTo(RESP_OK);
+
+            // We need to re-authenticate now
+            response = execAuthenticateToBlockNumber(card, sectorTrailerBlockNumber, KEY_B, REGISTER_0);
+            assertThatResponseBytes(response)
+                    .isEqualTo(RESP_OK);
+
+            // In C100 configuration both keys are not readable
+            assertBlockOnCardContainsData(card, sectorTrailerBlockNumber,
+                    _00_00_00_00_00_00 + " F7 8F 00 69 " + _00_00_00_00_00_00);
+        }
+
+        @Test
+        @Order(60)
+        void cannot_change_access_bits_even_with_keyB() {
+            // Change back to default, remember C100 configuration prevents
+            // any changes to access bits.
+            ResponseAPDU response = execWriteBlock(card, sectorTrailerBlockNumber,
+                    _00_00_00_00_00_00 + " FF 07 80 69 " + FF_FF_FF_FF_FF_FF);
+            assertThatResponseBytes(response)
+                    .isEqualTo(RESP_OK);
+
+            // Check access bits not changed, keys zero'ed as usual
+            assertBlockOnCardContainsData(card, sectorTrailerBlockNumber,
+                    _00_00_00_00_00_00 + " F7 8F 00 69 " + _00_00_00_00_00_00);
+
+            // Info: experiments with real cards confirmed that even if bits are
+            // invalid they get ignored.
+        }
+
+        @Test
+        @Order(70)
+        void writing_invalid_access_bits_returns_error() {
+            // This may be not the real card behaviour - but it's useful
+            // when testing GUI
+            int otherTrailer = blockNumberFromSectorBlock(8, 3);
+
+            // Use default key
+            ResponseAPDU response = execAuthenticateToBlockNumber(card, otherTrailer, KEY_A, REGISTER_0);
+            assertThatResponseBytes(response)
+                    .isEqualTo(RESP_OK);
+
+            assertCannotWriteData(card, otherTrailer,
+                    FF_FF_FF_FF_FF_FF + " 00 00 00 69 " + FF_FF_FF_FF_FF_FF);
+        }
+    }
 
     static void assertBlockOnCardContainsData(Card card, int blockNumber, String expectedData) {
         ResponseAPDU response = execReadBlock(card, blockNumber);
@@ -283,11 +421,14 @@ public class FakeCardTest {
     }
 
     static void assertCannotWriteData(Card card, int blockNumber) {
+        assertCannotWriteData(card, blockNumber, "DE AD BE EF FF FF FF FF 01 02 03 04 CA FE BA BE");
+    }
+
+    static void assertCannotWriteData(Card card, int blockNumber, String data) {
         ResponseAPDU dataBeforeWrite = execReadBlock(card, blockNumber);
 
         // Write unique "random" bytes
-        ResponseAPDU response = execWriteBlock(card, blockNumber,
-                "DE AD BE EF FF FF FF FF 01 02 03 04 CA FE BA BE");
+        ResponseAPDU response = execWriteBlock(card, blockNumber, data);
         assertThatResponseBytes(response)
                 .isEqualTo(RESP_ERR);
 
@@ -361,7 +502,7 @@ public class FakeCardTest {
         return assertThat(ByteArrays.toHexString(r.getBytes()));
     }
 
-    static int sectorBlockToBlockNumber(int sector, int block) {
+    static int blockNumberFromSectorBlock(int sector, int block) {
         return 4*sector + block;
     }
 }

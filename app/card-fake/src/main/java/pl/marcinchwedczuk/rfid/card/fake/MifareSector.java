@@ -1,7 +1,6 @@
 package pl.marcinchwedczuk.rfid.card.fake;
 
 import pl.marcinchwedczuk.rfid.card.commons.ByteArrays;
-import pl.marcinchwedczuk.rfid.card.commons.StringUtils;
 
 import javax.smartcardio.CardException;
 import java.util.Arrays;
@@ -71,7 +70,6 @@ class MifareSector {
     }
 
     public boolean write(int blockIndex, byte[] blockData, KeyType key) throws CardException {
-        new AccessBitsValidator(blockData).throwIfInvalid();
         String[] accessBits = new AccessBitsParser().parse(blocks[3]);
 
         if (blockIndex < 3) {
@@ -85,20 +83,30 @@ class MifareSector {
             return true;
         } else {
             // Sector trailer
+            if (!new AccessBitsValidator(blockData).isValid()) {
+                return false;
+            }
+
             TrailerBlockAccess access = TrailerBlockAccess.fromBits(accessBits[3]);
             byte[] trailerCopy = blocks[3].clone();
 
             // TODO: Allow partial update? or fail?
             if (access.writeAccessToKeyA.allowedUsingKey(key)) {
                 System.arraycopy(blockData, 0, trailerCopy, 0, 6);
+            } else {
+                return false;
             }
 
             if (access.writeAccessToAccessBits.allowedUsingKey(key)) {
                 System.arraycopy(blockData, 6, trailerCopy, 6, 4);
+            } else {
+                // silently ignore failure
             }
 
             if (access.writeAccessToKeyB.allowedUsingKey(key)) {
                 System.arraycopy(blockData, 10, trailerCopy, 10, 6);
+            } else {
+                return false;
             }
 
             blocks[3] = trailerCopy;
