@@ -443,22 +443,10 @@ public class FakeCardTest {
         return new CommandAPDU(ByteArrays.fromHexString(bytesHexString));
     }
 
-    static CommandAPDU cmdLoadKeyToReg(Register reg, String hexKey) {
-        return cmd(String.format("FF 82 00 %02X 06 %s", (reg == Register.REGISTER_0 ? 0 : 1), hexKey));
-    }
-
     static ResponseAPDU execLoadKeyToRegister(Card card, Register reg, String key) {
         CommandAPDU cmd = cmd(String.format("FF 82 00 %02X 06 %s", (reg == Register.REGISTER_0 ? 0 : 1), key));
         ResponseAPDU response = execute(card, cmd);
         return response;
-    }
-
-    static CommandAPDU cmdAuthenticateToBlockNumber(int blockNumber, KeyType keyType, Register reg) {
-        return cmd(String.format(
-                "FF 86 00 00 05 01 00 %02X %02X %02X",
-                blockNumber,
-                (keyType == KEY_A) ? 0x60 : 0x61,
-                (reg == Register.REGISTER_0 ? 0 : 1)));
     }
 
     static ResponseAPDU execAuthenticateToBlockNumber(Card card, int blockNumber, KeyType keyType, Register reg) {
@@ -470,10 +458,6 @@ public class FakeCardTest {
 
         ResponseAPDU response = execute(card, cmd);
         return response;
-    }
-
-    static CommandAPDU cmdWriteToBlockNumber(int blockNumber, String hexData) {
-        return cmd(String.format("FF D6 00 %02X 10 %s", blockNumber, hexData));
     }
 
     static ResponseAPDU execReadBlock(Card card, int blockNumber) {
