@@ -32,23 +32,22 @@ public class FakeCardTest {
     static final String BLOCK_DATA_00_01_02___0F = "00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F";
 
     FakeCard card = new FakeCard();
+    FakeMifare1kTestUtil cardWrapper = new FakeMifare1kTestUtil(card);
 
     @Test
     void returns_proper_ATR() {
         byte[] atrBytes = card.getATR().getBytes();
-        byte[] expected = ByteArrays.fromHexString(
-                // Example ATR for MIFARE 1K cards
-                "3B 8F 80 01 80 4F 0C A0 00 00 03 06 03 00 01 00 00 00 00 6A");
 
-        assertThat(atrBytes)
+        // Example ATR for MIFARE 1K cards
+        String expected = "3B 8F 80 01 80 4F 0C A0 00 00 03 06 03 00 01 00 00 00 00 6A";
+
+        assertThatHexStringOf(atrBytes)
                 .isEqualTo(expected);
     }
 
     @Test
     void returns_firmware_version() {
-        CommandAPDU getFirmwareCmd = cmd("FF 00 48 00 00");
-
-        ResponseAPDU response = execute(card, getFirmwareCmd);
+        ResponseAPDU response = cardWrapper.executeCommand("FF 00 48 00 00");
 
         assertThat(response.getBytes())
                 .asString()
@@ -57,9 +56,7 @@ public class FakeCardTest {
 
     @Test
     void returns_default_value_of_picc() {
-        CommandAPDU getPiccCmd = cmd("FF 00 50 00 00");
-
-        ResponseAPDU response = execute(card, getPiccCmd);
+        ResponseAPDU response = cardWrapper.executeCommand("FF 00 50 00 00");
 
         // Default value of Picc is 0xff
         assertThatResponseBytes(response)
@@ -69,44 +66,35 @@ public class FakeCardTest {
     @Test
     void can_update_picc() {
         // Change PICC to 0xCC
-        CommandAPDU changePiccCmd = cmd("FF 00 51 CC 00");
-
-        ResponseAPDU response = execute(card, changePiccCmd);
+        ResponseAPDU response = cardWrapper.executeCommand("FF 00 51 CC 00");
         assertThatResponseBytes(response)
                 .isEqualTo("90 CC");
 
         // Read PICC after change
-        CommandAPDU getPiccCmd = cmd("FF 00 50 00 00");
-
-        response = execute(card, getPiccCmd);
+        response = cardWrapper.executeCommand("FF 00 50 00 00");
         assertThatResponseBytes(response)
                 .isEqualTo("90 CC");
     }
 
     @Test
     void returns_failure_for_led_and_buzzer_commands() {
-        CommandAPDU ledBuzzCmd = cmd("FF 00 40 0F 04 02 01 01 01");
-
-        ResponseAPDU response = execute(card, ledBuzzCmd);
+        ResponseAPDU response = cardWrapper.executeCommand("FF 00 40 0F 04 02 01 01 01");
         assertThatResponseBytes(response)
-                // 0x63 == failure
                 .isEqualTo(RESP_ERR);
     }
 
     @Test
     void can_set_timeout() {
-        CommandAPDU setTimeoutCmd = cmd("FF 00 41 08 00");
-
-        ResponseAPDU response = execute(card, setTimeoutCmd);
+        // Timeout is a no-op on fake card.
+        // We only test that the command is being accepted.
+        ResponseAPDU response = cardWrapper.executeCommand("FF 00 41 08 00");
         assertThatResponseBytes(response)
                 .isEqualTo(RESP_OK);
     }
 
     @Test
     void can_set_buzz_during_card_detection() {
-        CommandAPDU ledBuzzCmd = cmd("FF 00 52 00 00");
-
-        ResponseAPDU response = execute(card, ledBuzzCmd);
+        ResponseAPDU response = cardWrapper.executeCommand("FF 00 52 00 00");
         assertThatResponseBytes(response)
                 .isEqualTo(RESP_OK);
     }
@@ -120,7 +108,7 @@ public class FakeCardTest {
         @Test
         @Order(10)
         void can_load_keyA_into_register_1() {
-            ResponseAPDU response = execLoadKeyToRegister(card, REGISTER_1, FF_FF_FF_FF_FF_FF);
+            ResponseAPDU response = cardWrapper.execLoadKeyToRegister(REGISTER_1, FF_FF_FF_FF_FF_FF);
             assertThatResponseBytes(response)
                     .isEqualTo(RESP_OK);
         }
@@ -128,7 +116,7 @@ public class FakeCardTest {
         @Test
         @Order(20)
         void authenticate_using_keyA_in_reg_1_to_sector_0() {
-            ResponseAPDU response = execAuthenticateToBlockNumber(card, 0, KEY_A, REGISTER_1);
+            ResponseAPDU response = cardWrapper.execAuthenticateToBlockNumber(0, KEY_A, REGISTER_1);
             assertThatResponseBytes(response)
                     .isEqualTo(RESP_OK);
         }
@@ -136,45 +124,45 @@ public class FakeCardTest {
         @Test
         @Order(30)
         void read_all_data_from_sector_0() {
-            assertBlockOnCardContainsData(card, 0, BLOCK_DATA_ZEROS);
-            assertBlockOnCardContainsData(card, 1, BLOCK_DATA_ZEROS);
-            assertBlockOnCardContainsData(card, 2, BLOCK_DATA_ZEROS);
+            cardWrapper.assertBlockOnCardContainsData(0, BLOCK_DATA_ZEROS);
+            cardWrapper.assertBlockOnCardContainsData(1, BLOCK_DATA_ZEROS);
+            cardWrapper.assertBlockOnCardContainsData(2, BLOCK_DATA_ZEROS);
 
             // Notice keyA is zero'ed, access bits are in the transport configuration
             String expectedTrailerBlock = "00 00 00 00 00 00 FF 07 80 69 FF FF FF FF FF FF";
-            assertBlockOnCardContainsData(card, 3, expectedTrailerBlock);
+            cardWrapper.assertBlockOnCardContainsData(3, expectedTrailerBlock);
         }
 
         @Test
         @Order(40)
         void cannot_write_data_to_manufacturer_block() {
-            assertCannotWriteData(card, 0);
+            cardWrapper.assertCannotWriteData(0);
         }
 
         @Test
         @Order(50)
         void can_write_data_to_block1_of_sector0() throws CardException {
-            int blockNumber = blockNumberFromSectorBlock(0, 1);
-            assertCanWriteData(card, blockNumber, BLOCK_DATA_00_01_02___0F);
+            int blockNumber = cardWrapper.toBlockNumber(0, 1);
+            cardWrapper.assertCanWriteData(blockNumber, BLOCK_DATA_00_01_02___0F);
         }
 
         @Test
         @Order(60)
         void cannot_write_data_to_block0_of_sector1_because_we_are_not_authenticated_to_it() {
-            int blockNumber = blockNumberFromSectorBlock(1, 0);
-            assertCannotWriteData(card, blockNumber);
+            int blockNumber = cardWrapper.toBlockNumber(1, 0);
+            cardWrapper.assertCannotWriteData(blockNumber);
         }
 
         @Test
         @Order(70)
         void after_authenticating_to_sector1_we_can_write_to_block0() {
-            int blockNumber = blockNumberFromSectorBlock(1, 0);
+            int blockNumber = cardWrapper.toBlockNumber(1, 0);
 
-            ResponseAPDU response = execAuthenticateToBlockNumber(card, blockNumber, KEY_A, REGISTER_1);
+            ResponseAPDU response = cardWrapper.execAuthenticateToBlockNumber(blockNumber, KEY_A, REGISTER_1);
             assertThatResponseBytes(response)
                     .isEqualTo(RESP_OK);
 
-            assertCanWriteData(card, blockNumber, BLOCK_DATA_00_01_02___0F);
+            cardWrapper.assertCanWriteData(blockNumber, BLOCK_DATA_00_01_02___0F);
         }
     }
 
@@ -187,11 +175,11 @@ public class FakeCardTest {
         @Test
         @Order(10)
         void can_load_keys_into_registers() throws CardException {
-            ResponseAPDU response = execLoadKeyToRegister(card, REGISTER_0, AA_AA_AA_AA_AA_AA);
+            ResponseAPDU response = cardWrapper.execLoadKeyToRegister(REGISTER_0, AA_AA_AA_AA_AA_AA);
             assertThatResponseBytes(response)
                     .isEqualTo(RESP_OK);
 
-            response = execLoadKeyToRegister(card, REGISTER_1, FF_FF_FF_FF_FF_FF);
+            response = cardWrapper.execLoadKeyToRegister(REGISTER_1, FF_FF_FF_FF_FF_FF);
             assertThatResponseBytes(response)
                     .isEqualTo(RESP_OK);
         }
@@ -200,12 +188,12 @@ public class FakeCardTest {
         @Order(20)
         void authenticate_with_wrong_and_right_key() {
             // Authenticate to block 0 using AA key
-            ResponseAPDU response = execAuthenticateToBlockNumber(card, 0, KEY_A, REGISTER_0);
+            ResponseAPDU response = cardWrapper.execAuthenticateToBlockNumber(0, KEY_A, REGISTER_0);
             assertThatResponseBytes(response)
                     .isEqualTo(RESP_ERR);
 
             // Authenticate to block 0 using FF key
-            response = execAuthenticateToBlockNumber(card, 0, KEY_A, REGISTER_1);
+            response = cardWrapper.execAuthenticateToBlockNumber(0, KEY_A, REGISTER_1);
             assertThatResponseBytes(response)
                     .isEqualTo(RESP_OK);
         }
@@ -215,9 +203,8 @@ public class FakeCardTest {
         void change_permissions_to_block0_to__rw_by_keyB__and_change_keyB() throws CardException {
             // Data in sector 1 readable by Key B only
             // and keyA = FF:::FF, keyB = AA:BB:CC:DD:EE:FF
-            ResponseAPDU response = execWriteBlock(
-                    card,
-                    blockNumberFromSectorBlock(0, 3),
+            ResponseAPDU response = cardWrapper.execWriteBlock(
+                    cardWrapper.toBlockNumber(0, 3),
                     "FF FF FF FF FF FF DF 05 A2 69 AA BB CC DD EE FF");
 
             assertThatResponseBytes(response)
@@ -227,11 +214,11 @@ public class FakeCardTest {
         @Test
         @Order(35)
         void load_new_keys_into_registers() throws CardException {
-            ResponseAPDU response =  execLoadKeyToRegister(card, REGISTER_0, AA_AA_AA_AA_AA_AA);
+            ResponseAPDU response = cardWrapper.execLoadKeyToRegister(REGISTER_0, AA_AA_AA_AA_AA_AA);
             assertThatResponseBytes(response)
                     .isEqualTo(RESP_OK);
 
-            response = execLoadKeyToRegister(card, REGISTER_1, AA_BB_CC_DD_EE_FF);
+            response = cardWrapper.execLoadKeyToRegister(REGISTER_1, AA_BB_CC_DD_EE_FF);
             assertThatResponseBytes(response)
                     .isEqualTo(RESP_OK);
         }
@@ -239,26 +226,26 @@ public class FakeCardTest {
         @Test
         @Order(40)
         void cannot_read_data_from_sector0_using_keyA() throws CardException {
-            int blockNumber = blockNumberFromSectorBlock(0, 1);
+            int blockNumber = cardWrapper.toBlockNumber(0, 1);
 
             // Authenticate to block 0 using FF key
-            ResponseAPDU response = execAuthenticateToBlockNumber(card, blockNumber, KEY_A, REGISTER_0);
+            ResponseAPDU response = cardWrapper.execAuthenticateToBlockNumber(blockNumber, KEY_A, REGISTER_0);
             assertThatResponseBytes(response)
                     .isEqualTo(RESP_ERR);
 
-            assertErrorWhenReadingBlock(card, blockNumber);
+            cardWrapper.assertErrorWhenReadingBlock(blockNumber);
         }
 
         @Test
         @Order(50)
         void can_read_data_from_sector0_using_keyB() {
-            int blockNumber = blockNumberFromSectorBlock(0, 1);
+            int blockNumber = cardWrapper.toBlockNumber(0, 1);
 
-            ResponseAPDU response = execAuthenticateToBlockNumber(card, blockNumber, KEY_B, REGISTER_1);
+            ResponseAPDU response = cardWrapper.execAuthenticateToBlockNumber(blockNumber, KEY_B, REGISTER_1);
             assertThatResponseBytes(response)
                     .isEqualTo(RESP_OK);
 
-            assertBlockOnCardContainsData(card, blockNumber, BLOCK_DATA_ZEROS);
+            cardWrapper.assertBlockOnCardContainsData(blockNumber, BLOCK_DATA_ZEROS);
         }
     }
 
@@ -266,16 +253,16 @@ public class FakeCardTest {
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     @TestMethodOrder(OrderAnnotation.class)
     class access_bits_and_keys_for_sector_trailer {
-        int sectorTrailerBlockNumber = blockNumberFromSectorBlock(1, 3);
+        int sectorTrailerBlockNumber = cardWrapper.toBlockNumber(1, 3);
 
         @Test
         @Order(10)
         void can_load_keys_into_registers() {
-            ResponseAPDU response = execLoadKeyToRegister(card, REGISTER_0, FF_FF_FF_FF_FF_FF);
+            ResponseAPDU response = cardWrapper.execLoadKeyToRegister(REGISTER_0, FF_FF_FF_FF_FF_FF);
             assertThatResponseBytes(response)
                     .isEqualTo(RESP_OK);
 
-            response = execLoadKeyToRegister(card, REGISTER_1, AA_BB_CC_DD_EE_FF);
+            response = cardWrapper.execLoadKeyToRegister(REGISTER_1, AA_BB_CC_DD_EE_FF);
             assertThatResponseBytes(response)
                     .isEqualTo(RESP_OK);
         }
@@ -283,7 +270,7 @@ public class FakeCardTest {
         @Test
         @Order(20)
         void authenticate_with_default_FF_key() {
-            ResponseAPDU response = execAuthenticateToBlockNumber(card, sectorTrailerBlockNumber, KEY_A, REGISTER_0);
+            ResponseAPDU response = cardWrapper.execAuthenticateToBlockNumber(sectorTrailerBlockNumber, KEY_A, REGISTER_0);
             assertThatResponseBytes(response)
                     .isEqualTo(RESP_OK);
         }
@@ -293,74 +280,74 @@ public class FakeCardTest {
         void change_access_bits_trailer_writable_by_keyB() {
             // Set configuration C100 - keys writable by keyB, not readable.
             // Access bits readable by both keys, never writable again.
-            ResponseAPDU response = execWriteBlock(card, sectorTrailerBlockNumber,
+            ResponseAPDU response = cardWrapper.execWriteBlock(sectorTrailerBlockNumber,
                     FF_FF_FF_FF_FF_FF + " F7 8F 00 69 " + AA_BB_CC_DD_EE_FF);
             assertThatResponseBytes(response)
                     .isEqualTo(RESP_OK);
 
             // Notice keys are not readable
-            assertBlockOnCardContainsData(card, sectorTrailerBlockNumber,
+            cardWrapper.assertBlockOnCardContainsData(sectorTrailerBlockNumber,
                     _00_00_00_00_00_00 + " F7 8F 00 69 " + _00_00_00_00_00_00);
         }
 
         @Test
         @Order(30)
         void can_read_trailer_via_keyA_but_keys_are_zeroed() {
-            ResponseAPDU response = execAuthenticateToBlockNumber(card, sectorTrailerBlockNumber, KEY_A, REGISTER_0);
+            ResponseAPDU response = cardWrapper.execAuthenticateToBlockNumber(sectorTrailerBlockNumber, KEY_A, REGISTER_0);
             assertThatResponseBytes(response)
                     .isEqualTo(RESP_OK);
 
-            assertBlockOnCardContainsData(card, sectorTrailerBlockNumber,
+            cardWrapper.assertBlockOnCardContainsData(sectorTrailerBlockNumber,
                     _00_00_00_00_00_00 + " F7 8F 00 69 " + _00_00_00_00_00_00);
         }
 
         @Test
         @Order(35)
         void can_read_trailer_via_keyB_but_keys_are_zeroed() {
-            ResponseAPDU response = execAuthenticateToBlockNumber(card, sectorTrailerBlockNumber, KEY_B, REGISTER_1);
+            ResponseAPDU response = cardWrapper.execAuthenticateToBlockNumber(sectorTrailerBlockNumber, KEY_B, REGISTER_1);
             assertThatResponseBytes(response)
                     .isEqualTo(RESP_OK);
 
-            assertBlockOnCardContainsData(card, sectorTrailerBlockNumber,
+            cardWrapper.assertBlockOnCardContainsData(sectorTrailerBlockNumber,
                     _00_00_00_00_00_00 + " F7 8F 00 69 " + _00_00_00_00_00_00);
         }
 
         @Test
         @Order(40)
         void cannot_change_keys_using_keyA() {
-            ResponseAPDU response = execAuthenticateToBlockNumber(card, sectorTrailerBlockNumber, KEY_A, REGISTER_0);
+            ResponseAPDU response = cardWrapper.execAuthenticateToBlockNumber(sectorTrailerBlockNumber, KEY_A, REGISTER_0);
             assertThatResponseBytes(response)
                     .isEqualTo(RESP_OK);
 
             // attempt: change keyA = 00:::00 and keyB = FF:::FF
-            response = execWriteBlock(card, sectorTrailerBlockNumber,
+            response = cardWrapper.execWriteBlock(sectorTrailerBlockNumber,
                     _00_00_00_00_00_00 + " F7 8F 00 69 " + FF_FF_FF_FF_FF_FF);
             assertThatResponseBytes(response)
                     .isEqualTo(RESP_ERR);
 
-            assertBlockOnCardContainsData(card, sectorTrailerBlockNumber,
+            cardWrapper.assertBlockOnCardContainsData(sectorTrailerBlockNumber,
                     _00_00_00_00_00_00 + " F7 8F 00 69 " + _00_00_00_00_00_00);
         }
 
         @Test
         @Order(50)
         void can_change_keys_using_keyB() {
-            ResponseAPDU response = execAuthenticateToBlockNumber(card, sectorTrailerBlockNumber, KEY_B, REGISTER_1);
+            ResponseAPDU response = cardWrapper.execAuthenticateToBlockNumber(sectorTrailerBlockNumber, KEY_B, REGISTER_1);
             assertThatResponseBytes(response)
                     .isEqualTo(RESP_OK);
 
-            response = execWriteBlock(card, sectorTrailerBlockNumber,
+            response = cardWrapper.execWriteBlock(sectorTrailerBlockNumber,
                     AA_AA_AA_AA_AA_AA + " F7 8F 00 69 " + FF_FF_FF_FF_FF_FF);
             assertThatResponseBytes(response)
                     .isEqualTo(RESP_OK);
 
             // We need to re-authenticate now
-            response = execAuthenticateToBlockNumber(card, sectorTrailerBlockNumber, KEY_B, REGISTER_0);
+            response = cardWrapper.execAuthenticateToBlockNumber(sectorTrailerBlockNumber, KEY_B, REGISTER_0);
             assertThatResponseBytes(response)
                     .isEqualTo(RESP_OK);
 
             // In C100 configuration both keys are not readable
-            assertBlockOnCardContainsData(card, sectorTrailerBlockNumber,
+            cardWrapper.assertBlockOnCardContainsData(sectorTrailerBlockNumber,
                     _00_00_00_00_00_00 + " F7 8F 00 69 " + _00_00_00_00_00_00);
         }
 
@@ -369,13 +356,13 @@ public class FakeCardTest {
         void cannot_change_access_bits_even_with_keyB() {
             // Change back to default, remember C100 configuration prevents
             // any changes to access bits.
-            ResponseAPDU response = execWriteBlock(card, sectorTrailerBlockNumber,
+            ResponseAPDU response = cardWrapper.execWriteBlock(sectorTrailerBlockNumber,
                     _00_00_00_00_00_00 + " FF 07 80 69 " + FF_FF_FF_FF_FF_FF);
             assertThatResponseBytes(response)
                     .isEqualTo(RESP_OK);
 
             // Check access bits not changed, keys zero'ed as usual
-            assertBlockOnCardContainsData(card, sectorTrailerBlockNumber,
+            cardWrapper.assertBlockOnCardContainsData(sectorTrailerBlockNumber,
                     _00_00_00_00_00_00 + " F7 8F 00 69 " + _00_00_00_00_00_00);
 
             // Info: experiments with real cards confirmed that even if bits are
@@ -387,106 +374,23 @@ public class FakeCardTest {
         void writing_invalid_access_bits_returns_error() {
             // This may be not the real card behaviour - but it's useful
             // when testing GUI
-            int otherTrailer = blockNumberFromSectorBlock(8, 3);
+            int otherTrailer = cardWrapper.toBlockNumber(8, 3);
 
             // Use default key
-            ResponseAPDU response = execAuthenticateToBlockNumber(card, otherTrailer, KEY_A, REGISTER_0);
+            ResponseAPDU response = cardWrapper.execAuthenticateToBlockNumber(otherTrailer, KEY_A, REGISTER_0);
             assertThatResponseBytes(response)
                     .isEqualTo(RESP_OK);
 
-            assertCannotWriteData(card, otherTrailer,
+            cardWrapper.assertCannotWriteData(otherTrailer,
                     FF_FF_FF_FF_FF_FF + " 00 00 00 69 " + FF_FF_FF_FF_FF_FF);
         }
     }
 
-    static void assertBlockOnCardContainsData(Card card, int blockNumber, String expectedData) {
-        ResponseAPDU response = execReadBlock(card, blockNumber);
-        assertThatResponseBytes(response)
-                .isEqualTo(expectedData + " 90 00");
-    }
-
-    static void assertErrorWhenReadingBlock(Card card, int blockNumber) {
-        ResponseAPDU response = execReadBlock(card, blockNumber);
-        assertThatResponseBytes(response)
-                .isEqualTo(RESP_ERR);
-    }
-
-    static void assertCanWriteData(Card card, int blockNumber, String data) {
-        ResponseAPDU response = execWriteBlock(card, blockNumber, data);
-        assertThatResponseBytes(response)
-                .isEqualTo(RESP_OK);
-
-        // Check data was actually written
-        assertBlockOnCardContainsData(card, blockNumber, data);
-    }
-
-    static void assertCannotWriteData(Card card, int blockNumber) {
-        assertCannotWriteData(card, blockNumber, "DE AD BE EF FF FF FF FF 01 02 03 04 CA FE BA BE");
-    }
-
-    static void assertCannotWriteData(Card card, int blockNumber, String data) {
-        ResponseAPDU dataBeforeWrite = execReadBlock(card, blockNumber);
-
-        // Write unique "random" bytes
-        ResponseAPDU response = execWriteBlock(card, blockNumber, data);
-        assertThatResponseBytes(response)
-                .isEqualTo(RESP_ERR);
-
-        ResponseAPDU dataAfterFailedWrite = execReadBlock(card, blockNumber);
-
-        // Check data not changed
-        assertThatResponseBytes(dataAfterFailedWrite)
-                .isEqualTo(ByteArrays.toHexString(dataBeforeWrite.getBytes()));
-    }
-
-    static CommandAPDU cmd(String bytesHexString) {
-        return new CommandAPDU(ByteArrays.fromHexString(bytesHexString));
-    }
-
-    static ResponseAPDU execLoadKeyToRegister(Card card, Register reg, String key) {
-        CommandAPDU cmd = cmd(String.format("FF 82 00 %02X 06 %s", (reg == Register.REGISTER_0 ? 0 : 1), key));
-        ResponseAPDU response = execute(card, cmd);
-        return response;
-    }
-
-    static ResponseAPDU execAuthenticateToBlockNumber(Card card, int blockNumber, KeyType keyType, Register reg) {
-        CommandAPDU cmd = cmd(String.format(
-                "FF 86 00 00 05 01 00 %02X %02X %02X",
-                blockNumber,
-                (keyType == KEY_A) ? 0x60 : 0x61,
-                (reg == Register.REGISTER_0 ? 0 : 1)));
-
-        ResponseAPDU response = execute(card, cmd);
-        return response;
-    }
-
-    static ResponseAPDU execReadBlock(Card card, int blockNumber) {
-        CommandAPDU readCmd = cmd(String.format("FF B0 00 %02X 10", blockNumber));
-        ResponseAPDU response = execute(card, readCmd);
-        return response;
-    }
-
-    static ResponseAPDU execWriteBlock(Card card, int blockNumber, String hexData) {
-        CommandAPDU writeCmd = cmd(String.format("FF D6 00 %02X 10 %s", blockNumber, hexData));
-        ResponseAPDU response = execute(card, writeCmd);
-        return response;
-    }
-
-    static ResponseAPDU execute(Card card, CommandAPDU cmd) {
-        try {
-            return card
-                    .getBasicChannel()
-                    .transmit(cmd);
-        } catch (CardException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     static AbstractStringAssert<?> assertThatResponseBytes(ResponseAPDU r) {
-        return assertThat(ByteArrays.toHexString(r.getBytes()));
+        return assertThatHexStringOf(r.getBytes());
     }
 
-    static int blockNumberFromSectorBlock(int sector, int block) {
-        return 4*sector + block;
+    static AbstractStringAssert<?> assertThatHexStringOf(byte[] bytes) {
+        return assertThat(ByteArrays.toHexString(bytes));
     }
 }
