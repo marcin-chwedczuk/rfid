@@ -87,7 +87,6 @@
                                     <value>${project.build.directory}/failsafe-reports/screenshots</value>
                                 </property>
                             </systemProperties>
-
                         </configuration>
                     </execution>
                 </executions>

@@ -19,11 +19,9 @@ public class AcrTerminalProvider {
 
     public static final AcrTerminalProvider INSTANCE = new AcrTerminalProvider();
 
-    private AcrTerminalProvider() {
-    }
+    private AcrTerminalProvider() { }
 
     private static CardTerminal fakeTerminal = null;
-
     // VisibleForTesting
     public static void setFakeTerminal(CardTerminal terminal) {
         fakeTerminal = terminal;

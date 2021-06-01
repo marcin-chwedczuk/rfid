@@ -76,25 +76,14 @@ public class AcrTerminal extends AcrTerminalCommands {
     }
 
     public AcrCard connect() {
+        String protocol = "T=0";
         try {
-            Card card = cardTerminal.connect("T=0");
+            Card card = cardTerminal.connect(protocol);
             return new AcrCard(this, new LoggingCardDecorator(card));
         } catch (CardException e) {
-            throw new AcrException(e);
-        }
-    }
-
-    public static List<AcrTerminal> getTerminals() {
-        logger.info("Getting list of the terminals.");
-        try {
-            TerminalFactory factory = TerminalFactory.getInstance("PC/SC", null);
-            List<CardTerminal> terminals = factory.terminals().list();
-            return terminals.stream()
-                    .map(AcrTerminal::new)
-                    .collect(toList());
-        } catch (CardException | NoSuchAlgorithmException e) {
-            logger.warn("Cannot get list of the terminals.", e);
-            return Collections.emptyList();
+            throw new AcrException(
+                    String.format("Cannot connect to card using protocol: '%s'.", protocol),
+                    e);
         }
     }
 }

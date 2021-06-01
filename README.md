@@ -91,7 +91,7 @@ for details. I was not able to change this value on macOS BigSur though.
 Please see `docs/API-ACR122U-2.04.pdf` document in this repository to find out how you
 can do this on Windows (pages 38 - 40).
 
-# Tips
+# Tips for Contributors
 
 Use `jenv` to manage multiple environments.
 

@@ -22,6 +22,11 @@
             <groupId>pl.marcinchwedczuk</groupId>
             <artifactId>card-commons</artifactId>
         </dependency>
+        <dependency>
+            <groupId>pl.marcinchwedczuk</groupId>
+            <artifactId>card-fake</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
