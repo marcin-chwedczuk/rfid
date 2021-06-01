@@ -39,7 +39,7 @@ public class FakeMifare1kTestUtil {
         return this;
     }
 
-    public FakeMifare1kTestUtil assertCanWriteData(int blockNumber, String data) {
+    public FakeMifare1kTestUtil assertCanWriteDataToBlock(int blockNumber, String data) {
         ResponseAPDU response = execWriteBlock(blockNumber, data);
         assertThatResponseBytes(response)
                 .isEqualTo(RESP_OK);
@@ -49,11 +49,11 @@ public class FakeMifare1kTestUtil {
         return this;
     }
 
-    public FakeMifare1kTestUtil assertCannotWriteData(int blockNumber) {
-        return assertCannotWriteData(blockNumber, "DE AD BE EF FF FF FF FF 01 02 03 04 CA FE BA BE");
+    public FakeMifare1kTestUtil assertCannotWriteDataToBlock(int blockNumber) {
+        return assertCannotWriteDataToBlock(blockNumber, "DE AD BE EF FF FF FF FF 01 02 03 04 CA FE BA BE");
     }
 
-    public FakeMifare1kTestUtil assertCannotWriteData(int blockNumber, String data) {
+    public FakeMifare1kTestUtil assertCannotWriteDataToBlock(int blockNumber, String data) {
         ResponseAPDU dataBeforeWrite = execReadBlock(blockNumber);
 
         ResponseAPDU response = execWriteBlock(blockNumber, data);
