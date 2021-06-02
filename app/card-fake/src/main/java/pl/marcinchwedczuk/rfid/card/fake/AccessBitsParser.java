@@ -17,7 +17,7 @@ class AccessBitsParser {
             Arrays.fill(chars, '?');
         }
 
-        String[] bitsNames = FakeMifare1K.ACCESS_BITS_POSITIONS.split("\\s+");
+        String[] bitsNames = Mifare1KSimulator.ACCESS_BITS_POSITIONS.split("\\s+");
 
         int byteIndex = 6;
         int bitIndex = 7;

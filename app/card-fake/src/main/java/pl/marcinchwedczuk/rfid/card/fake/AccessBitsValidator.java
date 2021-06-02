@@ -1,6 +1,5 @@
 package pl.marcinchwedczuk.rfid.card.fake;
 
-import javax.smartcardio.CardException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -15,7 +14,7 @@ class AccessBitsValidator {
 
     public boolean isValid() {
         Map<String, Boolean> bitValues = new HashMap<>();
-        String[] bitsNames = FakeMifare1K.ACCESS_BITS_POSITIONS.split("\\s+");
+        String[] bitsNames = Mifare1KSimulator.ACCESS_BITS_POSITIONS.split("\\s+");
 
         int byteIndex = 6;
         int bitIndex = 7;

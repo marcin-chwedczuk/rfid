@@ -21,7 +21,8 @@ public class AcrTerminal extends AcrTerminalCommands {
     private static final Logger logger = LoggerFactory.getLogger(AcrTerminal.class);
     private static final byte FF = (byte) 0xFF;
 
-    private final CardTerminal cardTerminal;
+    // TODO: Revert to private
+    public final CardTerminal cardTerminal;
 
     public AcrTerminal(CardTerminal cardTerminal) {
         if (cardTerminal == null) throw new NullPointerException();
@@ -43,7 +44,7 @@ public class AcrTerminal extends AcrTerminalCommands {
         // See: https://stackoverflow.com/a/29235803/1779504
         // System specific see: https://github.com/leg0/libnfc/blob/master/libnfc/drivers/acr122_pcsc.c#L53
         // macOS: https://github.com/pokusew/nfc-pcsc/issues/13#issuecomment-302482621
-        Card card = cardTerminal.connect("DIRECT");
+        Card card = new LoggingCardDecorator(cardTerminal.connect("DIRECT"));
         try {
             return card.transmitControlCommand(
                     PcScUtils.IOCTL_CCID_ESCAPE(), bytes);

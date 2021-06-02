@@ -1,7 +1,9 @@
 package pl.marcinchwedczuk.rfid.card.acr122;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIf;
 import pl.marcinchwedczuk.rfid.card.fake.CardAbsentFakeCardTerminal;
 import pl.marcinchwedczuk.rfid.card.fake.FakeCardTerminal;
 
@@ -13,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class AcrTerminalTest {
     @Nested
     class card_is_absent {
-        AcrTerminal acrTerminal = new AcrTerminal(new CardAbsentFakeCardTerminal());
+        AcrTerminal acrTerminal = new AcrTerminal(FakeCardTerminal.withCardAbsent());
 
         @Test
         void isCardPresent_returns_false() {
@@ -22,6 +24,13 @@ class AcrTerminalTest {
         }
 
         @Test
+        void returns_terminal_name() {
+            assertThat(acrTerminal.name())
+                    .isEqualTo("Fake Terminal (CARD_ABSENT)");
+        }
+
+        @Test
+        @Disabled("Check how the real soft behaves TODO")
         void attempt_to_connect_ends_with_exception() {
             assertThatThrownBy(() -> acrTerminal.connect())
                     .isInstanceOf(AcrException.class)
@@ -32,12 +41,12 @@ class AcrTerminalTest {
 
     @Nested
     class card_is_present {
-        AcrTerminal acrTerminal = new AcrTerminal(new FakeCardTerminal());
+        AcrTerminal acrTerminal = new AcrTerminal(FakeCardTerminal.withCardPresent());
 
         @Test
         void returns_terminal_name() {
             assertThat(acrTerminal.name())
-                    .isEqualTo("Fake Terminal");
+                    .isEqualTo("Fake Terminal (CARD_PRESENT)");
         }
 
         @Test
@@ -58,4 +67,17 @@ class AcrTerminalTest {
         }
     }
 
+    @Nested
+    class terminal_escape_commands {
+        AcrTerminal acrTerminal = new AcrTerminal(FakeCardTerminal.withCardAbsent());
+
+        @Test
+        @Disabled("TODO")
+        void returns_firmware_version() {
+            String ver = acrTerminal.getReaderFirmwareVersion();
+
+            assertThat(ver)
+                    .isEqualTo("");
+        }
+    }
 }

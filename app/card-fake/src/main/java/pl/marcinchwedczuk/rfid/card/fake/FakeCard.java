@@ -4,6 +4,7 @@ import javax.smartcardio.ATR;
 import javax.smartcardio.Card;
 import javax.smartcardio.CardChannel;
 import javax.smartcardio.CardException;
+import java.util.Objects;
 
 /**
  * Fake MIFARE 1K Card.
@@ -12,26 +13,37 @@ import javax.smartcardio.CardException;
  * (see docs/ folder in this repository).
  */
 class FakeCard extends Card {
-    private final FakeMifare1K mifare1K = new FakeMifare1K();
+    private final String protocol;
+    private final Acr122Simulator acr122;
+
+    public FakeCard(String protocol, CardState cardState) {
+        this.protocol = Objects.requireNonNull(protocol);
+        Objects.requireNonNull(cardState);
+
+        acr122 = new Acr122Simulator(
+                cardState == CardState.CARD_ABSENT
+                    ? null
+                    : new Mifare1KSimulator());
+    }
 
     @Override
     public ATR getATR() {
-        return mifare1K.getATR();
+        return acr122.getATR();
     }
 
     @Override
     public String getProtocol() {
-        throw new RuntimeException("Not implemented.");
+        return protocol;
     }
 
     @Override
     public CardChannel getBasicChannel() {
-        return new FakeCardChannel(this, mifare1K);
+        return new FakeCardChannel(this, acr122);
     }
 
     @Override
     public CardChannel openLogicalChannel() throws CardException {
-        return new FakeCardChannel(this, mifare1K);
+        return new FakeCardChannel(this, acr122);
     }
 
     @Override
@@ -46,7 +58,7 @@ class FakeCard extends Card {
 
     @Override
     public byte[] transmitControlCommand(int controlCode, byte[] command) throws CardException {
-        throw new RuntimeException("Not implemented.");
+        return acr122.transmitControlCommand(controlCode, command);
     }
 
     @Override

@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static pl.marcinchwedczuk.rfid.card.fake.KeyType.KEY_A;
 
-public class FakeMifare1kTestUtil {
+public class FakeCardTestUtil {
     public static final int SW_OK = 0x9000;
     public static final int SW_ERR = 0x6300;
 
@@ -21,25 +21,25 @@ public class FakeMifare1kTestUtil {
 
     private final FakeCard card;
 
-    public FakeMifare1kTestUtil(FakeCard card) {
+    public FakeCardTestUtil(FakeCard card) {
         this.card = Objects.requireNonNull(card);
     }
 
-    public FakeMifare1kTestUtil assertBlockOnCardContainsData(int blockNumber, String expectedData) {
+    public FakeCardTestUtil assertBlockOnCardContainsData(int blockNumber, String expectedData) {
         ResponseAPDU response = execReadBlock(blockNumber);
         assertThatResponseBytes(response)
                 .isEqualTo(expectedData + " 90 00");
         return this;
     }
 
-    public FakeMifare1kTestUtil assertErrorWhenReadingBlock(int blockNumber) {
+    public FakeCardTestUtil assertCannotReadBlock(int blockNumber) {
         ResponseAPDU response = execReadBlock(blockNumber);
         assertThatResponseBytes(response)
                 .isEqualTo(RESP_ERR);
         return this;
     }
 
-    public FakeMifare1kTestUtil assertCanWriteDataToBlock(int blockNumber, String data) {
+    public FakeCardTestUtil assertCanWriteDataToBlock(int blockNumber, String data) {
         ResponseAPDU response = execWriteBlock(blockNumber, data);
         assertThatResponseBytes(response)
                 .isEqualTo(RESP_OK);
@@ -49,11 +49,11 @@ public class FakeMifare1kTestUtil {
         return this;
     }
 
-    public FakeMifare1kTestUtil assertCannotWriteDataToBlock(int blockNumber) {
+    public FakeCardTestUtil assertCannotWriteDataToBlock(int blockNumber) {
         return assertCannotWriteDataToBlock(blockNumber, "DE AD BE EF FF FF FF FF 01 02 03 04 CA FE BA BE");
     }
 
-    public FakeMifare1kTestUtil assertCannotWriteDataToBlock(int blockNumber, String data) {
+    public FakeCardTestUtil assertCannotWriteDataToBlock(int blockNumber, String data) {
         ResponseAPDU dataBeforeWrite = execReadBlock(blockNumber);
 
         ResponseAPDU response = execWriteBlock(blockNumber, data);
@@ -73,7 +73,7 @@ public class FakeMifare1kTestUtil {
         return assertThat(ByteArrays.toHexString(r.getBytes()));
     }
 
-    public FakeMifare1kTestUtil loadKeyToRegister(Register reg, String key) {
+    public FakeCardTestUtil loadKeyToRegister(Register reg, String key) {
         ResponseAPDU response = execLoadKeyToRegister(reg, key);
         if (response.getSW() != 0x9000) {
             fail(String.format(
@@ -85,11 +85,11 @@ public class FakeMifare1kTestUtil {
 
     public ResponseAPDU execLoadKeyToRegister(Register reg, String key) {
         CommandAPDU cmd = cmd(String.format("FF 82 00 %02X 06 %s", (reg == Register.REGISTER_0 ? 0 : 1), key));
-        ResponseAPDU response = executeCommand(cmd);
+        ResponseAPDU response = sendToCard(cmd);
         return response;
     }
 
-    public FakeMifare1kTestUtil authenticateToBlockNumber(int blockNumber, KeyType keyType, Register reg) {
+    public FakeCardTestUtil authenticateToBlockNumber(int blockNumber, KeyType keyType, Register reg) {
         ResponseAPDU response = execAuthenticateToBlockNumber(blockNumber, keyType, reg);
         if (response.getSW() != 0x9000) {
             fail(String.format(
@@ -106,17 +106,17 @@ public class FakeMifare1kTestUtil {
                 (keyType == KEY_A) ? 0x60 : 0x61,
                 (reg == Register.REGISTER_0 ? 0 : 1)));
 
-        ResponseAPDU response = executeCommand(cmd);
+        ResponseAPDU response = sendToCard(cmd);
         return response;
     }
 
     public ResponseAPDU execReadBlock(int blockNumber) {
         CommandAPDU readCmd = cmd(String.format("FF B0 00 %02X 10", blockNumber));
-        ResponseAPDU response = executeCommand(readCmd);
+        ResponseAPDU response = sendToCard(readCmd);
         return response;
     }
 
-    public FakeMifare1kTestUtil writeBlock(int blockNumber, String hexData) {
+    public FakeCardTestUtil writeBlock(int blockNumber, String hexData) {
         ResponseAPDU response = execWriteBlock(blockNumber, hexData);
         if (response.getSW() != 0x9000) {
             fail(String.format(
@@ -128,11 +128,16 @@ public class FakeMifare1kTestUtil {
 
     public ResponseAPDU execWriteBlock(int blockNumber, String hexData) {
         CommandAPDU writeCmd = cmd(String.format("FF D6 00 %02X 10 %s", blockNumber, hexData));
-        ResponseAPDU response = executeCommand(writeCmd);
+        ResponseAPDU response = sendToCard(writeCmd);
         return response;
     }
 
-    public ResponseAPDU executeCommand(CommandAPDU cmd) {
+    public ResponseAPDU sendToCard(String commandHex) {
+        CommandAPDU cmd = cmd(commandHex);
+        return sendToCard(cmd);
+    }
+
+    public ResponseAPDU sendToCard(CommandAPDU cmd) {
         try {
             return card
                     .getBasicChannel()
@@ -140,11 +145,6 @@ public class FakeMifare1kTestUtil {
         } catch (CardException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public ResponseAPDU executeCommand(String commandHex) {
-        CommandAPDU cmd = cmd(commandHex);
-        return executeCommand(cmd);
     }
 
     public CommandAPDU cmd(String bytesHexString) {

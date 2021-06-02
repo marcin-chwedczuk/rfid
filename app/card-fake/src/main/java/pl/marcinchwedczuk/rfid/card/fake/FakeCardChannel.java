@@ -5,11 +5,11 @@ import java.nio.ByteBuffer;
 
 class FakeCardChannel extends CardChannel {
     private final FakeCard fakeCard;
-    private final FakeMifare1K mifare1K;
+    private final Acr122Simulator acr122;
 
-    public FakeCardChannel(FakeCard fakeCard, FakeMifare1K mifare1K) {
+    public FakeCardChannel(FakeCard fakeCard, Acr122Simulator acr122) {
         this.fakeCard = fakeCard;
-        this.mifare1K = mifare1K;
+        this.acr122 = acr122;
     }
 
     @Override
@@ -24,12 +24,12 @@ class FakeCardChannel extends CardChannel {
 
     @Override
     public ResponseAPDU transmit(CommandAPDU command) throws CardException {
-        return mifare1K.execute(command);
+        return acr122.executeCommand(command);
     }
 
     @Override
     public int transmit(ByteBuffer command, ByteBuffer response) throws CardException {
-        throw new RuntimeException("Not implemented");
+        throw new RuntimeException("Not implemented in FakeCardChannel.");
     }
 
     @Override

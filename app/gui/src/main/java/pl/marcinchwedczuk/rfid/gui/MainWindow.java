@@ -2,6 +2,7 @@ package pl.marcinchwedczuk.rfid.gui;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
@@ -9,17 +10,21 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import pl.marcinchwedczuk.rfid.card.acr122.AcrCard;
-import pl.marcinchwedczuk.rfid.card.acr122.AcrTerminal;
-import pl.marcinchwedczuk.rfid.card.acr122.AcrTerminalProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import pl.marcinchwedczuk.rfid.card.acr122.*;
 import pl.marcinchwedczuk.rfid.card.fake.FakeCardTerminal;
 
+import javax.smartcardio.*;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainWindow implements Initializable {
+    private static final Logger logger = LoggerFactory.getLogger(MainWindow.class);
+
     @FXML
     private ComboBox<AcrTerminal> terminalsList;
 
@@ -68,7 +73,7 @@ public class MainWindow implements Initializable {
     private void refreshTerminalList() {
         infoScreen.setText("Select terminal to start...");
 
-        AcrTerminalProvider.setFakeTerminal(new FakeCardTerminal());
+        AcrTerminalProvider.setFakeTerminal(FakeCardTerminal.withCardPresent());
 
         terminalsList.getItems().clear();
         terminalsList.getItems().addAll(AcrTerminalProvider.INSTANCE.findTerminals());
@@ -110,5 +115,20 @@ public class MainWindow implements Initializable {
 
     private Window getWindow() {
         return terminalsList.getScene().getWindow();
+    }
+
+    public void testAction(ActionEvent actionEvent) {
+        try {
+            Card direct = currentTerminal().cardTerminal
+                    .connect("DIRECT");
+
+            ATR atr = direct.getATR();
+            logger.info("ATR = {}", atr);
+
+            // Have to be closed
+        }
+        catch (Exception e) {
+            logger.error("err", e);
+        }
     }
 }
