@@ -3,11 +3,10 @@ package pl.marcinchwedczuk.rfid.card.acr122;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledIf;
-import pl.marcinchwedczuk.rfid.card.fake.CardAbsentFakeCardTerminal;
 import pl.marcinchwedczuk.rfid.card.fake.FakeCardTerminal;
 
 import javax.smartcardio.CardException;
+import javax.smartcardio.CardNotPresentException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -30,11 +29,10 @@ class AcrTerminalTest {
         }
 
         @Test
-        @Disabled("Check how the real soft behaves TODO")
         void attempt_to_connect_ends_with_exception() {
             assertThatThrownBy(() -> acrTerminal.connect())
                     .isInstanceOf(AcrException.class)
-                    .hasCauseInstanceOf(CardException.class)
+                    .hasCauseInstanceOf(CardNotPresentException.class)
                     .hasMessageContaining("Cannot connect");
         }
     }
@@ -72,12 +70,11 @@ class AcrTerminalTest {
         AcrTerminal acrTerminal = new AcrTerminal(FakeCardTerminal.withCardAbsent());
 
         @Test
-        @Disabled("TODO")
         void returns_firmware_version() {
             String ver = acrTerminal.getReaderFirmwareVersion();
 
             assertThat(ver)
-                    .isEqualTo("");
+                    .isEqualTo("FAKE1.0");
         }
     }
 }

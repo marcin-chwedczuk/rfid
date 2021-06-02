@@ -1,5 +1,7 @@
 package pl.marcinchwedczuk.rfid.card.fake;
 
+import pl.marcinchwedczuk.rfid.card.fake.impl.Acr122Simulator;
+
 import javax.smartcardio.*;
 import java.nio.ByteBuffer;
 

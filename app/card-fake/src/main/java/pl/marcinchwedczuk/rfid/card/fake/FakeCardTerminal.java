@@ -1,12 +1,14 @@
 package pl.marcinchwedczuk.rfid.card.fake;
 
+import pl.marcinchwedczuk.rfid.card.fake.impl.CardState;
+
 import javax.smartcardio.Card;
 import javax.smartcardio.CardException;
 import javax.smartcardio.CardNotPresentException;
 import javax.smartcardio.CardTerminal;
 
-import static pl.marcinchwedczuk.rfid.card.fake.CardState.CARD_ABSENT;
-import static pl.marcinchwedczuk.rfid.card.fake.CardState.CARD_PRESENT;
+import static pl.marcinchwedczuk.rfid.card.fake.impl.CardState.CARD_ABSENT;
+import static pl.marcinchwedczuk.rfid.card.fake.impl.CardState.CARD_PRESENT;
 
 public class FakeCardTerminal extends CardTerminal {
     public static FakeCardTerminal withCardPresent() {

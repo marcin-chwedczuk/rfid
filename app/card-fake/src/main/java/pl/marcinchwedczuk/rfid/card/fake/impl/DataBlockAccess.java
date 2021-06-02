@@ -1,6 +1,6 @@
-package pl.marcinchwedczuk.rfid.card.fake;
+package pl.marcinchwedczuk.rfid.card.fake.impl;
 
-import static pl.marcinchwedczuk.rfid.card.fake.AccessLevel.*;
+import static pl.marcinchwedczuk.rfid.card.fake.impl.AccessLevel.*;
 
 enum DataBlockAccess {
     C000(KEY_A_OR_B, KEY_A_OR_B),

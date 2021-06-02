@@ -1,6 +1,7 @@
-package pl.marcinchwedczuk.rfid.card.fake;
+package pl.marcinchwedczuk.rfid.card.fake.impl;
 
 import pl.marcinchwedczuk.rfid.card.commons.ByteArrays;
+import pl.marcinchwedczuk.rfid.card.fake.*;
 
 import javax.smartcardio.CardException;
 import java.util.Arrays;

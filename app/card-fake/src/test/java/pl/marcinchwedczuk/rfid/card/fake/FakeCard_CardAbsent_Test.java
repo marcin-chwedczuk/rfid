@@ -1,6 +1,7 @@
 package pl.marcinchwedczuk.rfid.card.fake;
 
 import org.junit.jupiter.api.Test;
+import pl.marcinchwedczuk.rfid.card.fake.impl.CardState;
 
 public class FakeCard_CardAbsent_Test extends BaseFakeCardTest {
     FakeCard_CardAbsent_Test() {

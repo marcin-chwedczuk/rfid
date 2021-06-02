@@ -1,4 +1,4 @@
-package pl.marcinchwedczuk.rfid.card.fake;
+package pl.marcinchwedczuk.rfid.card.fake.impl;
 
 enum AccessLevel {
     KEY_A,

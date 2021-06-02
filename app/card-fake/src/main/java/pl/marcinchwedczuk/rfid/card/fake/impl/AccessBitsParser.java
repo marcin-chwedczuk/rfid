@@ -1,4 +1,6 @@
-package pl.marcinchwedczuk.rfid.card.fake;
+package pl.marcinchwedczuk.rfid.card.fake.impl;
+
+import pl.marcinchwedczuk.rfid.card.fake.impl.Mifare1KSimulator;
 
 import java.util.Arrays;
 

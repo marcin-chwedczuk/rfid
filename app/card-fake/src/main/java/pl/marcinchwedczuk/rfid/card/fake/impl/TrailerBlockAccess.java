@@ -1,6 +1,6 @@
-package pl.marcinchwedczuk.rfid.card.fake;
+package pl.marcinchwedczuk.rfid.card.fake.impl;
 
-import static pl.marcinchwedczuk.rfid.card.fake.AccessLevel.*;
+import static pl.marcinchwedczuk.rfid.card.fake.impl.AccessLevel.*;
 
 enum TrailerBlockAccess {
     C000(NEVER, KEY_A, KEY_A, NEVER, KEY_A, KEY_A),

@@ -1,5 +1,9 @@
 package pl.marcinchwedczuk.rfid.card.fake;
 
+import pl.marcinchwedczuk.rfid.card.fake.impl.Acr122Simulator;
+import pl.marcinchwedczuk.rfid.card.fake.impl.CardState;
+import pl.marcinchwedczuk.rfid.card.fake.impl.Mifare1KSimulator;
+
 import javax.smartcardio.ATR;
 import javax.smartcardio.Card;
 import javax.smartcardio.CardChannel;

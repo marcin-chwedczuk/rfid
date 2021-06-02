@@ -1,10 +1,9 @@
-package pl.marcinchwedczuk.rfid.card.fake;
+package pl.marcinchwedczuk.rfid.card.fake.impl;
 
 import pl.marcinchwedczuk.rfid.card.commons.ByteArrays;
 
 import javax.smartcardio.*;
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
 
 /**
  * Fake card that represents ACR122 terminal itself.
@@ -12,7 +11,7 @@ import java.util.Optional;
  * Even if the card is not present terminal can accept
  * some commands like `getFirmwareVersion`.
  */
-class Acr122Simulator {
+public class Acr122Simulator {
     private final Mifare1KSimulator mifare1K;
 
     private int piccOperatingParameter = 0xff;
@@ -32,6 +31,28 @@ class Acr122Simulator {
     }
 
     public ResponseAPDU executeCommand(CommandAPDU cmd) throws CardException {
+        ResponseAPDU response = tryExecuteTerminalCommand(cmd);
+        if (response != null) {
+            return response;
+        }
+
+        if (mifare1K != null) {
+            // If card is present then relay the command to it.
+            return mifare1K.execute(cmd);
+        }
+        else {
+            // This part is tricky - this code will throw an IllegalArgumentException.
+            // This reproduces the actual behaviour of the JavaCardIO.
+            return new ResponseAPDU(new byte[] { });
+        }
+    }
+
+    public byte[] transmitControlCommand(int controlCode, byte[] command) throws CardException {
+        // Escape commands
+        return tryExecuteTerminalCommand(new CommandAPDU(command)).getBytes();
+    }
+
+    private ResponseAPDU tryExecuteTerminalCommand(CommandAPDU cmd) {
         if (matchesPattern(cmd, "FF 00 50 00 00")) {
             // Get PICC operating parameter
             return new ResponseAPDU(new byte[]{(byte) 0x90, (byte) piccOperatingParameter});
@@ -71,20 +92,7 @@ class Acr122Simulator {
             return new ResponseAPDU(new byte[]{(byte) 0x63, (byte) 0x00});
         }
 
-        if (mifare1K != null) {
-            // If card is present then relay the command to it.
-            return mifare1K.execute(cmd);
-        }
-        else {
-            // This part is tricky - this code will throw an IllegalArgumentException.
-            // This reproduces the actual behaviour of the JavaCardIO.
-            return new ResponseAPDU(new byte[] { });
-        }
-    }
-
-    public byte[] transmitControlCommand(int controlCode, byte[] command) throws CardException {
-        // TODO: Impl. escape commands
-        return new byte[0];
+        return null;
     }
 
     private boolean matchesPattern(CommandAPDU cmd, String regex) {

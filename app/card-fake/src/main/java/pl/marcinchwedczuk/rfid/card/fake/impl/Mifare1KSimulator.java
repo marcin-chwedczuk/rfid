@@ -1,17 +1,17 @@
-package pl.marcinchwedczuk.rfid.card.fake;
+package pl.marcinchwedczuk.rfid.card.fake.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.marcinchwedczuk.rfid.card.commons.ByteArrays;
+import pl.marcinchwedczuk.rfid.card.fake.impl.KeyType;
 
 import javax.smartcardio.ATR;
 import javax.smartcardio.CardException;
 import javax.smartcardio.CommandAPDU;
 import javax.smartcardio.ResponseAPDU;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
-class Mifare1KSimulator {
+public class Mifare1KSimulator {
     private static final Logger logger = LoggerFactory.getLogger(Mifare1KSimulator.class);
 
     /**
