@@ -239,5 +239,4 @@ public class FakeCard_CardTestPresent_Test extends BaseFakeCardTest {
                     FF_FF_FF_FF_FF_FF + " 00 00 00 69 " + FF_FF_FF_FF_FF_FF);
         }
     }
-
 }

@@ -5,6 +5,21 @@ public class ByteArrays {
 
     public static final byte[] EMPTY = new byte[] { };
 
+    public static byte[] of(int... ints) {
+        byte[] result = new byte[ints.length];
+
+        for (int i = 0; i < ints.length; i++) {
+            int el = ints[i];
+            if (el < 0 || el > 255) {
+                throw new IllegalArgumentException("Value outside of range: " + el + ".");
+            }
+
+            result[i] = (byte)el;
+        }
+
+        return result;
+    }
+
     public static byte[] fromHexString(String s) {
         String sDigits = s.replaceAll("\\s+", "");
         if (sDigits.length() % 2 != 0) {

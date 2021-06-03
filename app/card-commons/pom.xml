@@ -11,6 +11,13 @@
 
     <artifactId>card-commons</artifactId>
 
+    <properties>
+        <extra-jvm-options-when-running-tests>
+            --add-opens pl.marcinchwedczuk.rfid.card.commons/pl.marcinchwedczuk.rfid.card.commons=ALL-UNNAMED
+        </extra-jvm-options-when-running-tests>
+    </properties>
+
+
     <dependencies>
         <dependency>
             <groupId>org.slf4j</groupId>

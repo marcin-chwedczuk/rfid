@@ -63,9 +63,18 @@ public abstract class BaseFakeCardTest {
 
     @Test
     void returns_failure_for_led_and_buzzer_commands() {
+        // This is a no-op operation on FakeCard.
         ResponseAPDU response = testUtil.sendToCard("FF 00 40 0F 04 02 01 01 01");
         assertThatResponseBytes(response)
-                .isEqualTo(RESP_ERR);
+                .isEqualTo(RESP_OK);
+    }
+
+    @Test
+    void can_set_buzz_during_card_detection() {
+        // This is a no-op operation on FakeCard.
+        ResponseAPDU response = testUtil.sendToCard("FF 00 52 00 00");
+        assertThatResponseBytes(response)
+                .isEqualTo(RESP_OK);
     }
 
     @Test
@@ -77,12 +86,6 @@ public abstract class BaseFakeCardTest {
                 .isEqualTo(RESP_OK);
     }
 
-    @Test
-    void can_set_buzz_during_card_detection() {
-        ResponseAPDU response = testUtil.sendToCard("FF 00 52 00 00");
-        assertThatResponseBytes(response)
-                .isEqualTo(RESP_OK);
-    }
 
     static AbstractStringAssert<?> assertThatResponseBytes(ResponseAPDU r) {
         return assertThatHexStringOf(r.getBytes());

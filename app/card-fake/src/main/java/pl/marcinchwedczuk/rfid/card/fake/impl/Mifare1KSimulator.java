@@ -67,7 +67,7 @@ public class Mifare1KSimulator {
                 keyRegister1 = key;
             }
 
-            return new ResponseAPDU(ByteArrays.fromHexString("90 00"));
+            return new ResponseAPDU(ByteArrays.of(0x90, 0x00));
         }
 
         if (matchesPattern(cmd, "FF 86 00 00 05 01 00 .. .. ..")) {
@@ -86,10 +86,10 @@ public class Mifare1KSimulator {
             if (success) {
                 authenticatedSectorIndex = sectorIndex;
                 authenticatedUsingKey = keyA ? KeyType.KEY_A : KeyType.KEY_B;
-                return new ResponseAPDU(ByteArrays.fromHexString("90 00"));
+                return new ResponseAPDU(ByteArrays.of(0x90, 0x00));
             } else {
                 authenticatedSectorIndex = -1;
-                return new ResponseAPDU(ByteArrays.fromHexString("63 00"));
+                return new ResponseAPDU(ByteArrays.of(0x63, 0x00));
             }
         }
 
@@ -105,7 +105,7 @@ public class Mifare1KSimulator {
 
             if (authenticatedSectorIndex != sectorIndex) {
                 // Not authenticated
-                return new ResponseAPDU(ByteArrays.fromHexString("63 00"));
+                return new ResponseAPDU(ByteArrays.of(0x63, 0x00));
             }
 
             byte[] dataToReturn = sectors[sectorIndex].read(
@@ -115,7 +115,7 @@ public class Mifare1KSimulator {
 
             if (dataToReturn == null) {
                 // Access not allowed
-                return new ResponseAPDU(ByteArrays.fromHexString("63 00"));
+                return new ResponseAPDU(ByteArrays.of(0x63, 0x00));
             }
 
             return new ResponseAPDU(ByteArrays.fromHexString(
@@ -136,29 +136,27 @@ public class Mifare1KSimulator {
             byte[] blockData = Arrays.copyOfRange(data, 5, 5 + 16);
             if (blockData.length != 16) {
                 // Invalid block data length
-                return new ResponseAPDU(ByteArrays.fromHexString("63 00"));
+                return new ResponseAPDU(ByteArrays.of(0x63, 0x00));
             }
 
             if (authenticatedSectorIndex != sectorIndex) {
                 // Not authenticated
-                return new ResponseAPDU(ByteArrays.fromHexString("63 00"));
+                return new ResponseAPDU(ByteArrays.of(0x63, 0x00));
             }
 
             if (blockNumber == 0) {
                 // Attempt to write to read-only manufacturer data
-                return new ResponseAPDU(ByteArrays.fromHexString("63 00"));
+                return new ResponseAPDU(ByteArrays.of(0x63, 0x00));
             }
 
             boolean success = sectors[sectorIndex].write(blockIndex, blockData, authenticatedUsingKey);
             if (!success) {
                 // Write failed
-                return new ResponseAPDU(ByteArrays.fromHexString("63 00"));
+                return new ResponseAPDU(ByteArrays.of(0x63, 0x00));
             }
 
-            return new ResponseAPDU(ByteArrays.fromHexString("90 00"));
+            return new ResponseAPDU(ByteArrays.of(0x90, 0x00));
         }
-
-
 
         logger.error("Unknown sequence of bytes: {}", ByteArrays.toHexString(cmd.getBytes()));
         throw new CardException("Not implemented in fake card!");

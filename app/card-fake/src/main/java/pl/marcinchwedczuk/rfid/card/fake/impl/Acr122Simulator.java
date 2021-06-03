@@ -55,24 +55,24 @@ public class Acr122Simulator {
     private ResponseAPDU tryExecuteTerminalCommand(CommandAPDU cmd) {
         if (matchesPattern(cmd, "FF 00 50 00 00")) {
             // Get PICC operating parameter
-            return new ResponseAPDU(new byte[]{(byte) 0x90, (byte) piccOperatingParameter});
+            return new ResponseAPDU(ByteArrays.of(0x90, piccOperatingParameter));
         }
 
         if (matchesPattern(cmd, "FF 00 51 .. 00")) {
-            // Save PICC operating parameter
+            // Set PICC operating parameter
             byte newPicc = cmd.getBytes()[3];
             this.piccOperatingParameter = newPicc & 0xFF;
-            return new ResponseAPDU(new byte[]{(byte) 0x90, (byte) piccOperatingParameter});
+            return new ResponseAPDU(ByteArrays.of(0x90, piccOperatingParameter));
         }
 
         if (matchesPattern(cmd, "FF 00 40 .. 04 .. .. .. ..")) {
-            // Let & Buzzer settings - return failure, fake card does not supports it
-            return new ResponseAPDU(new byte[]{(byte) 0x63, (byte) 0x00});
+            // Let & Buzzer settings - no-op
+            return new ResponseAPDU(ByteArrays.of(0x90, 0x00));
         }
 
         if (matchesPattern(cmd, "FF 00 41 .. 00")) {
-            // Set timeout
-            return new ResponseAPDU(new byte[]{(byte) 0x90, (byte) 0x00});
+            // Set timeout - no-op
+            return new ResponseAPDU(ByteArrays.of(0x90, 0x00));
         }
 
         if (matchesPattern(cmd, "FF 00 48 00 00")) {
@@ -84,12 +84,13 @@ public class Acr122Simulator {
             // set enabled buzzer during card detection
             boolean valid = (
                     cmd.getBytes()[3] == 0x00 ||
-                            cmd.getBytes()[3] == (byte)0xff);
+                    cmd.getBytes()[3] == (byte)0xff
+            );
 
             if (valid)
-                return new ResponseAPDU(new byte[]{(byte) 0x90, (byte) 0x00});
+                return new ResponseAPDU(ByteArrays.of(0x90, 0x00));
 
-            return new ResponseAPDU(new byte[]{(byte) 0x63, (byte) 0x00});
+            return new ResponseAPDU(ByteArrays.of(0x63, 0x00));
         }
 
         return null;
@@ -99,6 +100,4 @@ public class Acr122Simulator {
         String bytes = ByteArrays.toHexString(cmd.getBytes());
         return bytes.matches(regex);
     }
-
-
 }
