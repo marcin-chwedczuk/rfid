@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.marcinchwedczuk.rfid.card.acr122.impl.AcrStandardErrors;
 import pl.marcinchwedczuk.rfid.card.commons.KeyType;
+import pl.marcinchwedczuk.rfid.card.commons.Register;
 import pl.marcinchwedczuk.rfid.card.commons.utils.ByteArrays;
 
 import javax.smartcardio.*;
@@ -69,7 +70,7 @@ public class AcrCard extends AcrTerminalCommands {
     }
 
 
-    public void loadKeyToRegister(byte[] key, KeyRegister register) {
+    public void loadKeyToRegister(byte[] key, Register register) {
         logger.debug("Load key {} to register {}.", ByteArrays.toHexString(key), register);
 
         if (key.length != 6) {
@@ -96,7 +97,7 @@ public class AcrCard extends AcrTerminalCommands {
         }
     }
 
-    public void authenticateSector(Sector sector, KeyType selectedKey, KeyRegister registerWithKey) {
+    public void authenticateSector(Sector sector, KeyType selectedKey, Register registerWithKey) {
         logger.debug("Authenticate sector {} with key {} (register {}).", sector, selectedKey, registerWithKey);
 
         if (selectedKey == null) {

@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import pl.marcinchwedczuk.rfid.card.acr122.*;
 import pl.marcinchwedczuk.rfid.card.commons.KeyType;
 
-import static pl.marcinchwedczuk.rfid.card.acr122.KeyRegister.REGISTER_0;
+import static pl.marcinchwedczuk.rfid.card.commons.Register.REGISTER_0;
 
 public class CardService {
     private static final Logger logger = LoggerFactory.getLogger(CardService.class);

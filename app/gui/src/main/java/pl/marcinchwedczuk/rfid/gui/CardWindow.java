@@ -32,8 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import static pl.marcinchwedczuk.rfid.card.acr122.KeyRegister.REGISTER_0;
 import static pl.marcinchwedczuk.rfid.card.commons.KeyType.KEY_A;
+import static pl.marcinchwedczuk.rfid.card.commons.Register.REGISTER_0;
 
 public class CardWindow implements Initializable {
     private static final Logger logger = LoggerFactory.getLogger(CardWindow.class);
