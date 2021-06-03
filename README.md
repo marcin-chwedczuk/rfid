@@ -2,6 +2,8 @@
 
 ![Build Status](https://github.com/marcin-chwedczuk/rfid/actions/workflows/ci.yaml/badge.svg)
 
+![Main Window](docs/img/mainWindow.png)
+
 # How to run?
 
 If you are a MacOS user, and the application reports error (check the logs):
