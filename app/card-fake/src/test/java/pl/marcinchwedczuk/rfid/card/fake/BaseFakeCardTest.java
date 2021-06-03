@@ -2,7 +2,7 @@ package pl.marcinchwedczuk.rfid.card.fake;
 
 import org.assertj.core.api.AbstractStringAssert;
 import org.junit.jupiter.api.Test;
-import pl.marcinchwedczuk.rfid.card.commons.ByteArrays;
+import pl.marcinchwedczuk.rfid.card.commons.utils.ByteArrays;
 
 import javax.smartcardio.Card;
 import javax.smartcardio.CardException;

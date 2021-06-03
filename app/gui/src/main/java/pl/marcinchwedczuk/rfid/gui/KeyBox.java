@@ -8,7 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
-import pl.marcinchwedczuk.rfid.card.commons.ByteArrays;
+import pl.marcinchwedczuk.rfid.card.commons.utils.ByteArrays;
 
 import java.io.IOException;
 import java.net.URL;

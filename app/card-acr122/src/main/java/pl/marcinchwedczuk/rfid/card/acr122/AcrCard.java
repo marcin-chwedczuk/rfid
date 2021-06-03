@@ -2,8 +2,9 @@ package pl.marcinchwedczuk.rfid.card.acr122;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.marcinchwedczuk.rfid.card.commons.ByteArrays;
-import pl.marcinchwedczuk.rfid.card.commons.StringUtils;
+import pl.marcinchwedczuk.rfid.card.acr122.impl.AcrStandardErrors;
+import pl.marcinchwedczuk.rfid.card.commons.KeyType;
+import pl.marcinchwedczuk.rfid.card.commons.utils.ByteArrays;
 
 import javax.smartcardio.*;
 
@@ -95,7 +96,7 @@ public class AcrCard extends AcrTerminalCommands {
         }
     }
 
-    public void authenticateSector(Sector sector, SelectedKey selectedKey, KeyRegister registerWithKey) {
+    public void authenticateSector(Sector sector, KeyType selectedKey, KeyRegister registerWithKey) {
         logger.debug("Authenticate sector {} with key {} (register {}).", sector, selectedKey, registerWithKey);
 
         if (selectedKey == null) {
@@ -105,7 +106,7 @@ public class AcrCard extends AcrTerminalCommands {
         byte[] commandBytes = new byte[]{
                 (byte) 0xFF, (byte) 0x86, 0x00, 0x00, 0x05,
                 0x01, 0x00, (byte) DataAddress.of(sector, BLOCK_0).blockNumber(),
-                (byte) (selectedKey == SelectedKey.KEY_A ? 0x60 : 0x61),
+                (byte) (selectedKey == KeyType.KEY_A ? 0x60 : 0x61),
                 (byte) registerWithKey.index()
         };
 

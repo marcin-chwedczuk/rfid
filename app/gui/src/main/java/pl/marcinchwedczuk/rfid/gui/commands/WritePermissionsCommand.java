@@ -3,6 +3,7 @@ package pl.marcinchwedczuk.rfid.gui.commands;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.marcinchwedczuk.rfid.card.acr122.*;
+import pl.marcinchwedczuk.rfid.card.commons.KeyType;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,14 +15,14 @@ public class WritePermissionsCommand extends BaseUiCommand<Sector> {
 
     private final CardService cardService;
     private final byte[] key;
-    private final SelectedKey selectedKey;
+    private final KeyType selectedKey;
     private final int fromSector;
     private final int toSector;
     private final TrailerBlock template;
 
     public WritePermissionsCommand(UiServices uiServices,
                                    AcrCard card,
-                                   byte[] key, SelectedKey selectedKey,
+                                   byte[] key, KeyType selectedKey,
                                    int fromSector, int toSector,
                                    TrailerBlock template) {
         super(uiServices);

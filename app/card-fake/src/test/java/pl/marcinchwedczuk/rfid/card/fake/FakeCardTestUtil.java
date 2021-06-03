@@ -1,9 +1,9 @@
 package pl.marcinchwedczuk.rfid.card.fake;
 
 import org.assertj.core.api.AbstractStringAssert;
-import pl.marcinchwedczuk.rfid.card.commons.ByteArrays;
-import pl.marcinchwedczuk.rfid.card.fake.impl.KeyType;
-import pl.marcinchwedczuk.rfid.card.fake.impl.Register;
+import pl.marcinchwedczuk.rfid.card.commons.utils.ByteArrays;
+import pl.marcinchwedczuk.rfid.card.commons.KeyType;
+import pl.marcinchwedczuk.rfid.card.commons.Register;
 
 import javax.smartcardio.Card;
 import javax.smartcardio.CardException;
@@ -13,7 +13,7 @@ import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static pl.marcinchwedczuk.rfid.card.fake.impl.KeyType.KEY_A;
+import static pl.marcinchwedczuk.rfid.card.commons.KeyType.KEY_A;
 
 public class FakeCardTestUtil {
     public static final int SW_OK = 0x9000;

@@ -9,10 +9,10 @@ import javax.smartcardio.CardException;
 import javax.smartcardio.ResponseAPDU;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static pl.marcinchwedczuk.rfid.card.fake.impl.KeyType.KEY_A;
-import static pl.marcinchwedczuk.rfid.card.fake.impl.KeyType.KEY_B;
-import static pl.marcinchwedczuk.rfid.card.fake.impl.Register.REGISTER_0;
-import static pl.marcinchwedczuk.rfid.card.fake.impl.Register.REGISTER_1;
+import static pl.marcinchwedczuk.rfid.card.commons.KeyType.KEY_A;
+import static pl.marcinchwedczuk.rfid.card.commons.KeyType.KEY_B;
+import static pl.marcinchwedczuk.rfid.card.commons.Register.REGISTER_0;
+import static pl.marcinchwedczuk.rfid.card.commons.Register.REGISTER_1;
 
 public class FakeCard_CardTestPresent_Test extends BaseFakeCardTest {
     // Card in JavaCardIO represents both Card and the Terminal device itself.

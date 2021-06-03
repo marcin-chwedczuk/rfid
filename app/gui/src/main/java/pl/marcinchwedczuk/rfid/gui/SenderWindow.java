@@ -15,7 +15,7 @@ import java.io.StringWriter;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import pl.marcinchwedczuk.rfid.card.commons.ByteArrays;
+import pl.marcinchwedczuk.rfid.card.commons.utils.ByteArrays;
 
 public class SenderWindow implements Initializable {
 

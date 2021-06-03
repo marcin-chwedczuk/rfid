@@ -3,6 +3,7 @@ package pl.marcinchwedczuk.rfid.gui.commands;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.marcinchwedczuk.rfid.card.acr122.*;
+import pl.marcinchwedczuk.rfid.card.commons.KeyType;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -14,7 +15,7 @@ public class ReadPermissionsCommand extends BaseUiCommand<Sector> {
 
     private final CardService cardService;
     private final byte[] key;
-    private final SelectedKey selectedKey;
+    private final KeyType selectedKey;
     private final Sector sector;
     private final Consumer<TrailerBlock> callback;
 
@@ -22,7 +23,7 @@ public class ReadPermissionsCommand extends BaseUiCommand<Sector> {
 
     public ReadPermissionsCommand(UiServices uiServices,
                                   AcrCard card,
-                                  byte[] key, SelectedKey selectedKey,
+                                  byte[] key, KeyType selectedKey,
                                   Sector sector,
                                   Consumer<TrailerBlock> callback) {
         super(uiServices);

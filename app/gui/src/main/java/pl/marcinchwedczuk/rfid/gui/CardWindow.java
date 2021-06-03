@@ -17,7 +17,8 @@ import javafx.stage.Window;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.marcinchwedczuk.rfid.card.acr122.*;
-import pl.marcinchwedczuk.rfid.card.commons.ByteArrays;
+import pl.marcinchwedczuk.rfid.card.commons.KeyType;
+import pl.marcinchwedczuk.rfid.card.commons.utils.ByteArrays;
 import pl.marcinchwedczuk.rfid.gui.commands.*;
 import pl.marcinchwedczuk.rfid.xml.XmlCardData;
 
@@ -32,7 +33,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import static pl.marcinchwedczuk.rfid.card.acr122.KeyRegister.REGISTER_0;
-import static pl.marcinchwedczuk.rfid.card.acr122.SelectedKey.KEY_A;
+import static pl.marcinchwedczuk.rfid.card.commons.KeyType.KEY_A;
 
 public class CardWindow implements Initializable {
     private static final Logger logger = LoggerFactory.getLogger(CardWindow.class);
@@ -47,7 +48,7 @@ public class CardWindow implements Initializable {
     @FXML
     private KeyBox key;
     @FXML
-    private ChoiceBox<SelectedKey> useAsKeyChoiceBox;
+    private ChoiceBox<KeyType> useAsKeyChoiceBox;
 
     private final SimpleObjectProperty<KeyForm> displayDataEncoding = new SimpleObjectProperty<>(KeyForm.Hex);
     @FXML
@@ -94,7 +95,7 @@ public class CardWindow implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        useAsKeyChoiceBox.getItems().setAll(SelectedKey.values());
+        useAsKeyChoiceBox.getItems().setAll(KeyType.values());
         useAsKeyChoiceBox.getSelectionModel().select(KEY_A);
 
         key.loadKey("FF:FF:FF:FF:FF:FF", KeyForm.Hex);

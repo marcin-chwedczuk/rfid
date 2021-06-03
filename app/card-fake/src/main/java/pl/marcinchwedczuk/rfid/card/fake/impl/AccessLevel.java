@@ -1,5 +1,7 @@
 package pl.marcinchwedczuk.rfid.card.fake.impl;
 
+import pl.marcinchwedczuk.rfid.card.commons.KeyType;
+
 enum AccessLevel {
     KEY_A,
     KEY_B,

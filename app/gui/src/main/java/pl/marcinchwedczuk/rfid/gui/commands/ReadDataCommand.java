@@ -4,6 +4,7 @@ import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.marcinchwedczuk.rfid.card.acr122.*;
+import pl.marcinchwedczuk.rfid.card.commons.KeyType;
 import pl.marcinchwedczuk.rfid.gui.DataRow;
 
 import java.util.List;
@@ -13,14 +14,14 @@ public class ReadDataCommand extends BaseUiCommand<Sector> {
 
     private final CardService cardService;
     private final byte[] key;
-    private final SelectedKey selectedKey;
+    private final KeyType selectedKey;
     private final int fromSector;
     private final int toSector;
     private final ObservableList<DataRow> resultContainer;
 
     public ReadDataCommand(UiServices uiServices,
                            AcrCard card,
-                           byte[] key, SelectedKey selectedKey,
+                           byte[] key, KeyType selectedKey,
                            int fromSector, int toSector,
                            ObservableList<DataRow> resultContainer) {
         super(uiServices);

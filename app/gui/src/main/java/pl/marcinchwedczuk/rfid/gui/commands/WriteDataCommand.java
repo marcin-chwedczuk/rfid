@@ -3,6 +3,7 @@ package pl.marcinchwedczuk.rfid.gui.commands;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.marcinchwedczuk.rfid.card.acr122.*;
+import pl.marcinchwedczuk.rfid.card.commons.KeyType;
 import pl.marcinchwedczuk.rfid.gui.DataRow;
 
 import java.util.Arrays;
@@ -15,14 +16,14 @@ public class WriteDataCommand extends BaseUiCommand<DataRow> {
 
     private final CardService cardService;
     private final byte[] key;
-    private final SelectedKey selectedKey;
+    private final KeyType selectedKey;
     private final int fromSector;
     private final int toSector;
     private final DataRow[] data;
 
     public WriteDataCommand(UiServices uiServices,
                             AcrCard card,
-                            byte[] key, SelectedKey selectedKey,
+                            byte[] key, KeyType selectedKey,
                             int fromSector, int toSector,
                             DataRow[] data) {
         super(uiServices);

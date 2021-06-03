@@ -1,7 +1,7 @@
 package pl.marcinchwedczuk.rfid.card.fake;
 
 import org.junit.jupiter.api.Test;
-import pl.marcinchwedczuk.rfid.card.commons.ByteArrays;
+import pl.marcinchwedczuk.rfid.card.commons.utils.ByteArrays;
 import pl.marcinchwedczuk.rfid.card.fake.impl.CardState;
 
 import javax.smartcardio.CardException;

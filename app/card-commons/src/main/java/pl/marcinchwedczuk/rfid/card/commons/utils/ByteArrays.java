@@ -1,4 +1,4 @@
-package pl.marcinchwedczuk.rfid.card.commons;
+package pl.marcinchwedczuk.rfid.card.commons.utils;
 
 import java.util.ArrayList;
 import java.util.List;

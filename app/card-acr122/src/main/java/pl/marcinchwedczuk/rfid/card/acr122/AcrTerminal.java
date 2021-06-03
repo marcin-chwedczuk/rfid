@@ -3,16 +3,13 @@ package pl.marcinchwedczuk.rfid.card.acr122;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.marcinchwedczuk.rfid.card.acr122.impl.AcrStandardErrors;
+import pl.marcinchwedczuk.rfid.card.acr122.impl.LoggingCardDecorator;
+import pl.marcinchwedczuk.rfid.card.acr122.impl.PcScUtils;
 
 import javax.smartcardio.Card;
 import javax.smartcardio.CardException;
 import javax.smartcardio.CardTerminal;
-import javax.smartcardio.TerminalFactory;
-import java.security.NoSuchAlgorithmException;
-import java.util.Collections;
-import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 /**
  * {@code javax.smartcardio} wrapper for ACR122 reader.

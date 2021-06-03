@@ -1,4 +1,4 @@
-package pl.marcinchwedczuk.rfid.card.acr122;
+package pl.marcinchwedczuk.rfid.card.acr122.impl;
 
 import javax.smartcardio.CardException;
 

@@ -3,6 +3,7 @@ package pl.marcinchwedczuk.rfid.gui.commands;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.marcinchwedczuk.rfid.card.acr122.*;
+import pl.marcinchwedczuk.rfid.card.commons.KeyType;
 
 import static pl.marcinchwedczuk.rfid.card.acr122.KeyRegister.REGISTER_0;
 
@@ -23,7 +24,7 @@ public class CardService {
         }
     }
 
-    public void authenticateSector(Sector sector, SelectedKey selectedKey) {
+    public void authenticateSector(Sector sector, KeyType selectedKey) {
         try {
             card.authenticateSector(sector, selectedKey, REGISTER_0);
         } catch (Exception e) {

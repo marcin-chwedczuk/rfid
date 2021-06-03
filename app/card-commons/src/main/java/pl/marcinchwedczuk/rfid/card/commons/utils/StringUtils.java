@@ -1,4 +1,4 @@
-package pl.marcinchwedczuk.rfid.card.commons;
+package pl.marcinchwedczuk.rfid.card.commons.utils;
 
 public class StringUtils {
     private StringUtils() { }

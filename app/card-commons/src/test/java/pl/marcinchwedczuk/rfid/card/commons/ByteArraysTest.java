@@ -2,6 +2,7 @@ package pl.marcinchwedczuk.rfid.card.commons;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import pl.marcinchwedczuk.rfid.card.commons.utils.ByteArrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -2,8 +2,8 @@ package pl.marcinchwedczuk.rfid.card.fake.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.marcinchwedczuk.rfid.card.commons.ByteArrays;
-import pl.marcinchwedczuk.rfid.card.fake.impl.KeyType;
+import pl.marcinchwedczuk.rfid.card.commons.KeyType;
+import pl.marcinchwedczuk.rfid.card.commons.utils.ByteArrays;
 
 import javax.smartcardio.ATR;
 import javax.smartcardio.CardException;

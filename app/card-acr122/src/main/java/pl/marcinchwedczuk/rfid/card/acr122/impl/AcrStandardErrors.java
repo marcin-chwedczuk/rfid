@@ -1,6 +1,7 @@
-package pl.marcinchwedczuk.rfid.card.acr122;
+package pl.marcinchwedczuk.rfid.card.acr122.impl;
 
-import pl.marcinchwedczuk.rfid.card.commons.ByteArrays;
+import pl.marcinchwedczuk.rfid.card.acr122.AcrException;
+import pl.marcinchwedczuk.rfid.card.commons.utils.ByteArrays;
 
 public class AcrStandardErrors {
     private AcrStandardErrors() {

@@ -1,6 +1,6 @@
 package pl.marcinchwedczuk.rfid.card.acr122;
 
-import pl.marcinchwedczuk.rfid.card.commons.ByteArrays;
+import pl.marcinchwedczuk.rfid.card.commons.utils.ByteArrays;
 
 import java.util.Arrays;
 
