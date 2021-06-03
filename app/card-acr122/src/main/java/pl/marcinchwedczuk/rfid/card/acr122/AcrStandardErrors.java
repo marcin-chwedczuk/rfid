@@ -1,5 +1,7 @@
 package pl.marcinchwedczuk.rfid.card.acr122;
 
+import pl.marcinchwedczuk.rfid.card.commons.ByteArrays;
+
 public class AcrStandardErrors {
     private AcrStandardErrors() {
     }
@@ -11,7 +13,7 @@ public class AcrStandardErrors {
     public static AcrException unexpectedResponseBytes(byte[] bytes) {
         return new AcrException(String.format(
                 "Terminal returned unexpected response bytes: %s.",
-                ByteArrays.toHexString(bytes, "")));
+                ByteArrays.toMacString(bytes)));
     }
 
     public static AcrException functionNotSupported() {

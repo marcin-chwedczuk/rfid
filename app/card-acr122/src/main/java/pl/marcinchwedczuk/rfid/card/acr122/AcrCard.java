@@ -2,6 +2,7 @@ package pl.marcinchwedczuk.rfid.card.acr122;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.marcinchwedczuk.rfid.card.commons.ByteArrays;
 import pl.marcinchwedczuk.rfid.card.commons.StringUtils;
 
 import javax.smartcardio.*;
@@ -38,7 +39,7 @@ public class AcrCard extends AcrTerminalCommands {
     public String getCardUID() {
         logger.debug("Getting card UID (via ATR)");
         byte[] uid = getData(0x00, 0x00, 0x00);
-        return ByteArrays.toHexString(uid, ":");
+        return ByteArrays.toMacString(uid);
     }
 
     // TODO: Refactor this can only return ATS or serial number of the tag

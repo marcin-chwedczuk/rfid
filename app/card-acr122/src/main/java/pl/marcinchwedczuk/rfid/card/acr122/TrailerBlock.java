@@ -1,5 +1,7 @@
 package pl.marcinchwedczuk.rfid.card.acr122;
 
+import pl.marcinchwedczuk.rfid.card.commons.ByteArrays;
+
 import java.util.Arrays;
 
 public class TrailerBlock {
@@ -29,11 +31,11 @@ public class TrailerBlock {
     }
 
     public String keyAHexString() {
-        return ByteArrays.toHexString(keyA, ":");
+        return ByteArrays.toMacString(keyA);
     }
 
     public String keyBHexString() {
-        return ByteArrays.toHexString(keyB, ":");
+        return ByteArrays.toMacString(keyB);
     }
 
     public void setKeyA(byte[] key) {

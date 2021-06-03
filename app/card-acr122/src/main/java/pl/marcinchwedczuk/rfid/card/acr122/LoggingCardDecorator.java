@@ -2,6 +2,7 @@ package pl.marcinchwedczuk.rfid.card.acr122;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.marcinchwedczuk.rfid.card.commons.ByteArrays;
 import pl.marcinchwedczuk.rfid.card.commons.StringUtils;
 
 import javax.smartcardio.*;
@@ -20,7 +21,7 @@ public class LoggingCardDecorator extends Card {
     @Override
     public ATR getATR() {
         ATR atr = card.getATR();
-        logger.debug("getATR() returns {}", ByteArrays.toHexString(atr.getBytes()));
+        logger.debug("getATR() returns {}", ByteArrays.toMacString(atr.getBytes()));
         return atr;
     }
 

@@ -17,6 +17,7 @@ import javafx.stage.Window;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.marcinchwedczuk.rfid.card.acr122.*;
+import pl.marcinchwedczuk.rfid.card.commons.ByteArrays;
 import pl.marcinchwedczuk.rfid.gui.commands.*;
 import pl.marcinchwedczuk.rfid.xml.XmlCardData;
 

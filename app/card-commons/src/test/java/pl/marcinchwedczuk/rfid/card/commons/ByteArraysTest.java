@@ -26,5 +26,51 @@ class ByteArraysTest {
         }
     }
 
+    @Nested
+    class toHexString {
+        @Test
+        void toMacString_works() {
+            String result = ByteArrays.toMacString(new byte[] { 0x01, 0x02, 0x03 });
+            assertThat(result)
+                    .isEqualTo("01:02:03");
+        }
 
+        @Test
+        void toHexString_works() {
+            String result = ByteArrays.toHexString(new byte[] { 0x01, 0x02, 0x03 });
+            assertThat(result)
+                    .isEqualTo("01 02 03");
+        }
+
+        @Test
+        void toHexString_with_separator_works() {
+            String result = ByteArrays.toHexString(new byte[] { 0x01, 0x02, 0x03 }, "--");
+            assertThat(result)
+                    .isEqualTo("01--02--03");
+        }
+    }
+
+    @Nested
+    class fromHexString {
+        @Test
+        void fromMacString_works() {
+            byte[] result = ByteArrays.fromMacString("01:02:03");
+            assertThat(result)
+                    .isEqualTo(ByteArrays.of(1, 2, 3));
+        }
+
+        @Test
+        void fromHexString_works() {
+            byte[] result = ByteArrays.fromHexString("01 02 03");
+            assertThat(result)
+                    .isEqualTo(ByteArrays.of(1, 2, 3));
+        }
+
+        @Test
+        void fromHexString_with_separator_works() {
+            byte[] result = ByteArrays.fromHexString("01--02--03", "--");
+            assertThat(result)
+                    .isEqualTo(ByteArrays.of(1, 2, 3));
+        }
+    }
 }

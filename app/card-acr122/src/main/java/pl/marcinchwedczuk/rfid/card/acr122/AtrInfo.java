@@ -1,5 +1,7 @@
 package pl.marcinchwedczuk.rfid.card.acr122;
 
+import pl.marcinchwedczuk.rfid.card.commons.ByteArrays;
+
 import java.util.Arrays;
 
 /**
@@ -38,8 +40,8 @@ public class AtrInfo {
                 Arrays.equals(registeredAppProviderId, expectedRegisteredAppProviderId),
                 "Registered Application Provider Identifier is not the expected 'PC/SC workgroup'. " +
                         "Expected bytes %s but got bytes %s.",
-                ByteArrays.toHexString(registeredAppProviderId, ":"),
-                ByteArrays.toHexString(expectedRegisteredAppProviderId, ":"));
+                ByteArrays.toMacString(registeredAppProviderId),
+                ByteArrays.toMacString(expectedRegisteredAppProviderId));
 
         int pixSS = historicalBytes[8];
         CardStandard cardStandard = CardStandard.fromPixSS(pixSS);

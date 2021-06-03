@@ -1,8 +1,8 @@
 package pl.marcinchwedczuk.rfid.gui;
 
 import pl.marcinchwedczuk.rfid.card.acr122.Block;
-import pl.marcinchwedczuk.rfid.card.acr122.ByteArrays;
 import pl.marcinchwedczuk.rfid.card.acr122.Sector;
+import pl.marcinchwedczuk.rfid.card.commons.ByteArrays;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -39,7 +39,7 @@ public class DataRow {
     @Override
     public String toString() {
         return String.format("S: %d, B: %d, %s, trailer? %s", sector, block,
-                ByteArrays.toHexString(bytes, ":"), isSectorTrailer);
+                ByteArrays.toMacString(bytes), isSectorTrailer);
     }
 
     @Override

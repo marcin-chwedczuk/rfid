@@ -1,8 +1,7 @@
 package pl.marcinchwedczuk.rfid.card.commons;
 
 public class StringUtils {
-    private StringUtils() {
-    }
+    private StringUtils() { }
 
     public static String takeLast(int nCharacters, String s) {
         if (s.length() < nCharacters) {
