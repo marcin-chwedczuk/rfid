@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import pl.marcinchwedczuk.rfid.card.fake.impl.CardState;
 
+import javax.smartcardio.CardException;
 import javax.smartcardio.ResponseAPDU;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -20,6 +21,11 @@ public class FakeCard_CardTestPresent_Test extends BaseFakeCardTest {
         super(new FakeCard("T=0", CardState.CARD_PRESENT));
     }
 
+    @Override
+    protected ResponseAPDU sendToCard(String commandBytes) throws CardException {
+        return testUtil.sendToCard(commandBytes);
+    }
+
     @Test
     void returns_proper_ATR() {
         byte[] atrBytes = card.getATR().getBytes();
@@ -32,9 +38,9 @@ public class FakeCard_CardTestPresent_Test extends BaseFakeCardTest {
     }
 
     @Nested
-    class card_data {
+    class authentication_tests {
         @Nested
-        class without_authenticating {
+        class not_authenticated_yet {
             int blockNumber = testUtil.toBlockNumber(1, 2);
 
             @Test
@@ -45,6 +51,15 @@ public class FakeCard_CardTestPresent_Test extends BaseFakeCardTest {
             @Test
             void cannot_write_data() {
                 testUtil.assertCannotWriteDataToBlock(blockNumber);
+            }
+
+            @Test
+            void authenticate_with_wrong_key_fails() {
+                testUtil.loadKeyToRegister(REGISTER_0, AA_AA_AA_AA_AA_AA);
+
+                ResponseAPDU response = testUtil.execAuthenticateToBlockNumber(0, KEY_A, REGISTER_0);
+                assertThatResponseBytes(response)
+                        .isEqualTo(RESP_ERR);
             }
         }
 
@@ -97,57 +112,45 @@ public class FakeCard_CardTestPresent_Test extends BaseFakeCardTest {
     }
 
     @Nested
-    class card_data_and_custom_access_bits {
-        // Card is in default configuration at the beginning.
+    class card_with_data_permissions_data_readable_and_writable_by_keyB_only_and_keyB_is_AA___FF {
+        final int blockNumber = testUtil.toBlockNumber(1, 1);
+        final int trailerBlockNumber = testUtil.toBlockNumber(1, 3);
 
-        @Test
-        void authenticate_with_wrong_key_fails() {
-            testUtil.loadKeyToRegister(REGISTER_0, AA_AA_AA_AA_AA_AA);
+        @BeforeEach
+        void before() {
+            // Use default keys to change permissions:
+            // Data in sector 1 readable by Key B only
+            // and keyA = FF:::FF, keyB = AA:BB:CC:DD:EE:FF
+            testUtil
+                    .loadKeyToRegister(REGISTER_0, FF_FF_FF_FF_FF_FF)
+                    .authenticateToBlockNumber(trailerBlockNumber, KEY_A, REGISTER_0)
+                    .writeBlock(trailerBlockNumber, "FF FF FF FF FF FF DF 05 A2 69 AA BB CC DD EE FF");
 
-            ResponseAPDU response = testUtil.execAuthenticateToBlockNumber(0, KEY_A, REGISTER_0);
-            assertThatResponseBytes(response)
-                    .isEqualTo(RESP_ERR);
+            // Load new keys into registers
+            testUtil
+                    .loadKeyToRegister(REGISTER_0, FF_FF_FF_FF_FF_FF)
+                    .loadKeyToRegister(REGISTER_1, AA_BB_CC_DD_EE_FF);
         }
 
-        @Nested
-        class data_readable_by_keyB_only {
-            final int blockNumber = testUtil.toBlockNumber(1, 1);
-            final int trailerBlockNumber = testUtil.toBlockNumber(1, 3);
+        @Test
+        void cannot_read_and_write_data_using_keyA() {
+            testUtil
+                    .authenticateToBlockNumber(blockNumber, KEY_A, REGISTER_0)
+                    .assertCannotReadBlock(blockNumber)
+                    .assertCannotWriteDataToBlock(blockNumber);
+        }
 
-            @BeforeEach
-            void before() {
-                // Use default keys to change permissions:
-                // Data in sector 1 readable by Key B only
-                // and keyA = FF:::FF, keyB = AA:BB:CC:DD:EE:FF
-                testUtil
-                        .loadKeyToRegister(REGISTER_0, FF_FF_FF_FF_FF_FF)
-                        .authenticateToBlockNumber(trailerBlockNumber, KEY_A, REGISTER_0)
-                        .writeBlock(trailerBlockNumber, "FF FF FF FF FF FF DF 05 A2 69 AA BB CC DD EE FF");
-
-                // Load new keys into registers
-                testUtil
-                        .loadKeyToRegister(REGISTER_0, FF_FF_FF_FF_FF_FF)
-                        .loadKeyToRegister(REGISTER_1, AA_BB_CC_DD_EE_FF);
-            }
-
-            @Test
-            void cannot_read_data_using_keyA() {
-                testUtil
-                        .authenticateToBlockNumber(blockNumber, KEY_A, REGISTER_0)
-                        .assertCannotReadBlock(blockNumber);
-            }
-
-            @Test
-            void can_read_data_using_keyB() {
-                testUtil
-                        .authenticateToBlockNumber(blockNumber, KEY_B, REGISTER_1)
-                        .assertBlockOnCardContainsData(blockNumber, BLOCK_DATA_ZEROS);
-            }
+        @Test
+        void can_read_and_write_data_using_keyB() {
+            testUtil
+                    .authenticateToBlockNumber(blockNumber, KEY_B, REGISTER_1)
+                    .assertBlockOnCardContainsData(blockNumber, BLOCK_DATA_ZEROS)
+                    .assertCanWriteDataToBlock(blockNumber, BLOCK_DATA_00_01_02___0F);
         }
     }
 
     @Nested
-    class custom_access_bits_for_sector_trailer {
+    class access_bits_permissions_keys_writable_by_keyB_accessBits_not_writable {
         int sectorTrailerBlockNumber = testUtil.toBlockNumber(1, 3);
 
         @BeforeEach
@@ -160,7 +163,6 @@ public class FakeCard_CardTestPresent_Test extends BaseFakeCardTest {
                     .authenticateToBlockNumber(sectorTrailerBlockNumber, KEY_A, REGISTER_0)
                     .writeBlock(sectorTrailerBlockNumber, FF_FF_FF_FF_FF_FF + " F7 8F 00 69 " + AA_BB_CC_DD_EE_FF);
         }
-
 
         @Test
         void can_read_trailer_via_keyA_but_keys_are_zeroed() {
@@ -229,7 +231,7 @@ public class FakeCard_CardTestPresent_Test extends BaseFakeCardTest {
         @Test
         void writing_invalid_access_bits_returns_error() {
             // This may be not the real card behaviour - but it's useful
-            // when testing GUI
+            // when testing GUI.
             int otherTrailer = testUtil.toBlockNumber(8, 3);
 
             // Use default key

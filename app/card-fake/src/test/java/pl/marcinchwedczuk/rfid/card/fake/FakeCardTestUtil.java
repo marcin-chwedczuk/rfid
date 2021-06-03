@@ -5,6 +5,7 @@ import pl.marcinchwedczuk.rfid.card.commons.ByteArrays;
 import pl.marcinchwedczuk.rfid.card.fake.impl.KeyType;
 import pl.marcinchwedczuk.rfid.card.fake.impl.Register;
 
+import javax.smartcardio.Card;
 import javax.smartcardio.CardException;
 import javax.smartcardio.CommandAPDU;
 import javax.smartcardio.ResponseAPDU;
@@ -21,9 +22,9 @@ public class FakeCardTestUtil {
     public static final String RESP_OK = "90 00";
     public static final String RESP_ERR = "63 00";
 
-    private final FakeCard card;
+    private final Card card;
 
-    public FakeCardTestUtil(FakeCard card) {
+    public FakeCardTestUtil(Card card) {
         this.card = Objects.requireNonNull(card);
     }
 
