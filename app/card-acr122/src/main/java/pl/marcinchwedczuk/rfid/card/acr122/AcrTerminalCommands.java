@@ -2,7 +2,6 @@ package pl.marcinchwedczuk.rfid.card.acr122;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.marcinchwedczuk.rfid.card.acr122.*;
 import pl.marcinchwedczuk.rfid.card.acr122.impl.AcrStandardErrors;
 
 import javax.smartcardio.CardException;
@@ -30,7 +29,7 @@ public abstract class AcrTerminalCommands {
                 throw AcrStandardErrors.unexpectedResponseBytes(responseBytes);
             }
 
-            return PiccOperatingParameter.fromBitPattern(responseBytes[1]);
+            return PiccOperatingParameter.parseByte(responseBytes[1]);
         } catch (CardException e) {
             throw AcrException.ofCardException(e);
         }

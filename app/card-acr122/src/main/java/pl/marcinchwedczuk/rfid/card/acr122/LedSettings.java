@@ -1,5 +1,7 @@
 package pl.marcinchwedczuk.rfid.card.acr122;
 
+import pl.marcinchwedczuk.rfid.card.acr122.impl.RichByte;
+
 import static pl.marcinchwedczuk.rfid.card.acr122.LedSettings.LedBlinkingMask.BLINK;
 import static pl.marcinchwedczuk.rfid.card.acr122.LedSettings.LedBlinkingMask.NOT_BLINK;
 import static pl.marcinchwedczuk.rfid.card.acr122.LedSettings.LedState.OFF;

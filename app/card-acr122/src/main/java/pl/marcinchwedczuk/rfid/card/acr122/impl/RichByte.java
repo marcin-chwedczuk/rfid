@@ -1,8 +1,8 @@
-package pl.marcinchwedczuk.rfid.card.acr122;
+package pl.marcinchwedczuk.rfid.card.acr122.impl;
 
 import pl.marcinchwedczuk.rfid.card.commons.utils.StringUtils;
 
-class RichByte {
+public class RichByte {
     private final int b;
 
     public RichByte(int b) {

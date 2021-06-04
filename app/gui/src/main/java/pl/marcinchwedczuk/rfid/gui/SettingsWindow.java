@@ -22,9 +22,9 @@ import pl.marcinchwedczuk.rfid.card.acr122.LedSettings.LedBlinkingMask;
 import pl.marcinchwedczuk.rfid.card.acr122.LedSettings.LedState;
 import pl.marcinchwedczuk.rfid.card.acr122.LedSettings.StateMask;
 import pl.marcinchwedczuk.rfid.card.acr122.PiccOperatingParameter;
-import pl.marcinchwedczuk.rfid.card.acr122.PiccOperatingParameter.EnableDisable;
-import pl.marcinchwedczuk.rfid.card.acr122.PiccOperatingParameter.PoolingInterval;
-import pl.marcinchwedczuk.rfid.card.acr122.PiccOperatingParameter.SkipDetect;
+import pl.marcinchwedczuk.rfid.card.acr122.FeatureStatus;
+import pl.marcinchwedczuk.rfid.card.acr122.PoolingInterval;
+import pl.marcinchwedczuk.rfid.card.acr122.DetectionStatus;
 
 import java.io.IOException;
 import java.net.URL;
@@ -64,21 +64,21 @@ public class SettingsWindow implements Initializable {
 
     // PICC Parameter Settings
     @FXML
-    private ChoiceBox<EnableDisable> autoPiccPoolingCB;
+    private ChoiceBox<FeatureStatus> autoPiccPoolingCB;
     @FXML
-    private ChoiceBox<EnableDisable> autoAtsGenerationCB;
+    private ChoiceBox<FeatureStatus> autoAtsGenerationCB;
     @FXML
     private ChoiceBox<PoolingInterval> pollingIntervalCB;
     @FXML
-    private ChoiceBox<SkipDetect> feliCa424KCB;
+    private ChoiceBox<DetectionStatus> feliCa424KCB;
     @FXML
-    private ChoiceBox<SkipDetect> feliCa212KCB;
+    private ChoiceBox<DetectionStatus> feliCa212KCB;
     @FXML
-    private ChoiceBox<SkipDetect> topazCB;
+    private ChoiceBox<DetectionStatus> topazCB;
     @FXML
-    private ChoiceBox<SkipDetect> isoTypeB_CB;
+    private ChoiceBox<DetectionStatus> isoTypeB_CB;
     @FXML
-    private ChoiceBox<SkipDetect> isoTypeA_CB;
+    private ChoiceBox<DetectionStatus> isoTypeA_CB;
 
     @FXML
     private TitledPane remarksPane;
@@ -104,14 +104,14 @@ public class SettingsWindow implements Initializable {
         repetitionsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10, 3));
         enumChoiceBox(linkToBuzzerCB, Buzzer.values());
 
-        enumChoiceBox(autoPiccPoolingCB, EnableDisable.values());
-        enumChoiceBox(autoAtsGenerationCB, EnableDisable.values());
+        enumChoiceBox(autoPiccPoolingCB, FeatureStatus.values());
+        enumChoiceBox(autoAtsGenerationCB, FeatureStatus.values());
         enumChoiceBox(pollingIntervalCB, PoolingInterval.values());
-        enumChoiceBox(feliCa424KCB, SkipDetect.values());
-        enumChoiceBox(feliCa212KCB, SkipDetect.values());
-        enumChoiceBox(topazCB, SkipDetect.values());
-        enumChoiceBox(isoTypeB_CB, SkipDetect.values());
-        enumChoiceBox(isoTypeA_CB, SkipDetect.values());
+        enumChoiceBox(feliCa424KCB, DetectionStatus.values());
+        enumChoiceBox(feliCa212KCB, DetectionStatus.values());
+        enumChoiceBox(topazCB, DetectionStatus.values());
+        enumChoiceBox(isoTypeB_CB, DetectionStatus.values());
+        enumChoiceBox(isoTypeA_CB, DetectionStatus.values());
 
         remarksPane.expandedProperty().addListener((prop, oldValue, isAnimated) -> {
             Platform.runLater(() -> getStage().sizeToScene());
@@ -141,7 +141,7 @@ public class SettingsWindow implements Initializable {
 
     @FXML
     private void savePICC() {
-        PiccOperatingParameter picc = new PiccOperatingParameter();
+        PiccOperatingParameter picc = PiccOperatingParameter.newDefault();
         picc.setAutoPiccPolling(this.autoPiccPoolingCB.getValue());
         picc.setAutoAtsGeneration(this.autoAtsGenerationCB.getValue());
         picc.setPollingInterval(this.pollingIntervalCB.getValue());

@@ -1,65 +1,68 @@
 package pl.marcinchwedczuk.rfid.card.acr122;
 
-import static pl.marcinchwedczuk.rfid.card.acr122.PiccOperatingParameter.EnableDisable.DISABLE;
-import static pl.marcinchwedczuk.rfid.card.acr122.PiccOperatingParameter.EnableDisable.ENABLE;
-import static pl.marcinchwedczuk.rfid.card.acr122.PiccOperatingParameter.PoolingInterval.INTERVAL_250_MILLIS;
-import static pl.marcinchwedczuk.rfid.card.acr122.PiccOperatingParameter.PoolingInterval.INTERVAL_500_MILLIS;
-import static pl.marcinchwedczuk.rfid.card.acr122.PiccOperatingParameter.SkipDetect.DETECT;
-import static pl.marcinchwedczuk.rfid.card.acr122.PiccOperatingParameter.SkipDetect.SKIP;
+import pl.marcinchwedczuk.rfid.card.acr122.impl.RichByte;
+import pl.marcinchwedczuk.rfid.card.commons.utils.ToStringBuilder;
+
+import static pl.marcinchwedczuk.rfid.card.acr122.FeatureStatus.DISABLED;
+import static pl.marcinchwedczuk.rfid.card.acr122.FeatureStatus.ENABLED;
+import static pl.marcinchwedczuk.rfid.card.acr122.PoolingInterval.INTERVAL_250_MILLIS;
+import static pl.marcinchwedczuk.rfid.card.acr122.PoolingInterval.INTERVAL_500_MILLIS;
+import static pl.marcinchwedczuk.rfid.card.acr122.DetectionStatus.DETECT;
+import static pl.marcinchwedczuk.rfid.card.acr122.DetectionStatus.IGNORE;
 
 public class PiccOperatingParameter {
-    private EnableDisable autoPiccPolling;
+    static PiccOperatingParameter parseByte(byte b) {
+        return new PiccOperatingParameter(b);
+    }
+
+    public static PiccOperatingParameter newDefault() {
+        return new PiccOperatingParameter((byte)0xFF);
+    }
+
+    private FeatureStatus autoPiccPolling;
 
     /**
      * To issue ATS (Answer To Select) Request whenever
-     * an ISO14443-4 Type A tag is activated
+     * an ISO14443-4 Type A tag is activated.
      */
-    private EnableDisable autoAtsGeneration;
+    private FeatureStatus autoAtsGeneration;
 
-
-    public enum PoolingInterval {
-        INTERVAL_250_MILLIS,
-        INTERVAL_500_MILLIS
-    }
-
+    /**
+     * To set the time interval between successive PICC Polling.
+     */
     private PoolingInterval pollingInterval;
 
     /* The Tag Types to be detected during PICC Polling. */
-    private SkipDetect feliCa424K;
-    private SkipDetect feliCa212K;
-    private SkipDetect topaz;
-    private SkipDetect iso14443TypeB;
+    private DetectionStatus feliCa424K;
+    private DetectionStatus feliCa212K;
+    private DetectionStatus topaz;
+    private DetectionStatus iso14443TypeB;
 
     /**
      * To detect the Mifare Tags, the Auto ATS Generation must be disabled first.
      */
-    private SkipDetect iso14443TypeA;
+    private DetectionStatus iso14443TypeA;
 
-    public PiccOperatingParameter() {
-        this((byte) 0);
-    }
+    private PiccOperatingParameter(byte b) {
+        RichByte richByte = new RichByte(b);
 
-    private PiccOperatingParameter(byte bits) {
-        RichByte richBits = new RichByte(bits);
-
-        autoPiccPolling = richBits.isBitSet(7) ? ENABLE : DISABLE;
-        autoAtsGeneration = richBits.isBitSet(6) ? ENABLE : DISABLE;
-        pollingInterval = richBits.isBitSet(5)
+        autoPiccPolling = richByte.isBitSet(7) ? ENABLED : DISABLED;
+        autoAtsGeneration = richByte.isBitSet(6) ? ENABLED : DISABLED;
+        pollingInterval = richByte.isBitSet(5)
                 ? INTERVAL_250_MILLIS
                 : INTERVAL_500_MILLIS;
 
-        // TODO: richBits.mapBit(3, SkipDetect::fromBoolean)
-        feliCa424K = richBits.isBitSet(4) ? DETECT : SKIP;
-        feliCa212K = richBits.isBitSet(3) ? DETECT : SKIP;
-        topaz = richBits.isBitSet(2) ? DETECT : SKIP;
-        iso14443TypeB = richBits.isBitSet(1) ? DETECT : SKIP;
-        iso14443TypeA = richBits.isBitSet(0) ? DETECT : SKIP;
+        feliCa424K = richByte.isBitSet(4) ? DETECT : IGNORE;
+        feliCa212K = richByte.isBitSet(3) ? DETECT : IGNORE;
+        topaz = richByte.isBitSet(2) ? DETECT : IGNORE;
+        iso14443TypeB = richByte.isBitSet(1) ? DETECT : IGNORE;
+        iso14443TypeA = richByte.isBitSet(0) ? DETECT : IGNORE;
     }
 
-    public byte toByte() {
+    byte toByte() {
         return new RichByte(0)
-                .withBit(7, autoPiccPolling == ENABLE)
-                .withBit(6, autoAtsGeneration == ENABLE)
+                .withBit(7, autoPiccPolling == ENABLED)
+                .withBit(6, autoAtsGeneration == ENABLED)
                 .withBit(5, pollingInterval == INTERVAL_250_MILLIS)
                 .withBit(4, feliCa424K == DETECT)
                 .withBit(3, feliCa212K == DETECT)
@@ -69,93 +72,73 @@ public class PiccOperatingParameter {
                 .asByte();
     }
 
-    public EnableDisable getAutoPiccPolling() {
+    public FeatureStatus getAutoPiccPolling() {
         return autoPiccPolling;
     }
-
-    public void setAutoPiccPolling(EnableDisable autoPiccPolling) {
+    public void setAutoPiccPolling(FeatureStatus autoPiccPolling) {
         this.autoPiccPolling = autoPiccPolling;
     }
 
-    public EnableDisable getAutoAtsGeneration() {
+    public FeatureStatus getAutoAtsGeneration() {
         return autoAtsGeneration;
     }
-
-    public void setAutoAtsGeneration(EnableDisable autoAtsGeneration) {
+    public void setAutoAtsGeneration(FeatureStatus autoAtsGeneration) {
         this.autoAtsGeneration = autoAtsGeneration;
     }
 
     public PoolingInterval getPollingInterval() {
         return pollingInterval;
     }
-
     public void setPollingInterval(PoolingInterval pollingInterval) {
         this.pollingInterval = pollingInterval;
     }
 
-    public SkipDetect getFeliCa424K() {
+    public DetectionStatus getFeliCa424K() {
         return feliCa424K;
     }
-
-    public void setFeliCa424K(SkipDetect feliCa424K) {
+    public void setFeliCa424K(DetectionStatus feliCa424K) {
         this.feliCa424K = feliCa424K;
     }
 
-    public SkipDetect getFeliCa212K() {
+    public DetectionStatus getFeliCa212K() {
         return feliCa212K;
     }
-
-    public void setFeliCa212K(SkipDetect feliCa212K) {
+    public void setFeliCa212K(DetectionStatus feliCa212K) {
         this.feliCa212K = feliCa212K;
     }
 
-    public SkipDetect getTopaz() {
+    public DetectionStatus getTopaz() {
         return topaz;
     }
-
-    public void setTopaz(SkipDetect topaz) {
+    public void setTopaz(DetectionStatus topaz) {
         this.topaz = topaz;
     }
 
-    public SkipDetect getIso14443TypeB() {
+    public DetectionStatus getIso14443TypeB() {
         return iso14443TypeB;
     }
-
-    public void setIso14443TypeB(SkipDetect iso14443TypeB) {
+    public void setIso14443TypeB(DetectionStatus iso14443TypeB) {
         this.iso14443TypeB = iso14443TypeB;
     }
 
-    public SkipDetect getIso14443TypeA() {
+    public DetectionStatus getIso14443TypeA() {
         return iso14443TypeA;
     }
-
-    public void setIso14443TypeA(SkipDetect iso14443TypeA) {
+    public void setIso14443TypeA(DetectionStatus iso14443TypeA) {
         this.iso14443TypeA = iso14443TypeA;
     }
 
     @Override
     public String toString() {
-        return "PiccOperatingParameter{" + "\n" +
-                "enableAutoPiccPolling=" + autoPiccPolling + "\n" +
-                ", enableAutoAtsGeneration=" + autoAtsGeneration + "\n" +
-                ", pollingInterval=" + pollingInterval + "\n" +
-                ", detectFeliCa424K=" + feliCa424K + "\n" +
-                ", detectFeliCa212K=" + feliCa212K + "\n" +
-                ", detectTopaz=" + topaz + "\n" +
-                ", detectISO14443TypeB=" + iso14443TypeB + "\n" +
-                ", detectISO14443TypeA=" + iso14443TypeA + "\n" +
-                '}';
+        return new ToStringBuilder(PiccOperatingParameter.class)
+            .appendField("enableAutoPiccPolling", autoPiccPolling)
+            .appendField("enableAutoAtsGeneration", autoAtsGeneration)
+            .appendField("pollingInterval", pollingInterval)
+            .appendField("feliCa424K", feliCa424K)
+            .appendField("feliCa212K", feliCa212K)
+            .appendField("topaz", topaz)
+            .appendField("iso14443TypeB", iso14443TypeB)
+            .appendField("iso14443TypeA", iso14443TypeA)
+            .toString();
     }
-
-    public static PiccOperatingParameter fromBitPattern(byte bits) {
-        return new PiccOperatingParameter(bits);
-    }
-
-    // TODO: EnableStatus & DetectStatus, to/from Boolean
-    public enum EnableDisable {
-        ENABLE,
-        DISABLE
-    }
-
-    public enum SkipDetect {SKIP, DETECT}
 }
