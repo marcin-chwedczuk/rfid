@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import pl.marcinchwedczuk.rfid.card.commons.utils.ByteArrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ByteArraysTest {
     @Nested
@@ -24,6 +25,15 @@ class ByteArraysTest {
             assertThat(result[0] & 0xff).isEqualTo(0x00);
             assertThat(result[1] & 0xff).isEqualTo(0x08);
             assertThat(result[2] & 0xff).isEqualTo(0xff);
+        }
+
+        @Test
+        void disallows_values_outside_0x00_0xff_range() {
+            assertThatThrownBy(() -> ByteArrays.of(-1))
+                    .isInstanceOf(IllegalArgumentException.class);
+
+            assertThatThrownBy(() -> ByteArrays.of(0xff + 1))
+                    .isInstanceOf(IllegalArgumentException.class);
         }
     }
 

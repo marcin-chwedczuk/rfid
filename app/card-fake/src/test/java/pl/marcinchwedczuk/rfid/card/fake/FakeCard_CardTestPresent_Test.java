@@ -3,7 +3,9 @@ package pl.marcinchwedczuk.rfid.card.fake;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import pl.marcinchwedczuk.rfid.card.fake.impl.Acr122Simulator;
 import pl.marcinchwedczuk.rfid.card.fake.impl.CardState;
+import pl.marcinchwedczuk.rfid.card.fake.impl.Mifare1KSimulator;
 
 import javax.smartcardio.CardException;
 import javax.smartcardio.ResponseAPDU;
@@ -18,7 +20,7 @@ public class FakeCard_CardTestPresent_Test extends BaseFakeCardTest {
     // Card in JavaCardIO represents both Card and the Terminal device itself.
     // The only difference is the protocol used to connect to them.
     public FakeCard_CardTestPresent_Test() {
-        super(new FakeCard("T=0", CardState.CARD_PRESENT));
+        super(new FakeCard("T=0", new Acr122Simulator(new Mifare1KSimulator())));
     }
 
     @Override

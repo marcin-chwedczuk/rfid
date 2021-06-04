@@ -2,6 +2,7 @@ package pl.marcinchwedczuk.rfid.card.acr122;
 
 import org.junit.jupiter.api.Test;
 import pl.marcinchwedczuk.rfid.card.acr122.impl.RichByte;
+import pl.marcinchwedczuk.rfid.card.commons.utils.ByteArrays;
 import pl.marcinchwedczuk.rfid.card.commons.utils.StringUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -9,9 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class RichByteTest {
     @Test
     public void can_convert_from_and_to_byte() {
-        byte[] testValues = new byte[]{
-                0, 1, (byte) 0xFF, (byte) 0xF0, 0x0F, (byte) 0xAC, 0x47
-        };
+        byte[] testValues = ByteArrays.of(0x00, 0x01, 0xFF, 0xF0, 0x0F, 0xAC, 0x47);
 
         for (byte b : testValues) {
             RichByte richByte = new RichByte(b);

@@ -2,12 +2,12 @@ package pl.marcinchwedczuk.rfid.card.acr122;
 
 import pl.marcinchwedczuk.rfid.card.acr122.impl.RichByte;
 
-import static pl.marcinchwedczuk.rfid.card.acr122.LedSettings.LedBlinkingMask.BLINK;
-import static pl.marcinchwedczuk.rfid.card.acr122.LedSettings.LedBlinkingMask.NOT_BLINK;
-import static pl.marcinchwedczuk.rfid.card.acr122.LedSettings.LedState.OFF;
-import static pl.marcinchwedczuk.rfid.card.acr122.LedSettings.LedState.ON;
-import static pl.marcinchwedczuk.rfid.card.acr122.LedSettings.StateMask.NO_CHANGE;
-import static pl.marcinchwedczuk.rfid.card.acr122.LedSettings.StateMask.UPDATE;
+import static pl.marcinchwedczuk.rfid.card.acr122.LedBlinkingMask.BLINK;
+import static pl.marcinchwedczuk.rfid.card.acr122.LedBlinkingMask.NOT_BLINK;
+import static pl.marcinchwedczuk.rfid.card.acr122.LedState.OFF;
+import static pl.marcinchwedczuk.rfid.card.acr122.LedState.ON;
+import static pl.marcinchwedczuk.rfid.card.acr122.StateMask.NO_CHANGE;
+import static pl.marcinchwedczuk.rfid.card.acr122.StateMask.UPDATE;
 
 public class LedSettings {
     private LedState finalRedLED;
@@ -23,19 +23,19 @@ public class LedSettings {
     private LedBlinkingMask blinkingMaskGreenLED;
 
     public LedSettings(byte b) {
-        RichByte bits = new RichByte(b);
+        RichByte richByte = new RichByte(b);
 
-        finalRedLED = bits.isBitSet(0) ? ON : OFF;
-        finalGreenLED = bits.isBitSet(1) ? ON : OFF;
+        finalRedLED = richByte.isBitSet(0) ? ON : OFF;
+        finalGreenLED = richByte.isBitSet(1) ? ON : OFF;
 
-        maskRedLED = bits.isBitSet(2) ? UPDATE : NO_CHANGE;
-        maskGreenLED = bits.isBitSet(3) ? UPDATE : NO_CHANGE;
+        maskRedLED = richByte.isBitSet(2) ? UPDATE : NO_CHANGE;
+        maskGreenLED = richByte.isBitSet(3) ? UPDATE : NO_CHANGE;
 
-        initialBlinkingRedLED = bits.isBitSet(4) ? ON : OFF;
-        initialBlinkingGreenLED = bits.isBitSet(5) ? ON : OFF;
+        initialBlinkingRedLED = richByte.isBitSet(4) ? ON : OFF;
+        initialBlinkingGreenLED = richByte.isBitSet(5) ? ON : OFF;
 
-        blinkingMaskRedLED = bits.isBitSet(6) ? BLINK : NOT_BLINK;
-        blinkingMaskGreenLED = bits.isBitSet(7) ? BLINK : NOT_BLINK;
+        blinkingMaskRedLED = richByte.isBitSet(6) ? BLINK : NOT_BLINK;
+        blinkingMaskGreenLED = richByte.isBitSet(7) ? BLINK : NOT_BLINK;
     }
 
     byte toControlByte() {
@@ -87,9 +87,4 @@ public class LedSettings {
         return new LedSettings(b);
     }
 
-    public enum LedState {ON, OFF}
-
-    public enum StateMask {UPDATE, NO_CHANGE}
-
-    public enum LedBlinkingMask {BLINK, NOT_BLINK}
 }

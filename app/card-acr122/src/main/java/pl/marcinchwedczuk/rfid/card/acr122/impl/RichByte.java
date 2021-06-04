@@ -36,10 +36,11 @@ public class RichByte {
 
     @Override
     public String toString() {
-        return StringUtils.to8BitsString(asByte());
+        return StringUtils.takeLast(8,
+                "00000000" + Integer.toBinaryString(b & 0xFF));
     }
 
-    private void checkBitPosition(int bitPosition) {
+    private static void checkBitPosition(int bitPosition) {
         if (bitPosition < 0 || bitPosition >= 8) {
             throw new IllegalArgumentException("bitPosition");
         }

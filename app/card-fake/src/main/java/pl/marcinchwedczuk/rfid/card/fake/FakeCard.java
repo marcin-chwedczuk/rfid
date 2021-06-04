@@ -20,14 +20,9 @@ class FakeCard extends Card {
     private final String protocol;
     private final Acr122Simulator acr122;
 
-    public FakeCard(String protocol, CardState cardState) {
+    public FakeCard(String protocol, Acr122Simulator acr122) {
         this.protocol = Objects.requireNonNull(protocol);
-        Objects.requireNonNull(cardState);
-
-        acr122 = new Acr122Simulator(
-                cardState == CardState.CARD_ABSENT
-                    ? null
-                    : new Mifare1KSimulator());
+        this.acr122 = Objects.requireNonNull(acr122);
     }
 
     @Override

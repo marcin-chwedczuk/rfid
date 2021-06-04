@@ -14,6 +14,8 @@ public class ByteArrays {
 
         for (int i = 0; i < ints.length; i++) {
             int el = ints[i];
+            // Allow both integers in rage 0x00-0xFF,
+            // and conversion from bytes.
             if (el < 0 || el > 255) {
                 throw new IllegalArgumentException("Value outside of range: " + el + ".");
             }

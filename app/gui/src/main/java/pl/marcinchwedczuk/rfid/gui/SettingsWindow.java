@@ -16,11 +16,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.marcinchwedczuk.rfid.card.acr122.AcrTerminalCommands;
 import pl.marcinchwedczuk.rfid.card.acr122.LedBuzzerSettings;
-import pl.marcinchwedczuk.rfid.card.acr122.LedBuzzerSettings.Buzzer;
+import pl.marcinchwedczuk.rfid.card.acr122.Buzzer;
 import pl.marcinchwedczuk.rfid.card.acr122.LedSettings;
-import pl.marcinchwedczuk.rfid.card.acr122.LedSettings.LedBlinkingMask;
-import pl.marcinchwedczuk.rfid.card.acr122.LedSettings.LedState;
-import pl.marcinchwedczuk.rfid.card.acr122.LedSettings.StateMask;
+import pl.marcinchwedczuk.rfid.card.acr122.LedBlinkingMask;
+import pl.marcinchwedczuk.rfid.card.acr122.LedState;
+import pl.marcinchwedczuk.rfid.card.acr122.StateMask;
 import pl.marcinchwedczuk.rfid.card.acr122.PiccOperatingParameter;
 import pl.marcinchwedczuk.rfid.card.acr122.FeatureStatus;
 import pl.marcinchwedczuk.rfid.card.acr122.PoolingInterval;
@@ -130,7 +130,7 @@ public class SettingsWindow implements Initializable {
     private void refreshPICC() {
         PiccOperatingParameter picc;
         try {
-            picc = terminalCommands.readPiccOperatingParameter();
+            picc = terminalCommands.getPiccOperatingParameter();
         } catch (Exception e) {
             FxDialogBoxes.error("Cannot read PICC parameter.", e.getMessage());
             return;
@@ -152,7 +152,7 @@ public class SettingsWindow implements Initializable {
         picc.setIso14443TypeA(this.isoTypeA_CB.getValue());
 
         try {
-            terminalCommands.savePiccOperatingParameter(picc);
+            terminalCommands.setPiccOperatingParameter(picc);
             FxDialogBoxes.info("PICC parameters were changed!");
         } catch (Exception e) {
             FxDialogBoxes.exception(e);

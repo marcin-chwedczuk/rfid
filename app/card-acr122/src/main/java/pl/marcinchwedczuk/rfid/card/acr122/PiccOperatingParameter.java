@@ -72,6 +72,10 @@ public class PiccOperatingParameter {
                 .asByte();
     }
 
+    int toUnsignedByte() {
+        return toByte() & 0xFF;
+    }
+
     public FeatureStatus getAutoPiccPolling() {
         return autoPiccPolling;
     }
@@ -131,8 +135,8 @@ public class PiccOperatingParameter {
     @Override
     public String toString() {
         return new ToStringBuilder(PiccOperatingParameter.class)
-            .appendField("enableAutoPiccPolling", autoPiccPolling)
-            .appendField("enableAutoAtsGeneration", autoAtsGeneration)
+            .appendField("autoPiccPolling", autoPiccPolling)
+            .appendField("autoAtsGeneration", autoAtsGeneration)
             .appendField("pollingInterval", pollingInterval)
             .appendField("feliCa424K", feliCa424K)
             .appendField("feliCa212K", feliCa212K)

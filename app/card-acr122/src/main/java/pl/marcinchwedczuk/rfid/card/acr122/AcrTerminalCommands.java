@@ -3,6 +3,7 @@ package pl.marcinchwedczuk.rfid.card.acr122;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.marcinchwedczuk.rfid.card.acr122.impl.AcrStandardErrors;
+import pl.marcinchwedczuk.rfid.card.commons.utils.ByteArrays;
 
 import javax.smartcardio.CardException;
 import javax.smartcardio.ResponseAPDU;
@@ -13,12 +14,10 @@ public abstract class AcrTerminalCommands {
 
     public abstract byte[] sendRawCommand(byte[] commandBytes) throws CardException;
 
-    public PiccOperatingParameter readPiccOperatingParameter() {
-        logger.info("readPiccOperatingParameter()");
+    public PiccOperatingParameter getPiccOperatingParameter() {
+        logger.info("getPiccOperatingParameter()");
 
-        byte[] commandBytes = new byte[]{
-                (byte) 0xFF, 0x00, 0x50, 0x00, 0x00
-        };
+        byte[] commandBytes = ByteArrays.of(0xFF, 0x00, 0x50, 0x00, 0x00);
 
         try {
             byte[] responseBytes = this.sendRawCommand(commandBytes);
@@ -35,14 +34,11 @@ public abstract class AcrTerminalCommands {
         }
     }
 
-    public void savePiccOperatingParameter(PiccOperatingParameter parameter) {
-        logger.info("savePiccOperatingParameter({})", parameter);
+    public void setPiccOperatingParameter(PiccOperatingParameter parameter) {
+        logger.info("setPiccOperatingParameter({})", parameter);
 
-        byte parameterByte = parameter.toByte();
-
-        byte[] commandBytes = new byte[]{
-                (byte) 0xFF, 0x00, 0x51, parameterByte, 0x00
-        };
+        int parameterByte = parameter.toUnsignedByte();
+        byte[] commandBytes = ByteArrays.of(0xFF, 0x00, 0x51, parameterByte, 0x00);
 
         try {
             byte[] responseBytes = sendRawCommand(commandBytes);
@@ -51,7 +47,6 @@ public abstract class AcrTerminalCommands {
                 logger.error("Unexpected bytes returned from terminal {}.", responseBytes);
                 throw AcrStandardErrors.unexpectedResponseBytes(responseBytes);
             }
-
         } catch (CardException e) {
             throw AcrException.ofCardException(e);
         }

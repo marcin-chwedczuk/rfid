@@ -4,6 +4,7 @@ import pl.marcinchwedczuk.rfid.card.commons.utils.ByteArrays;
 
 import javax.smartcardio.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 /**
  * Fake card that represents ACR122 terminal itself.
@@ -15,6 +16,10 @@ public class Acr122Simulator {
     private final Mifare1KSimulator mifare1K;
 
     private int piccOperatingParameter = 0xff;
+
+    public Acr122Simulator() {
+        this(null);
+    }
 
     public Acr122Simulator(Mifare1KSimulator mifare1K) {
         this.mifare1K = mifare1K;

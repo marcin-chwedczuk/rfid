@@ -254,6 +254,16 @@
                     <!-- set logging level to DEBUG -->
                     -Dlog.level=DEBUG
                 </extra-jvm-options-when-running-gui-app>
+                <old-extra-jvm-options-when-running-tests>
+                    ${extra-jvm-options-when-running-tests}
+                </old-extra-jvm-options-when-running-tests>
+                <extra-jvm-options-when-running-tests>
+                    @{old-extra-jvm-options-when-running-tests}
+
+                    <!-- tests use slf4j simple logger.
+                        this sets tests log level to DEBUG -->
+                    -Dorg.slf4j.simpleLogger.defaultLogLevel=debug
+                </extra-jvm-options-when-running-tests>
             </properties>
         </profile>
 

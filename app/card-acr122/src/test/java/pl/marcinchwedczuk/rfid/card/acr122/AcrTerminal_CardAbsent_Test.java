@@ -9,8 +9,13 @@ import javax.smartcardio.CardNotPresentException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class AcrTerminal_CardAbsent_Test {
+class AcrTerminal_CardAbsent_Test extends BaseTerminalCommandsTest {
     AcrTerminal acrTerminal = new AcrTerminal(FakeCardTerminal.withCardAbsent());
+
+    @Override
+    protected AcrTerminalCommands terminal() {
+        return acrTerminal;
+    }
 
     @Test
     void isCardPresent_returns_false() {
