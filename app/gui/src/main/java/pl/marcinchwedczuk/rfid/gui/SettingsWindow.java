@@ -14,17 +14,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.marcinchwedczuk.rfid.card.acr122.AcrTerminalCommands;
-import pl.marcinchwedczuk.rfid.card.acr122.LedBuzzerSettings;
-import pl.marcinchwedczuk.rfid.card.acr122.Buzzer;
-import pl.marcinchwedczuk.rfid.card.acr122.LedSettings;
-import pl.marcinchwedczuk.rfid.card.acr122.LedBlinkingMask;
-import pl.marcinchwedczuk.rfid.card.acr122.LedState;
-import pl.marcinchwedczuk.rfid.card.acr122.StateMask;
-import pl.marcinchwedczuk.rfid.card.acr122.PiccOperatingParameter;
-import pl.marcinchwedczuk.rfid.card.acr122.FeatureStatus;
-import pl.marcinchwedczuk.rfid.card.acr122.PoolingInterval;
-import pl.marcinchwedczuk.rfid.card.acr122.DetectionStatus;
+import pl.marcinchwedczuk.rfid.card.acr122.*;
 
 import java.io.IOException;
 import java.net.URL;
@@ -198,9 +188,9 @@ public class SettingsWindow implements Initializable {
     @FXML
     public void sendBlinkBuzzCommand() {
         // Save Led & Buzzer
-        LedBuzzerSettings newSettings = new LedBuzzerSettings();
-        newSettings.setT1(t1Spinner.getValue());
-        newSettings.setT2(t2Spinner.getValue());
+        LedBuzzerSettings newSettings = LedBuzzerSettings.newDefaults();
+        newSettings.setT1(TDuration.fromNumberOf100msUnits(t1Spinner.getValue()));
+        newSettings.setT2(TDuration.fromNumberOf100msUnits(t2Spinner.getValue()));
         newSettings.setNumberOfRepetitions(repetitionsSpinner.getValue());
         newSettings.setLinkToBuzzer(linkToBuzzerCB.getValue());
 

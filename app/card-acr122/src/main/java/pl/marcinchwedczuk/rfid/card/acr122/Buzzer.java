@@ -6,6 +6,10 @@ public enum Buzzer {
     BUZZER_DURING_T2,
     BUZZER_DURING_T1_T2;
 
+    public int toUnsignedByte() {
+        return toControlByte() & 0xFF;
+    }
+
     public byte toControlByte() {
         switch (this) {
             case BUZZER_DISABLED:

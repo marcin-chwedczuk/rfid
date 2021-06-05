@@ -2,6 +2,8 @@ package pl.marcinchwedczuk.rfid.card.acr122;
 
 import pl.marcinchwedczuk.rfid.card.acr122.impl.RichByte;
 
+import java.util.Objects;
+
 import static pl.marcinchwedczuk.rfid.card.acr122.LedBlinkingMask.BLINK;
 import static pl.marcinchwedczuk.rfid.card.acr122.LedBlinkingMask.NOT_BLINK;
 import static pl.marcinchwedczuk.rfid.card.acr122.LedState.OFF;
@@ -10,6 +12,14 @@ import static pl.marcinchwedczuk.rfid.card.acr122.StateMask.NO_CHANGE;
 import static pl.marcinchwedczuk.rfid.card.acr122.StateMask.UPDATE;
 
 public class LedSettings {
+    static LedSettings newDefault() {
+        return ofControlByte((byte)0x00);
+    }
+
+    static LedSettings ofControlByte(byte b) {
+        return new LedSettings(b);
+    }
+
     private LedState finalRedLED;
     private LedState finalGreenLED;
 
@@ -22,7 +32,7 @@ public class LedSettings {
     private LedBlinkingMask blinkingMaskRedLED;
     private LedBlinkingMask blinkingMaskGreenLED;
 
-    public LedSettings(byte b) {
+    LedSettings(byte b) {
         RichByte richByte = new RichByte(b);
 
         finalRedLED = richByte.isBitSet(0) ? ON : OFF;
@@ -52,39 +62,35 @@ public class LedSettings {
     }
 
     public void setFinalRedLED(LedState finalRedLED) {
-        this.finalRedLED = finalRedLED;
+        this.finalRedLED = Objects.requireNonNull(finalRedLED);
     }
 
     public void setFinalGreenLED(LedState finalGreenLED) {
-        this.finalGreenLED = finalGreenLED;
+        this.finalGreenLED = Objects.requireNonNull(finalGreenLED);
     }
 
     public void setMaskRedLED(StateMask maskRedLED) {
-        this.maskRedLED = maskRedLED;
+        this.maskRedLED = Objects.requireNonNull(maskRedLED);
     }
 
     public void setMaskGreenLED(StateMask maskGreenLED) {
-        this.maskGreenLED = maskGreenLED;
+        this.maskGreenLED = Objects.requireNonNull(maskGreenLED);
     }
 
     public void setInitialBlinkingRedLED(LedState initialBlinkingRedLED) {
-        this.initialBlinkingRedLED = initialBlinkingRedLED;
+        this.initialBlinkingRedLED = Objects.requireNonNull(initialBlinkingRedLED);
     }
 
     public void setInitialBlinkingGreenLED(LedState initialBlinkingGreenLED) {
-        this.initialBlinkingGreenLED = initialBlinkingGreenLED;
+        this.initialBlinkingGreenLED = Objects.requireNonNull(initialBlinkingGreenLED);
     }
 
     public void setBlinkingMaskRedLED(LedBlinkingMask blinkingMaskRedLED) {
-        this.blinkingMaskRedLED = blinkingMaskRedLED;
+        this.blinkingMaskRedLED = Objects.requireNonNull(blinkingMaskRedLED);
     }
 
     public void setBlinkingMaskGreenLED(LedBlinkingMask blinkingMaskGreenLED) {
-        this.blinkingMaskGreenLED = blinkingMaskGreenLED;
+        this.blinkingMaskGreenLED = Objects.requireNonNull(blinkingMaskGreenLED);
     }
-
-    public static LedSettings ofControlByte(byte b) {
-        return new LedSettings(b);
-    }
-
 }
+

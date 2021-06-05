@@ -31,7 +31,7 @@ public abstract class BaseTerminalCommandsTest {
         // TODO: Fake card currently only accept the command.
         // TODO: Make it possible to inspect values send to fake card
 
-        LedBuzzerSettings settings = new LedBuzzerSettings();
+        LedBuzzerSettings settings = LedBuzzerSettings.newDefaults();
 
         terminal().configureLedAndBuzzer(settings);
     }
