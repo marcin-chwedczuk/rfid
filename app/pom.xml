@@ -253,17 +253,11 @@
                     -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=1044
                     <!-- set logging level to DEBUG -->
                     -Dlog.level=DEBUG
-                </extra-jvm-options-when-running-gui-app>
-                <old-extra-jvm-options-when-running-tests>
-                    ${extra-jvm-options-when-running-tests}
-                </old-extra-jvm-options-when-running-tests>
-                <extra-jvm-options-when-running-tests>
-                    @{old-extra-jvm-options-when-running-tests}
-
                     <!-- tests use slf4j simple logger.
-                        this sets tests log level to DEBUG -->
+                       this sets tests log level to DEBUG.
+                       TODO: This of course does not work if I put it here. Fix it. -->
                     -Dorg.slf4j.simpleLogger.defaultLogLevel=debug
-                </extra-jvm-options-when-running-tests>
+                </extra-jvm-options-when-running-gui-app>
             </properties>
         </profile>
 

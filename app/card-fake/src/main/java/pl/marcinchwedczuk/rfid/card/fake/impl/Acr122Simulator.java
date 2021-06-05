@@ -1,6 +1,7 @@
 package pl.marcinchwedczuk.rfid.card.fake.impl;
 
 import pl.marcinchwedczuk.rfid.card.commons.utils.ByteArrays;
+import pl.marcinchwedczuk.rfid.card.fake.CommandHistory;
 
 import javax.smartcardio.*;
 import java.nio.charset.StandardCharsets;
@@ -13,15 +14,18 @@ import java.util.Objects;
  * some commands like `getFirmwareVersion`.
  */
 public class Acr122Simulator {
+    private final CommandHistory commandHistory;
     private final Mifare1KSimulator mifare1K;
 
     private int piccOperatingParameter = 0xff;
 
-    public Acr122Simulator() {
-        this(null);
+    public Acr122Simulator(CommandHistory commandHistory) {
+        this(commandHistory, null);
     }
 
-    public Acr122Simulator(Mifare1KSimulator mifare1K) {
+    public Acr122Simulator(CommandHistory commandHistory,
+                           Mifare1KSimulator mifare1K) {
+        this.commandHistory = Objects.requireNonNull(commandHistory);
         this.mifare1K = mifare1K;
     }
 
@@ -36,6 +40,8 @@ public class Acr122Simulator {
     }
 
     public ResponseAPDU executeCommand(CommandAPDU cmd) throws CardException {
+        commandHistory.addCommand(cmd.getBytes(), "received command");
+
         ResponseAPDU response = tryExecuteTerminalCommand(cmd);
         if (response != null) {
             return response;
@@ -53,7 +59,7 @@ public class Acr122Simulator {
     }
 
     public byte[] transmitControlCommand(int controlCode, byte[] command) throws CardException {
-        // Escape commands
+        commandHistory.addCommand(command, "received escape command");
         return tryExecuteTerminalCommand(new CommandAPDU(command)).getBytes();
     }
 

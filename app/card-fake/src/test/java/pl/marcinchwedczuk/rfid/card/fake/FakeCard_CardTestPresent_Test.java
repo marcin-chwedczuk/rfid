@@ -20,7 +20,7 @@ public class FakeCard_CardTestPresent_Test extends BaseFakeCardTest {
     // Card in JavaCardIO represents both Card and the Terminal device itself.
     // The only difference is the protocol used to connect to them.
     public FakeCard_CardTestPresent_Test() {
-        super(new FakeCard("T=0", new Acr122Simulator(new Mifare1KSimulator())));
+        super(new FakeCard("T=0", new Acr122Simulator(new CommandHistory(), new Mifare1KSimulator())));
     }
 
     @Override

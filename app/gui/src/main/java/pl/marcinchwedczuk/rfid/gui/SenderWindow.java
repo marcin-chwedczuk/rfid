@@ -36,7 +36,7 @@ public class SenderWindow implements Initializable {
     private void sendCommand() {
         byte[] command = ByteArrays.fromHexString(bytesToSend.getText());
         try {
-            byte[] responseBytes = card.sendRawCommand(command);
+            byte[] responseBytes = card.sendCommand(command);
             response.setText(ByteArrays.toHexString(responseBytes));
         } catch (Exception e) {
             response.clear();

@@ -20,6 +20,7 @@ public class FakeCardTerminal extends CardTerminal {
         return new FakeCardTerminal(CARD_ABSENT);
     }
 
+    private final CommandHistory commandHistory = new CommandHistory();
     private final CardState cardState;
     private final Acr122Simulator acr122;
 
@@ -28,9 +29,14 @@ public class FakeCardTerminal extends CardTerminal {
     public FakeCardTerminal(CardState cardState) {
         this.cardState = cardState;
         this.acr122 = new Acr122Simulator(
+                commandHistory,
                 cardState == CardState.CARD_ABSENT
                         ? null
                         : new Mifare1KSimulator());
+    }
+
+    public CommandHistory getCommandHistory() {
+        return commandHistory;
     }
 
     @Override

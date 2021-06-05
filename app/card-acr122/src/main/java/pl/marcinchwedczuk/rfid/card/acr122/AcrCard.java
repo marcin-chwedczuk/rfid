@@ -23,7 +23,13 @@ public class AcrCard extends AcrTerminalCommands {
         this.card = card;
     }
 
-    public byte[] sendRawCommand(byte[] commandBytes) throws CardException {
+    @Override
+    CardTerminal getUnderlyingTerminal() {
+        return terminal.getUnderlyingTerminal();
+    }
+
+    @Override
+    public byte[] sendCommand(byte[] commandBytes) throws CardException {
         return card.getBasicChannel()
                 .transmit(new CommandAPDU(commandBytes))
                 .getBytes();

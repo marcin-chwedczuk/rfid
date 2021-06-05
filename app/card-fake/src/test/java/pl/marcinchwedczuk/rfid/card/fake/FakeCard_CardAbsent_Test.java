@@ -10,7 +10,7 @@ import javax.smartcardio.ResponseAPDU;
 
 public class FakeCard_CardAbsent_Test extends BaseFakeCardTest {
     FakeCard_CardAbsent_Test() {
-        super(new FakeCard("DIRECT", new Acr122Simulator()));
+        super(new FakeCard("DIRECT", new Acr122Simulator(new CommandHistory())));
     }
 
     @Override
