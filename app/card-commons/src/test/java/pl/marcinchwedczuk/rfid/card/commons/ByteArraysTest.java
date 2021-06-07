@@ -84,4 +84,15 @@ class ByteArraysTest {
                     .isEqualTo(ByteArrays.of(1, 2, 3));
         }
     }
+
+    @Test
+    void concat_works() {
+        byte[] first = new byte[] { 1, 2, 3 };
+        byte[] second = new byte[] { 10, 20 };
+
+        byte[] result = ByteArrays.concat(first, second);
+
+        assertThat(result)
+                .isEqualTo(new byte[] { 1, 2, 3, 10, 20 });
+    }
 }

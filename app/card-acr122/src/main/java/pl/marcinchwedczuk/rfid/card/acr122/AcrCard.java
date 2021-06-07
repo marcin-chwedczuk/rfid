@@ -9,6 +9,8 @@ import pl.marcinchwedczuk.rfid.card.commons.utils.ByteArrays;
 
 import javax.smartcardio.*;
 
+import java.util.Objects;
+
 import static pl.marcinchwedczuk.rfid.card.acr122.Block.BLOCK_0;
 
 public class AcrCard extends AcrTerminalCommands {
@@ -81,10 +83,9 @@ public class AcrCard extends AcrTerminalCommands {
 
         logger.debug("Load key {} into register {}.", ByteArrays.toHexString(key), register);
 
-        byte[] commandBytes = new byte[]{
-                (byte) 0xFF, (byte) 0x82, 0x00, (byte) register.index(), 0x06,
-                key[0], key[1], key[2], key[3], key[4], key[5]
-        };
+        byte[] commandBytes = ByteArrays.concat(
+                ByteArrays.of(0xFF, 0x82, 0x00, register.index(), 0x06),
+                key);
         try {
             ResponseAPDU response =
                     card.getBasicChannel().transmit(new CommandAPDU(commandBytes));
@@ -103,18 +104,15 @@ public class AcrCard extends AcrTerminalCommands {
     }
 
     public void authenticateToSector(Sector sector, KeyType selectedKey, Register registerWithKey) {
+        Objects.requireNonNull(selectedKey);
+
         logger.debug("Authenticate sector {} with key {} (register {}).", sector, selectedKey, registerWithKey);
 
-        if (selectedKey == null) {
-            throw new NullPointerException("keyType");
-        }
-
-        byte[] commandBytes = new byte[]{
-                (byte) 0xFF, (byte) 0x86, 0x00, 0x00, 0x05,
-                0x01, 0x00, (byte) DataAddress.of(sector, BLOCK_0).blockNumber(),
-                (byte) (selectedKey == KeyType.KEY_A ? 0x60 : 0x61),
-                (byte) registerWithKey.index()
-        };
+        byte[] commandBytes = ByteArrays.of(
+                0xFF, 0x86, 0x00, 0x00, 0x05, 0x01, 0x00,
+                DataAddress.of(sector, BLOCK_0).blockNumber(),
+                (selectedKey == KeyType.KEY_A ? 0x60 : 0x61),
+                registerWithKey.index());
 
         try {
             ResponseAPDU response =
@@ -135,9 +133,8 @@ public class AcrCard extends AcrTerminalCommands {
     public byte[] readData(DataAddress block, int numberOfBytes) {
         logger.debug("Read binary block {} (nbytes = {}).", block, numberOfBytes);
 
-        byte[] commandBytes = new byte[]{
-                (byte) 0xFF, (byte) 0xB0, 0x00, (byte) block.blockNumber(), (byte) numberOfBytes
-        };
+        byte[] commandBytes = ByteArrays.of(
+                0xFF, 0xB0, 0x00, block.blockNumber(), numberOfBytes);
 
         try {
             ResponseAPDU response =
@@ -161,17 +158,12 @@ public class AcrCard extends AcrTerminalCommands {
         logger.debug("Write binary block {} (data = {}).", block, ByteArrays.toHexString(data16));
 
         if (data16.length != 16) {
-            throw new IllegalArgumentException("Block is 16 bytes long for Mifare 1K/4K.");
+            throw new IllegalArgumentException("Block is 16 bytes long for Mifare 1K.");
         }
 
-        byte[] commandBytes = new byte[]{
-                (byte) 0xFF, (byte) 0xD6, 0x00, (byte) block.blockNumber(),
-                (byte) data16.length, // must be 16 for Mifare 1K/4K
-                data16[0], data16[1], data16[2], data16[3],
-                data16[4], data16[5], data16[6], data16[7],
-                data16[8], data16[9], data16[10], data16[11],
-                data16[12], data16[13], data16[14], data16[15]
-        };
+        byte[] commandBytes = ByteArrays.concat(
+                ByteArrays.of(0xFF, 0xD6, 0x00, block.blockNumber(), data16.length),
+                data16);
 
         try {
             ResponseAPDU response =
