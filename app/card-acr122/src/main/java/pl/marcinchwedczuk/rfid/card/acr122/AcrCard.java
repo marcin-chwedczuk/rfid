@@ -52,9 +52,7 @@ public class AcrCard extends AcrTerminalCommands {
 
     // TODO: Refactor this can only return ATS or serial number of the tag
     private byte[] getData(int p1, int p2, int len) {
-        byte[] commandBytes = new byte[]{
-                (byte) 0xFF, (byte) 0xCA, (byte) (p1 & 0xFF), (byte) (p2 & 0xFF), (byte) (len & 0xFF)
-        };
+        byte[] commandBytes = ByteArrays.of(0xFF, 0xCA, p1, p2, len);
 
         try {
             ResponseAPDU response =
@@ -71,17 +69,17 @@ public class AcrCard extends AcrTerminalCommands {
 
             return response.getData();
         } catch (CardException e) {
-            throw AcrException.ofCardException(e);
+            throw AcrException.ofCardException(e,
+                    "Error while retrieving data from the card.");
         }
     }
 
-
-    public void loadKeyToRegister(byte[] key, Register register) {
-        logger.debug("Load key {} to register {}.", ByteArrays.toHexString(key), register);
-
+    public void loadKeyIntoRegister(byte[] key, Register register) {
         if (key.length != 6) {
             throw new IllegalArgumentException("Invalid key length (key should be 6 bytes long).");
         }
+
+        logger.debug("Load key {} into register {}.", ByteArrays.toHexString(key), register);
 
         byte[] commandBytes = new byte[]{
                 (byte) 0xFF, (byte) 0x82, 0x00, (byte) register.index(), 0x06,
@@ -99,7 +97,8 @@ public class AcrCard extends AcrTerminalCommands {
             }
             // Success
         } catch (CardException e) {
-            throw AcrException.ofCardException(e);
+            throw AcrException.ofCardException(e,
+                    "Error while loading key into a register.");
         }
     }
 
@@ -134,7 +133,7 @@ public class AcrCard extends AcrTerminalCommands {
     }
 
     public byte[] readBinaryBlock(DataAddress block, int numberOfBytes) {
-        logger.debug("reading binary block {} (bytes {})", block, numberOfBytes);
+        logger.debug("Read binary block {} (nbytes = {}).", block, numberOfBytes);
 
         byte[] commandBytes = new byte[]{
                 (byte) 0xFF, (byte) 0xB0, 0x00, (byte) block.blockNumber(), (byte) numberOfBytes
@@ -159,7 +158,7 @@ public class AcrCard extends AcrTerminalCommands {
     }
 
     public void writeBinaryBlock(DataAddress block, byte[] data16) {
-        logger.debug("Writing binary block {} (bytes {})", block, ByteArrays.toHexString(data16));
+        logger.debug("Write binary block {} (data = {}).", block, ByteArrays.toHexString(data16));
 
         if (data16.length != 16) {
             throw new IllegalArgumentException("Block is 16 bytes long for Mifare 1K/4K.");

@@ -18,7 +18,7 @@ public class CardService {
 
     public void loadKey(byte[] key) {
         try {
-            card.loadKeyToRegister(key, REGISTER_0);
+            card.loadKeyIntoRegister(key, REGISTER_0);
         } catch (AcrException e) {
             failWith(e, "Cannot load key to card register.");
         }

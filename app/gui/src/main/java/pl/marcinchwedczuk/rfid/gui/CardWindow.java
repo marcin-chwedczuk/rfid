@@ -275,7 +275,7 @@ public class CardWindow implements Initializable {
         }
 
         try {
-            card.loadKeyToRegister(keyBytes, REGISTER_0);
+            card.loadKeyIntoRegister(keyBytes, REGISTER_0);
         } catch (AcrException e) {
             FxDialogBoxes.error("Cannot read data from card!", e.getMessage());
             return;
