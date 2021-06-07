@@ -24,7 +24,7 @@ class AcrTerminal_CardAbsent_Test extends BaseTerminalCommandsTest {
     }
 
     @Test
-    void returns_terminal_name() {
+    void name_returns_terminal_name() {
         assertThat(acrTerminal.name())
                 .isEqualTo("Fake Terminal (CARD_ABSENT)");
     }

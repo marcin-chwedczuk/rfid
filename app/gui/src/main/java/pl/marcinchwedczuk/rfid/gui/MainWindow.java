@@ -119,11 +119,21 @@ public class MainWindow implements Initializable {
 
     public void testAction(ActionEvent actionEvent) {
         try {
+            /*
             Card direct = currentTerminal().getUnderlyingTerminal()
                     .connect("DIRECT");
 
             ATR atr = direct.getATR();
             logger.info("ATR = {}", atr);
+             */
+
+            AcrCard card = currentTerminal().connect();
+            try {
+                String cardId = card.getCardUID();
+                logger.info("CARD ID = {}", cardId);
+            } finally {
+                card.disconnect();
+            }
 
             // Have to be closed
         }

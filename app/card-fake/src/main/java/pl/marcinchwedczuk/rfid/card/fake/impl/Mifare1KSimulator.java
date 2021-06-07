@@ -43,11 +43,11 @@ public class Mifare1KSimulator {
     }
 
     public ResponseAPDU execute(CommandAPDU cmd) throws CardException {
-        if (matchesPattern(cmd, "FF CA 00 00 04")) {
-            // Get Card ID
+        if (matchesPattern(cmd, "FF CA 00 00 00")) {
+            // Get Card ID - first 4 bytes of sector0/block0
             return new ResponseAPDU(ByteArrays.fromHexString(
                     // Card ID LSB - MSB, SW1, SW2
-                    "AA BB CC DD EE FF 90 00"
+                    "AA BB CC DD 90 00"
             ));
         }
 
