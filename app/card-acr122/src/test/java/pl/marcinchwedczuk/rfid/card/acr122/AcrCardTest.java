@@ -87,4 +87,57 @@ class AcrCardTest {
         assertThat(ByteArrays.toHexString(data))
                 .isEqualTo("00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF");
     }
+
+    // TODO: Change API, trailer should not be readable as byte[]
+    // to avoid changing CBITS by mistake.
+    @Test
+    void read_permissions_from_card() {
+        Sector firstSector = Sector.of(0);
+        DataAddress trailerBlockAddress = DataAddress.of(firstSector, Block.TRAILER);
+
+        acrCard.loadKeyIntoRegister(defaultKey, REGISTER_0);
+        acrCard.authenticateToSector(firstSector, KEY_A, REGISTER_0);
+
+        byte[] trailerData = acrCard.readData(trailerBlockAddress, 16);
+        TrailerBlock trailerBlock = new TrailerBlock(trailerData);
+
+        // Key A is not readable in default configuration
+        assertThat(trailerBlock.keyAHexString())
+                .isEqualTo("00:00:00:00:00:00");
+        assertThat(trailerBlock.keyBHexString())
+                .isEqualTo("FF:FF:FF:FF:FF:FF");
+
+        AccessBits accessBits = trailerBlock.accessBits;
+
+        // Check data block permissions
+        assertThat(accessBits.dataBlockAccesses)
+                .hasSize(3);
+
+        DataBlockAccess block2Access = accessBits.dataBlockAccesses.get(2);
+        assertThat(block2Access.read)
+                .isEqualTo(AccessCond.KEY_A_OR_B);
+        assertThat(block2Access.write)
+                .isEqualTo(AccessCond.KEY_A_OR_B);
+        assertThat(block2Access.increment)
+                .isEqualTo(AccessCond.KEY_A_OR_B);
+        assertThat(block2Access.other)
+                .isEqualTo(AccessCond.KEY_A_OR_B);
+
+        // Check trailer permissions
+        SectorTrailerAccess trailerAccess = accessBits.sectorTrailerAccess;
+        assertThat(trailerAccess.readKeyA)
+                .isEqualTo(AccessCond.NEVER);
+        assertThat(trailerAccess.writeKeyA)
+                .isEqualTo(AccessCond.KEY_A);
+
+        assertThat(trailerAccess.readKeyB)
+                .isEqualTo(AccessCond.KEY_A);
+        assertThat(trailerAccess.writeKeyB)
+                .isEqualTo(AccessCond.KEY_A);
+
+        assertThat(trailerAccess.accessBitsRead)
+                .isEqualTo(AccessCond.KEY_A);
+        assertThat(trailerAccess.accessBitsWrite)
+                .isEqualTo(AccessCond.KEY_A);
+    }
 }
