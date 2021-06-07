@@ -17,9 +17,10 @@ public class ToStringBuilder {
         return this;
     }
 
-    public ToStringBuilder appendField(String fieldName, String s) {
+    public ToStringBuilder appendField(String fieldName, String value) {
         appendSeparator();
-        result.append(String.format("%s: \"%s\"", fieldName, s));
+        result.append(String.format("%s: '%s'",
+                fieldName, StringUtils.escape(value)));
         return this;
     }
 

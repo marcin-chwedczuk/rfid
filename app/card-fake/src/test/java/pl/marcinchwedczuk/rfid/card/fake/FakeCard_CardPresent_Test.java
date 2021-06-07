@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import pl.marcinchwedczuk.rfid.card.fake.impl.Acr122Simulator;
-import pl.marcinchwedczuk.rfid.card.fake.impl.CardState;
 import pl.marcinchwedczuk.rfid.card.fake.impl.Mifare1KSimulator;
 
 import javax.smartcardio.CardException;
@@ -16,10 +15,10 @@ import static pl.marcinchwedczuk.rfid.card.commons.KeyType.KEY_B;
 import static pl.marcinchwedczuk.rfid.card.commons.Register.REGISTER_0;
 import static pl.marcinchwedczuk.rfid.card.commons.Register.REGISTER_1;
 
-public class FakeCard_CardTestPresent_Test extends BaseFakeCardTest {
+public class FakeCard_CardPresent_Test extends BaseFakeCardTest {
     // Card in JavaCardIO represents both Card and the Terminal device itself.
     // The only difference is the protocol used to connect to them.
-    public FakeCard_CardTestPresent_Test() {
+    public FakeCard_CardPresent_Test() {
         super(new FakeCard("T=0", new Acr122Simulator(new CommandHistory(), new Mifare1KSimulator())));
     }
 
@@ -37,6 +36,25 @@ public class FakeCard_CardTestPresent_Test extends BaseFakeCardTest {
 
         assertThatHexStringOf(atrBytes)
                 .isEqualTo(expected);
+    }
+
+    @Test
+    void first_block_of_the_first_sector_contains_fake_manufacturer_data() {
+        testUtil.loadKeyIntoRegister(REGISTER_0, FF_FF_FF_FF_FF_FF);
+        testUtil.authenticateToBlockNumber(0, KEY_A, REGISTER_0);
+
+        byte[] data = testUtil.execReadBlock(0).getData();
+
+        assertThatHexStringOf(data)
+                .isEqualTo("AA BB CC DD D7 08 04 00 01 6F 01 6D 45 68 F8 1D");
+    }
+
+    @Test
+    void manufacturer_block_data_cannot_be_changed() {
+        testUtil.loadKeyIntoRegister(REGISTER_0, FF_FF_FF_FF_FF_FF);
+        testUtil.authenticateToBlockNumber(0, KEY_A, REGISTER_0);
+
+        testUtil.assertCannotWriteDataToBlock(0);
     }
 
     @Nested
@@ -57,7 +75,7 @@ public class FakeCard_CardTestPresent_Test extends BaseFakeCardTest {
 
             @Test
             void authenticate_with_wrong_key_fails() {
-                testUtil.loadKeyToRegister(REGISTER_0, AA_AA_AA_AA_AA_AA);
+                testUtil.loadKeyIntoRegister(REGISTER_0, AA_AA_AA_AA_AA_AA);
 
                 ResponseAPDU response = testUtil.execAuthenticateToBlockNumber(0, KEY_A, REGISTER_0);
                 assertThatResponseBytes(response)
@@ -66,37 +84,37 @@ public class FakeCard_CardTestPresent_Test extends BaseFakeCardTest {
         }
 
         @Nested
-        class after_authenticating_with_default_key_to_sector0 {
+        class after_authenticating_with_default_key_to_sector2 {
             @BeforeEach
             void before() {
                 // Card has the default transport configuration in the beginning.
+                int blockNumber = testUtil.toBlockNumber(2, 1);
+
                 testUtil
-                        .loadKeyToRegister(REGISTER_1, FF_FF_FF_FF_FF_FF)
-                        .authenticateToBlockNumber(0, KEY_A, REGISTER_1);
+                        .loadKeyIntoRegister(REGISTER_1, FF_FF_FF_FF_FF_FF)
+                        .authenticateToBlockNumber(blockNumber, KEY_A, REGISTER_1);
             }
 
             @Test
-            void can_read_data_from_all_blocks_of_sector_0() {
+            void can_read_data_from_all_blocks_of_sector_2() {
                 testUtil
-                        .assertBlockOnCardContainsData(0, BLOCK_DATA_ZEROS)
-                        .assertBlockOnCardContainsData(1, BLOCK_DATA_ZEROS)
-                        .assertBlockOnCardContainsData(2, BLOCK_DATA_ZEROS);
+                        .assertBlockOnCardContainsData(
+                                testUtil.toBlockNumber(2, 0), BLOCK_DATA_ZEROS)
+                        .assertBlockOnCardContainsData(
+                                testUtil.toBlockNumber(2, 1), BLOCK_DATA_ZEROS)
+                        .assertBlockOnCardContainsData(
+                                testUtil.toBlockNumber(2, 2), BLOCK_DATA_ZEROS);
 
                 // Notice keyA is zero'ed, access bits are in the transport configuration
                 String expectedTrailerBlock = "00 00 00 00 00 00 FF 07 80 69 FF FF FF FF FF FF";
-                testUtil.assertBlockOnCardContainsData(3, expectedTrailerBlock);
+                testUtil.assertBlockOnCardContainsData(
+                        testUtil.toBlockNumber(2, 3), expectedTrailerBlock);
             }
 
             @Test
-            void can_write_data_to_block1_of_sector0() {
-                int blockNumber = testUtil.toBlockNumber(0, 1);
+            void can_write_data_to_block1_of_sector2() {
+                int blockNumber = testUtil.toBlockNumber(2, 1);
                 testUtil.assertCanWriteDataToBlock(blockNumber, BLOCK_DATA_00_01_02___0F);
-            }
-
-            @Test
-            void manufacturer_block_data_cannot_be_changed() {
-                // Sector 0, block 0 is special
-                testUtil.assertCannotWriteDataToBlock(0);
             }
 
             @Test
@@ -124,14 +142,14 @@ public class FakeCard_CardTestPresent_Test extends BaseFakeCardTest {
             // Data in sector 1 readable by Key B only
             // and keyA = FF:::FF, keyB = AA:BB:CC:DD:EE:FF
             testUtil
-                    .loadKeyToRegister(REGISTER_0, FF_FF_FF_FF_FF_FF)
+                    .loadKeyIntoRegister(REGISTER_0, FF_FF_FF_FF_FF_FF)
                     .authenticateToBlockNumber(trailerBlockNumber, KEY_A, REGISTER_0)
                     .writeBlock(trailerBlockNumber, "FF FF FF FF FF FF DF 05 A2 69 AA BB CC DD EE FF");
 
             // Load new keys into registers
             testUtil
-                    .loadKeyToRegister(REGISTER_0, FF_FF_FF_FF_FF_FF)
-                    .loadKeyToRegister(REGISTER_1, AA_BB_CC_DD_EE_FF);
+                    .loadKeyIntoRegister(REGISTER_0, FF_FF_FF_FF_FF_FF)
+                    .loadKeyIntoRegister(REGISTER_1, AA_BB_CC_DD_EE_FF);
         }
 
         @Test
@@ -160,8 +178,8 @@ public class FakeCard_CardTestPresent_Test extends BaseFakeCardTest {
             // Set configuration C100 - keys writable by keyB, not readable.
             // Access bits readable by both keys, never writable again.
             testUtil
-                    .loadKeyToRegister(REGISTER_0, FF_FF_FF_FF_FF_FF)
-                    .loadKeyToRegister(REGISTER_1, AA_BB_CC_DD_EE_FF)
+                    .loadKeyIntoRegister(REGISTER_0, FF_FF_FF_FF_FF_FF)
+                    .loadKeyIntoRegister(REGISTER_1, AA_BB_CC_DD_EE_FF)
                     .authenticateToBlockNumber(sectorTrailerBlockNumber, KEY_A, REGISTER_0)
                     .writeBlock(sectorTrailerBlockNumber, FF_FF_FF_FF_FF_FF + " F7 8F 00 69 " + AA_BB_CC_DD_EE_FF);
         }
@@ -206,7 +224,7 @@ public class FakeCard_CardTestPresent_Test extends BaseFakeCardTest {
 
             // We need to re-authenticate now
             testUtil
-                    .loadKeyToRegister(REGISTER_0, FF_FF_FF_FF_FF_FF)
+                    .loadKeyIntoRegister(REGISTER_0, FF_FF_FF_FF_FF_FF)
                     .authenticateToBlockNumber(sectorTrailerBlockNumber, KEY_B, REGISTER_0);
 
             // In C100 configuration both keys are not readable

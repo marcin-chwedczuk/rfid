@@ -62,6 +62,6 @@ public class TrailerBlock {
 
     private void validateKey(byte[] key) {
         if (key == null || key.length != 6)
-            throw new IllegalArgumentException("Invalid key!");
+            throw new IllegalArgumentException("key");
     }
 }

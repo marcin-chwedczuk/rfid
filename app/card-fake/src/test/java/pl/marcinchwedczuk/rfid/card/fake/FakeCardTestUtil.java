@@ -76,7 +76,7 @@ public class FakeCardTestUtil {
         return assertThat(ByteArrays.toHexString(r.getBytes()));
     }
 
-    public FakeCardTestUtil loadKeyToRegister(Register reg, String key) {
+    public FakeCardTestUtil loadKeyIntoRegister(Register reg, String key) {
         ResponseAPDU response = execLoadKeyToRegister(reg, key);
         if (response.getSW() != 0x9000) {
             fail(String.format(

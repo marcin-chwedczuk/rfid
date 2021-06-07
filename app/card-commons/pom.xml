@@ -14,6 +14,7 @@
     <properties>
         <extra-jvm-options-when-running-tests>
             --add-opens pl.marcinchwedczuk.rfid.card.commons/pl.marcinchwedczuk.rfid.card.commons=ALL-UNNAMED
+            --add-opens pl.marcinchwedczuk.rfid.card.commons/pl.marcinchwedczuk.rfid.card.commons.utils=ALL-UNNAMED
         </extra-jvm-options-when-running-tests>
     </properties>
 

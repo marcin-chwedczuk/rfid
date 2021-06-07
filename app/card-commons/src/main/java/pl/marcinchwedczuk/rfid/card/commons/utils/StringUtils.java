@@ -15,4 +15,15 @@ public class StringUtils {
         return StringUtils.takeLast(8,
                 "00000000" + Integer.toBinaryString((int) b & 0xFF));
     }
+
+    public static String escape(String s){
+        return s.replace("\\", "\\\\")
+                .replace("\t", "\\t")
+                .replace("\b", "\\b")
+                .replace("\n", "\\n")
+                .replace("\r", "\\r")
+                .replace("\f", "\\f")
+                .replace("\'", "\\'")
+                .replace("\"", "\\\"");
+    }
 }

@@ -26,7 +26,7 @@ public class CardService {
 
     public void authenticateSector(Sector sector, KeyType selectedKey) {
         try {
-            card.authenticateSector(sector, selectedKey, REGISTER_0);
+            card.authenticateToSector(sector, selectedKey, REGISTER_0);
         } catch (Exception e) {
             failWith(e, "Cannot authenticate to sector %s using provided key.", sector);
         }
@@ -34,7 +34,7 @@ public class CardService {
 
     public byte[] readBlockData(DataAddress address) {
         try {
-            return card.readBinaryBlock(address, 16);
+            return card.readData(address, 16);
         } catch (Exception e) {
             failWith(e, "Reading block %s of sector %s failed.",
                     address.block, address.sector);

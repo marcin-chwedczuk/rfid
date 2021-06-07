@@ -114,4 +114,10 @@ class MifareSector {
             return true;
         }
     }
+
+    void setupManufacturerData() {
+        // Take from real card, fixed card ID to AA BB CC DD
+        blocks[0] = ByteArrays.fromHexString(
+                "AA BB CC DD D7 08 04 00 01 6F 01 6D 45 68 F8 1D 90 00");
+    }
 }

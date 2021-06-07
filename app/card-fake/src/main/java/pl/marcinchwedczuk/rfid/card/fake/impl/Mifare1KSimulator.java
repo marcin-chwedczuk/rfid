@@ -28,6 +28,7 @@ public class Mifare1KSimulator {
         for (int i = 0; i < sectors.length; i++) {
             sectors[i] = new MifareSector();
         }
+        sectors[0].setupManufacturerData();
     }
 
     private byte[] keyRegister0 = null;

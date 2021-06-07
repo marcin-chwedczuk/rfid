@@ -102,7 +102,7 @@ public class AcrCard extends AcrTerminalCommands {
         }
     }
 
-    public void authenticateSector(Sector sector, KeyType selectedKey, Register registerWithKey) {
+    public void authenticateToSector(Sector sector, KeyType selectedKey, Register registerWithKey) {
         logger.debug("Authenticate sector {} with key {} (register {}).", sector, selectedKey, registerWithKey);
 
         if (selectedKey == null) {
@@ -132,7 +132,7 @@ public class AcrCard extends AcrTerminalCommands {
         }
     }
 
-    public byte[] readBinaryBlock(DataAddress block, int numberOfBytes) {
+    public byte[] readData(DataAddress block, int numberOfBytes) {
         logger.debug("Read binary block {} (nbytes = {}).", block, numberOfBytes);
 
         byte[] commandBytes = new byte[]{
