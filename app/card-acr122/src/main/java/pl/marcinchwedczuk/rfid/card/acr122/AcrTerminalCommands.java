@@ -14,6 +14,8 @@ public abstract class AcrTerminalCommands {
     private static final Logger logger = LoggerFactory.getLogger(AcrTerminal.class);
 
     public abstract byte[] sendCommand(byte[] commandBytes) throws CardException;
+
+    // VisibleForTests
     abstract CardTerminal getUnderlyingTerminal();
 
     public PiccOperatingParameter getPiccOperatingParameter() {
@@ -57,17 +59,17 @@ public abstract class AcrTerminalCommands {
     public void configureLedAndBuzzer(LedBuzzerSettings settings) {
         logger.info("configureLedAndBuzzer({})", settings);
 
-        byte[] bdc = settings.toControlBytes();
+        int[] bdc = settings.toUnsignedControlBytes();
 
-        byte[] commandBytes = new byte[]{
-                (byte) 0xFF, 0x00, 0x40,
-                settings.getLedSettings().toControlByte(),
+        byte[] commandBytes = ByteArrays.of(
+                0xFF, 0x00, 0x40,
+                settings.getLedSettings().toUnsignedControlByte(),
                 0x04, bdc[0], bdc[1], bdc[2], bdc[3]
-        };
+        );
 
         try {
             ResponseAPDU response = new ResponseAPDU(
-                    this.sendCommand(commandBytes)
+                this.sendCommand(commandBytes)
             );
 
             int sw = response.getSW();
@@ -82,11 +84,9 @@ public abstract class AcrTerminalCommands {
         }
     }
 
-    public void configureBuzzerOnCartDetection(boolean buzzOnCartDetection) {
-        byte param = buzzOnCartDetection ? (byte) 0xFF : 0x00;
-        byte[] commandBytes = new byte[]{
-                (byte) 0xFF, 0x00, 0x52, param, 0x00
-        };
+    public void setBuzzOnCardDetection(boolean buzz) {
+        int param = buzz ? 0xFF : 0x00;
+        byte[] commandBytes = ByteArrays.of(0xFF, 0x00, 0x52, param, 0x00);
 
         try {
             ResponseAPDU response = new ResponseAPDU(
@@ -118,23 +118,19 @@ public abstract class AcrTerminalCommands {
      *                Use {@link #WAIT_INDEFINITELY} to wait for a response without timing out.
      */
     public void setTimeout(int seconds) {
-        logger.info("setTimeout({})", seconds);
-
         if (seconds < 0 || seconds > 0xFF) {
             throw new IllegalArgumentException("seconds");
         }
 
+        logger.info("setTimeout({})", seconds);
+
         // Timeout is measured in 5 seconds unit. We round up
         // to the closed unit.
-        byte roundedUpUnits = (byte) ((seconds + 4) / 5);
-
-        byte[] commandBytes = new byte[]{
-                (byte) 0xFF, 0x00, 0x41, roundedUpUnits, 0x00
-        };
+        int roundedUpUnits = (seconds + 4) / 5;
+        byte[] commandBytes = ByteArrays.of(0xFF, 0x00, 0x41, roundedUpUnits, 0x00);
 
         try {
-            ResponseAPDU response = new ResponseAPDU(
-                    sendCommand(commandBytes));
+            ResponseAPDU response = new ResponseAPDU(sendCommand(commandBytes));
 
             int sw = response.getSW();
             if (sw == 0x6300) {
@@ -151,18 +147,12 @@ public abstract class AcrTerminalCommands {
     public String getReaderFirmwareVersion() {
         logger.info("getReaderFirmwareVersion()");
 
-        byte[] commandBytes = new byte[]{
-                (byte) 0xFF, 0x00, 0x48, 0x00, 0x00
-        };
-
+        byte[] commandBytes = ByteArrays.of(0xFF, 0x00, 0x48, 0x00, 0x00);
         try {
-            ResponseAPDU response = new ResponseAPDU(
-                    sendCommand(commandBytes));
-
+            ResponseAPDU response = new ResponseAPDU(sendCommand(commandBytes));
             return new String(response.getBytes(), StandardCharsets.US_ASCII);
         } catch (CardException e) {
             throw AcrException.ofCardException(e);
         }
     }
-
 }

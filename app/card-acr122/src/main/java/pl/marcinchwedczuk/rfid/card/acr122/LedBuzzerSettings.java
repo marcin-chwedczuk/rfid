@@ -61,13 +61,13 @@ public class LedBuzzerSettings {
         linkToBuzzer = Buzzer.fromControlByte(blinkingDurationControl[3]);
     }
 
-    byte[] toControlBytes() {
-        return ByteArrays.of(
+    int[] toUnsignedControlBytes() {
+        return new int[] {
             T1.toUnsignedByte(),
             T2.toUnsignedByte(),
             numberOfRepetitions,
             linkToBuzzer.toUnsignedByte()
-        );
+        };
     }
 
     public LedSettings getLedSettings() {

@@ -48,6 +48,10 @@ public class LedSettings {
         blinkingMaskGreenLED = richByte.isBitSet(7) ? BLINK : NOT_BLINK;
     }
 
+    int toUnsignedControlByte() {
+        return toControlByte() & 0xFF;
+    }
+
     byte toControlByte() {
         return new RichByte(0)
                 .withBit(0, finalRedLED == ON)
