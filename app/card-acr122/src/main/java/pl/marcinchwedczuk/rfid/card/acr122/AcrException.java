@@ -23,6 +23,10 @@ public class AcrException extends RuntimeException {
     }
 
     static AcrException ofCardException(CardException e) {
-        return new AcrException(e.getMessage(), e);
+        return ofCardException(e, "%s", e.getMessage());
+    }
+
+    static AcrException ofCardException(CardException e, String format, Object... args) {
+        return new AcrException(String.format(format, args), e);
     }
 }

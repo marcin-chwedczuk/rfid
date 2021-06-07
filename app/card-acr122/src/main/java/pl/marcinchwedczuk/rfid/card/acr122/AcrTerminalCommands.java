@@ -11,7 +11,7 @@ import javax.smartcardio.ResponseAPDU;
 import java.nio.charset.StandardCharsets;
 
 public abstract class AcrTerminalCommands {
-    private static final Logger logger = LoggerFactory.getLogger(AcrTerminal.class);
+    private static final Logger logger = LoggerFactory.getLogger(AcrTerminalCommands.class);
 
     public abstract byte[] sendCommand(byte[] commandBytes) throws CardException;
 
@@ -57,6 +57,8 @@ public abstract class AcrTerminalCommands {
     }
 
     public void configureLedAndBuzzer(LedBuzzerSettings settings) {
+        // TODO: This methods name + settings need to be refactored.
+
         logger.info("configureLedAndBuzzer({})", settings);
 
         int[] bdc = settings.toUnsignedControlBytes();
@@ -144,7 +146,7 @@ public abstract class AcrTerminalCommands {
         }
     }
 
-    public String getReaderFirmwareVersion() {
+    public String getTerminalFirmwareVersion() {
         logger.info("getReaderFirmwareVersion()");
 
         byte[] commandBytes = ByteArrays.of(0xFF, 0x00, 0x48, 0x00, 0x00);

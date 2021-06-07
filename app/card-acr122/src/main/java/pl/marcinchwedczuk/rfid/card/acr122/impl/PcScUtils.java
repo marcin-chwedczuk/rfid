@@ -28,7 +28,7 @@ public class PcScUtils {
         return isWindows;
     }
 
-    public static boolean isEscapeCommandNotEnabled(CardException e) {
+    public static boolean areEscapeCommandsDisabled(CardException e) {
         // TODO: Test this on Windows & Linux
         if (e.getCause() != null &&
                 e.getCause().getClass().getName().equals("sun.security.smartcardio.PCSCException") &&

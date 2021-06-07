@@ -119,7 +119,7 @@ public class MainWindow implements Initializable {
 
     public void testAction(ActionEvent actionEvent) {
         try {
-            Card direct = currentTerminal().cardTerminal
+            Card direct = currentTerminal().getUnderlyingTerminal()
                     .connect("DIRECT");
 
             ATR atr = direct.getATR();

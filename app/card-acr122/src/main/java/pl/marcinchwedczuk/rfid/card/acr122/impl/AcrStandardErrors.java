@@ -25,7 +25,7 @@ public class AcrStandardErrors {
         return new AcrException("The operation failed.");
     }
 
-    public static AcrException escapeCommandNotEnabled() {
+    public static AcrException escapeCommandsDisabled() {
         return new AcrException("PC/SC Escape command is not allowed.");
     }
 }

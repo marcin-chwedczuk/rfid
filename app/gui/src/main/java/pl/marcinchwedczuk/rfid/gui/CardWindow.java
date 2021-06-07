@@ -384,7 +384,7 @@ public class CardWindow implements Initializable {
     public void displayFirmwareVersion(ActionEvent unused) {
         try {
             String terminalName = card.terminal().name();
-            String firmware = card.getReaderFirmwareVersion();
+            String firmware = card.getTerminalFirmwareVersion();
 
             FxDialogBoxes.info(String.format(
                     "Terminal name: %s" + System.lineSeparator() +

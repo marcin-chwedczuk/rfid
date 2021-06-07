@@ -2,7 +2,6 @@ package pl.marcinchwedczuk.rfid.card.acr122;
 
 import org.junit.jupiter.api.Test;
 import pl.marcinchwedczuk.rfid.card.commons.utils.ByteArrays;
-import pl.marcinchwedczuk.rfid.card.fake.CommandHistory;
 import pl.marcinchwedczuk.rfid.card.fake.CommandHistory.CommandHistoryEntry;
 import pl.marcinchwedczuk.rfid.card.fake.FakeCardTerminal;
 
@@ -85,7 +84,7 @@ public abstract class BaseTerminalCommandsTest {
 
     @Test
     void get_reader_firmware_works() {
-        String firmware = terminal().getReaderFirmwareVersion();
+        String firmware = terminal().getTerminalFirmwareVersion();
         assertThat(firmware)
                 .isEqualTo("FAKE1.0");
     }

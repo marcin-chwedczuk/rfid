@@ -1,6 +1,5 @@
 package pl.marcinchwedczuk.rfid.card.acr122;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.marcinchwedczuk.rfid.card.acr122.impl.AcrStandardErrors;
@@ -10,26 +9,47 @@ import pl.marcinchwedczuk.rfid.card.acr122.impl.PcScUtils;
 import javax.smartcardio.Card;
 import javax.smartcardio.CardException;
 import javax.smartcardio.CardTerminal;
+import java.util.Objects;
 
 /**
  * {@code javax.smartcardio} wrapper for ACR122 reader.
  */
 public class AcrTerminal extends AcrTerminalCommands {
     private static final Logger logger = LoggerFactory.getLogger(AcrTerminal.class);
-    private static final byte FF = (byte) 0xFF;
 
-    // TODO: Revert to private
-    public final CardTerminal cardTerminal;
+    private final CardTerminal cardTerminal;
 
     public AcrTerminal(CardTerminal cardTerminal) {
-        if (cardTerminal == null) throw new NullPointerException();
-
-        this.cardTerminal = cardTerminal;
+        this.cardTerminal = Objects.requireNonNull(cardTerminal);
     }
 
     @Override
-    CardTerminal getUnderlyingTerminal() {
+    public CardTerminal getUnderlyingTerminal() {
         return cardTerminal;
+    }
+
+    public String name() {
+        return cardTerminal.getName();
+    }
+
+    public boolean isCardPresent() {
+        try {
+            return cardTerminal.isCardPresent();
+        } catch (CardException e) {
+            logger.warn("isCardPresent failed", e);
+            throw AcrException.ofCardException(e, "isCardPresent failed.");
+        }
+    }
+
+    public AcrCard connect() {
+        String protocol = "T=0";
+        try {
+            Card card = cardTerminal.connect(protocol);
+            return new AcrCard(this, new LoggingCardDecorator(card));
+        } catch (CardException e) {
+            throw AcrException.ofCardException(e,
+                "Cannot connect to card using protocol: '%s'.", protocol);
+        }
     }
 
     /**
@@ -51,42 +71,17 @@ public class AcrTerminal extends AcrTerminalCommands {
             return card.transmitControlCommand(
                     PcScUtils.IOCTL_CCID_ESCAPE(), bytes);
         } catch (CardException e) {
-            if (PcScUtils.isEscapeCommandNotEnabled(e)) {
-                throw AcrStandardErrors.escapeCommandNotEnabled();
+            if (PcScUtils.areEscapeCommandsDisabled(e)) {
+                throw AcrStandardErrors.escapeCommandsDisabled();
             }
-            throw e;
+            throw AcrException.ofCardException(e, "Sending escape command failed.");
         } finally {
             card.disconnect(false);
-        }
-    }
-
-    public String name() {
-        return cardTerminal.getName();
-    }
-
-    public boolean isCardPresent() {
-        try {
-            return cardTerminal.isCardPresent();
-        } catch (CardException e) {
-            logger.warn("isCardPresent failed", e);
-            return false;
         }
     }
 
     @Override
     public String toString() {
         return name();
-    }
-
-    public AcrCard connect() {
-        String protocol = "T=0";
-        try {
-            Card card = cardTerminal.connect(protocol);
-            return new AcrCard(this, new LoggingCardDecorator(card));
-        } catch (CardException e) {
-            throw new AcrException(
-                    String.format("Cannot connect to card using protocol: '%s'.", protocol),
-                    e);
-        }
     }
 }
