@@ -1,6 +1,6 @@
 package pl.marcinchwedczuk.rfid.card.fake.impl;
 
-public enum CardState {
+public enum CardPresence {
     CARD_PRESENT,
     CARD_ABSENT
 }

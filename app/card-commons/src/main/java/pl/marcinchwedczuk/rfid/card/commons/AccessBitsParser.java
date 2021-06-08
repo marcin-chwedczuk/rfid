@@ -1,5 +1,6 @@
 package pl.marcinchwedczuk.rfid.card.fake.impl;
 
+import pl.marcinchwedczuk.rfid.card.commons.Mifare;
 import pl.marcinchwedczuk.rfid.card.fake.impl.Mifare1KSimulator;
 
 import java.util.Arrays;
@@ -19,7 +20,7 @@ class AccessBitsParser {
             Arrays.fill(chars, '?');
         }
 
-        String[] bitsNames = Mifare1KSimulator.ACCESS_BITS_POSITIONS.split("\\s+");
+        String[] bitsNames = Mifare.ACCESS_BITS_POSITIONS.split("\\s+");
 
         int byteIndex = 6;
         int bitIndex = 7;
