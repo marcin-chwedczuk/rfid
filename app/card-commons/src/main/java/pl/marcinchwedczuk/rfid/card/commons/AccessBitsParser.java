@@ -1,11 +1,8 @@
-package pl.marcinchwedczuk.rfid.card.fake.impl;
-
-import pl.marcinchwedczuk.rfid.card.commons.Mifare;
-import pl.marcinchwedczuk.rfid.card.fake.impl.Mifare1KSimulator;
+package pl.marcinchwedczuk.rfid.card.commons;
 
 import java.util.Arrays;
 
-class AccessBitsParser {
+public class AccessBitsParser {
     /**
      * @param bytes Trailer sector bytes. Should be `byte[16]` array.
      * @return Returns array which at index `i` contains access bits for sector `i`.

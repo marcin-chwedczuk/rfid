@@ -1,6 +1,6 @@
 package pl.marcinchwedczuk.rfid.card.fake.impl;
 
-import pl.marcinchwedczuk.rfid.card.commons.KeyType;
+import pl.marcinchwedczuk.rfid.card.commons.*;
 import pl.marcinchwedczuk.rfid.card.commons.utils.ByteArrays;
 
 import javax.smartcardio.CardException;

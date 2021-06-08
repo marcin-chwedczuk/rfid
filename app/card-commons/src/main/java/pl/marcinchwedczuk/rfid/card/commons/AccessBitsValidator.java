@@ -1,13 +1,10 @@
-package pl.marcinchwedczuk.rfid.card.fake.impl;
-
-import pl.marcinchwedczuk.rfid.card.commons.Mifare;
-import pl.marcinchwedczuk.rfid.card.fake.impl.Mifare1KSimulator;
+package pl.marcinchwedczuk.rfid.card.commons;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-class AccessBitsValidator {
+public class AccessBitsValidator {
 
     private final byte[] trailerSector;
 

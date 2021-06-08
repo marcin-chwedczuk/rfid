@@ -1,8 +1,8 @@
-package pl.marcinchwedczuk.rfid.card.fake.impl;
+package pl.marcinchwedczuk.rfid.card.commons;
 
-import static pl.marcinchwedczuk.rfid.card.fake.impl.AccessLevel.*;
+import static pl.marcinchwedczuk.rfid.card.commons.AccessLevel.*;
 
-enum TrailerBlockAccess {
+public enum TrailerBlockAccess {
     C000(NEVER, KEY_A, KEY_A, NEVER, KEY_A, KEY_A),
     C010(NEVER, NEVER, KEY_A, NEVER, KEY_A, NEVER),
     C100(NEVER, KEY_B, KEY_A_OR_B, NEVER, NEVER, KEY_B),

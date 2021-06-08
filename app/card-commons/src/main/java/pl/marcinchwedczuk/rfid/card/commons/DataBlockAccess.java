@@ -1,8 +1,8 @@
-package pl.marcinchwedczuk.rfid.card.fake.impl;
+package pl.marcinchwedczuk.rfid.card.commons;
 
-import static pl.marcinchwedczuk.rfid.card.fake.impl.AccessLevel.*;
+import static pl.marcinchwedczuk.rfid.card.commons.AccessLevel.*;
 
-enum DataBlockAccess {
+public enum DataBlockAccess {
     C000(KEY_A_OR_B, KEY_A_OR_B),
     C010(KEY_A_OR_B, NEVER),
     C100(KEY_A_OR_B, KEY_B),
