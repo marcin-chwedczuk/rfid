@@ -154,7 +154,7 @@ public class AcrCard extends AcrTerminalCommands {
         }
     }
 
-    public void writeBinaryBlock(DataAddress block, byte[] data16) {
+    public void writeData(DataAddress block, byte[] data16) {
         logger.debug("Write binary block {} (data = {}).", block, ByteArrays.toHexString(data16));
 
         if (data16.length != 16) {

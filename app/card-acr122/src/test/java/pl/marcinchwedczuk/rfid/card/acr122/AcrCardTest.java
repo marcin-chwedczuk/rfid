@@ -2,7 +2,6 @@ package pl.marcinchwedczuk.rfid.card.acr122;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import pl.marcinchwedczuk.rfid.card.commons.utils.ByteArrays;
 import pl.marcinchwedczuk.rfid.card.fake.FakeCardTerminal;
@@ -10,6 +9,7 @@ import pl.marcinchwedczuk.rfid.card.fake.FakeCardTerminal;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static pl.marcinchwedczuk.rfid.card.commons.KeyType.KEY_A;
+import static pl.marcinchwedczuk.rfid.card.commons.KeyType.KEY_B;
 import static pl.marcinchwedczuk.rfid.card.commons.Register.REGISTER_0;
 
 class AcrCardTest {
@@ -80,7 +80,7 @@ class AcrCardTest {
         acrCard.loadKeyIntoRegister(defaultKey, REGISTER_0);
         acrCard.authenticateToSector(firstSector, KEY_A, REGISTER_0);
 
-        acrCard.writeBinaryBlock(block2, ByteArrays.fromHexString(
+        acrCard.writeData(block2, ByteArrays.fromHexString(
                 "00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF"));
 
         byte[] data = acrCard.readData(block2, 16);
@@ -139,5 +139,64 @@ class AcrCardTest {
                 .isEqualTo(AccessCond.KEY_A);
         assertThat(trailerAccess.accessBitsWrite)
                 .isEqualTo(AccessCond.KEY_A);
+    }
+
+    @Test
+    void write_permissions_to_card() {
+        Sector firstSector = Sector.of(3);
+        DataAddress trailerBlockAddress = DataAddress.of(firstSector, Block.TRAILER);
+
+        byte[] newKeyB = ByteArrays.of(1, 2, 3, 4, 5, 6);
+
+        acrCard.loadKeyIntoRegister(defaultKey, REGISTER_0);
+        acrCard.authenticateToSector(firstSector, KEY_A, REGISTER_0);
+
+        TrailerBlock trailerBlock = new TrailerBlock();
+        trailerBlock.setKeyA(defaultKey);
+        trailerBlock.setKeyB(newKeyB);
+        trailerBlock.accessBits.setDataBlockAccess(0, "0, 0, 0");
+        trailerBlock.accessBits.setDataBlockAccess(1, "1, 0, 0");
+        trailerBlock.accessBits.setDataBlockAccess(2, "1, 1, 0");
+        trailerBlock.accessBits.setSectorTrailerAccess("1, 0, 0");
+
+        acrCard.writeData(trailerBlockAddress, trailerBlock.toBytes());
+
+        // Authenticate using keyB
+        acrCard.loadKeyIntoRegister(newKeyB, REGISTER_0);
+        acrCard.authenticateToSector(firstSector, KEY_B, REGISTER_0);
+
+        trailerBlock = new TrailerBlock(acrCard.readData(trailerBlockAddress, 16));
+        AccessBits accessBits = trailerBlock.accessBits;
+
+        // Check data block permissions
+        assertThat(accessBits.dataBlockAccesses)
+                .hasSize(3);
+
+        DataBlockAccess block2Access = accessBits.dataBlockAccesses.get(2);
+        assertThat(block2Access.read)
+                .isEqualTo(AccessCond.KEY_A_OR_B);
+        assertThat(block2Access.write)
+                .isEqualTo(AccessCond.KEY_B);
+        assertThat(block2Access.increment)
+                .isEqualTo(AccessCond.KEY_B);
+        assertThat(block2Access.other)
+                .isEqualTo(AccessCond.KEY_A_OR_B);
+
+        // Check trailer permissions
+        SectorTrailerAccess trailerAccess = accessBits.sectorTrailerAccess;
+        assertThat(trailerAccess.readKeyA)
+                .isEqualTo(AccessCond.NEVER);
+        assertThat(trailerAccess.writeKeyA)
+                .isEqualTo(AccessCond.KEY_B);
+
+        assertThat(trailerAccess.readKeyB)
+                .isEqualTo(AccessCond.NEVER);
+        assertThat(trailerAccess.writeKeyB)
+                .isEqualTo(AccessCond.KEY_B);
+
+        assertThat(trailerAccess.accessBitsRead)
+                .isEqualTo(AccessCond.KEY_A_OR_B);
+        assertThat(trailerAccess.accessBitsWrite)
+                .isEqualTo(AccessCond.NEVER);
     }
 }

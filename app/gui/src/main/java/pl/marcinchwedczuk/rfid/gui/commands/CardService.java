@@ -46,7 +46,7 @@ public class CardService {
         try {
             logger.info("Writing data {} to sector {}, block {}.",
                     data, address.sector, address.block);
-            card.writeBinaryBlock(address, data);
+            card.writeData(address, data);
         } catch (Exception e) {
             failWith(e, "Writing block %s of sector %s failed.",
                     address.block, address.sector);
