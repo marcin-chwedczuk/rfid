@@ -66,7 +66,7 @@ public abstract class BaseFakeCardTest {
     }
 
     @Test
-    void returns_failure_for_led_and_buzzer_commands() throws CardException {
+    void accepts_set_led_and_buzzer_commands() throws CardException {
         // This is a no-op operation on FakeCard.
         ResponseAPDU response = sendToCard("FF 00 40 0F 04 02 01 01 01");
         assertThatResponseBytes(response)

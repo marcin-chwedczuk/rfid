@@ -127,12 +127,14 @@ public class MainWindow implements Initializable {
             logger.info("ATR = {}", atr);
              */
 
-            AcrCard card = currentTerminal().connect();
+            Card card = currentTerminal().getUnderlyingTerminal()
+                    .connect("T=0");
             try {
-                String cardId = card.getCardUID();
-                logger.info("CARD ID = {}", cardId);
-            } finally {
-                card.disconnect();
+                card.disconnect(false);
+
+                card.openLogicalChannel().getChannelNumber();
+            } catch (Exception e) {
+                logger.error("After disconnect!", e);
             }
 
             // Have to be closed

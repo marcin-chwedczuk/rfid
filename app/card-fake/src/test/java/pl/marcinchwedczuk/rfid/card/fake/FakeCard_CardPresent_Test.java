@@ -6,10 +6,14 @@ import org.junit.jupiter.api.Test;
 import pl.marcinchwedczuk.rfid.card.fake.impl.Acr122Simulator;
 import pl.marcinchwedczuk.rfid.card.fake.impl.Mifare1KSimulator;
 
+import javax.smartcardio.CardChannel;
 import javax.smartcardio.CardException;
 import javax.smartcardio.ResponseAPDU;
 
+import java.nio.ByteBuffer;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static pl.marcinchwedczuk.rfid.card.commons.KeyType.KEY_A;
 import static pl.marcinchwedczuk.rfid.card.commons.KeyType.KEY_B;
 import static pl.marcinchwedczuk.rfid.card.commons.Register.REGISTER_0;
@@ -259,6 +263,52 @@ public class FakeCard_CardPresent_Test extends BaseFakeCardTest {
 
             testUtil.assertCannotWriteDataToBlock(otherTrailer,
                     FF_FF_FF_FF_FF_FF + " 00 00 00 69 " + FF_FF_FF_FF_FF_FF);
+        }
+    }
+
+    @Nested
+    class after_disconnecting_from_card {
+        CardChannel basicChannel;
+
+        @BeforeEach
+        void before() throws CardException {
+            this.basicChannel = card.getBasicChannel();
+            card.disconnect(true);
+        }
+
+        @Test
+        void methods_throw_exceptions() {
+            assertThatThrownBy(() -> card.getBasicChannel())
+                    .isInstanceOf(IllegalStateException.class);
+
+            assertThatThrownBy(() -> card.openLogicalChannel())
+                    .isInstanceOf(IllegalStateException.class);
+
+            assertThatThrownBy(() -> card.transmitControlCommand(0, new byte[10]))
+                    .isInstanceOf(IllegalStateException.class);
+
+            assertThatThrownBy(() -> card.beginExclusive())
+                    .isInstanceOf(IllegalStateException.class);
+
+            assertThatThrownBy(() -> card.endExclusive())
+                    .isInstanceOf(IllegalStateException.class);
+        }
+
+        @Test
+        void can_call_disconnect_multiple_times() throws CardException {
+            card.disconnect(true);
+            card.disconnect(true);
+
+            card.disconnect(false);
+            card.disconnect(false);
+        }
+
+        @Test
+        void disconnecting_from_card_closes_channel() {
+            ByteBuffer dummy = ByteBuffer.wrap(new byte[10]);
+
+            assertThatThrownBy(() -> basicChannel.transmit(dummy, dummy))
+                    .isInstanceOf(IllegalStateException.class);
         }
     }
 }

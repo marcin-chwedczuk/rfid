@@ -30,5 +30,4 @@ public class FakeCard_CardAbsent_Test extends BaseFakeCardTest {
         assertThatHexStringOf(atrBytes)
                 .isEqualTo("");
     }
-
 }

@@ -9,6 +9,8 @@ class FakeCardChannel extends CardChannel {
     private final FakeCard fakeCard;
     private final Acr122Simulator acr122;
 
+    private boolean closed = false;
+
     public FakeCardChannel(FakeCard fakeCard, Acr122Simulator acr122) {
         this.fakeCard = fakeCard;
         this.acr122 = acr122;
@@ -26,16 +28,25 @@ class FakeCardChannel extends CardChannel {
 
     @Override
     public ResponseAPDU transmit(CommandAPDU command) throws CardException {
+        checkState();
         return acr122.executeCommand(command);
     }
 
     @Override
     public int transmit(ByteBuffer command, ByteBuffer response) throws CardException {
+        checkState();
+
         throw new RuntimeException("Not implemented in FakeCardChannel.");
     }
 
     @Override
     public void close() throws CardException {
-        // TODO: Closed channel should throw exceptions
+        this.closed = true;
+    }
+
+    private void checkState() {
+        if (closed) {
+            throw new IllegalStateException("Operation cannot be performed on a closed channel.");
+        }
     }
 }
