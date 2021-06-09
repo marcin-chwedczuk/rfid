@@ -1,6 +1,9 @@
 package pl.marcinchwedczuk.rfid.card.commons;
 
+import pl.marcinchwedczuk.rfid.card.commons.utils.ByteArrays;
+
 import java.util.Arrays;
+import java.util.BitSet;
 
 public class AccessBitsParser {
     /**
@@ -10,33 +13,23 @@ public class AccessBitsParser {
      * That means that we have access control bits for sector `1`:
      * `C1_1 ... C3_1` set to values `0`, `1` and `0`.
      */
-    public AccessBits parse(byte[] bytes) {
+    public AccessBits parse(byte[] sectorTrailerBytes) {
         char[][] map = new char[4][3];
-
         for (char[] chars : map) {
             Arrays.fill(chars, '?');
         }
 
-        String[] bitsNames = Mifare.ACCESS_BITS_POSITIONS.split("\\s+");
+        BitSet sectorTrailer = BitSet.valueOf(sectorTrailerBytes);
 
-        int byteIndex = 6;
-        int bitIndex = 7;
-        for (String bitName : bitsNames) {
-            if (bitName.startsWith("c")) {
-
-                int bitPosition = charValue(bitName.charAt(1)) - 1; // Make it zero-based
-                int blockIndex = charValue(bitName.charAt(2));
-
-                map[blockIndex][bitPosition] = getBit(bytes, byteIndex, bitIndex) ? '1' : '0';
+        Mifare1K.forEachAccessBit((byteIndex, bitIndex, isNegated, forBlock, cPosition) -> {
+            boolean bitValue = sectorTrailer.get(byteIndex*8 + bitIndex);
+            if (isNegated) {
+                bitValue = !bitValue;
             }
 
-            if (bitIndex == 0) {
-                byteIndex++;
-                bitIndex = 7;
-            } else {
-                bitIndex--;
-            }
-        }
+            // cPosition is 1 based
+            map[forBlock][cPosition - 1] = bitValue ? '1' : '0';
+        });
 
         return new AccessBits(
             DataBlockAccess.fromBits(map[0]),
@@ -53,57 +46,17 @@ public class AccessBitsParser {
             accessBits.trailerBlockAccess().toBits()
         };
 
-        byte[] sectorTrailer = new byte[16];
+        BitSet sectorTrailer = new BitSet(16*8);
 
-        String[] bitsNames = Mifare.ACCESS_BITS_POSITIONS.split("\\s+");
-
-        int byteIndex = 6;
-        int bitIndex = 7;
-        for (String bitName : bitsNames) {
-            int bitPosition = charValue(bitName.charAt(1)) - 1; // Make it zero-based
-            int blockIndex = charValue(bitName.charAt(2));
-
-            // TODO: char[] to boolean[]
-            boolean value = (map[blockIndex][bitPosition] == '1');
-            if (bitName.startsWith("C")) {
+        Mifare1K.forEachAccessBit((byteIndex, bitIndex, isNegated, forBlock, cPosition) -> {
+            boolean value = (map[forBlock][cPosition - 1] == '1');
+            if (isNegated) {
                 value = !value;
             }
 
-            setBit(sectorTrailer, byteIndex, bitIndex, value);
+            sectorTrailer.set(byteIndex*8 + bitIndex, value);
+        });
 
-            if (bitIndex == 0) {
-                byteIndex++;
-                bitIndex = 7;
-            } else {
-                bitIndex--;
-            }
-        }
-
-        return sectorTrailer;
-    }
-
-    private boolean getBit(byte[] trailerSector, int byteIndex, int bitIndex) {
-        if (bitIndex < 0 || bitIndex > 7)
-            throw new IllegalArgumentException("bitIndex");
-
-        byte byte_ = trailerSector[byteIndex];
-        boolean bit = (byte_ & (1 << bitIndex)) != 0;
-        return bit;
-    }
-
-    private void setBit(byte[] sectorTrailer, int byteIndex, int bitIndex, boolean value) {
-        if (bitIndex < 0 || bitIndex > 7)
-            throw new IllegalArgumentException("bitIndex");
-
-        byte byte_ = sectorTrailer[byteIndex];
-
-        byte bit = (byte)(1 << bitIndex);
-        byte_ = (byte)( (byte_ & ~bit) | (value ? bit : 0) );
-
-        sectorTrailer[byteIndex] = byte_;
-    }
-
-    private int charValue(char c) {
-        return Integer.parseInt(Character.toString(c));
+        return sectorTrailer.toByteArray();
     }
 }

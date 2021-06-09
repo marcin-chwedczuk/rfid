@@ -14,7 +14,7 @@ public class AccessBitsValidator {
 
     public boolean isValid() {
         Map<String, Boolean> bitValues = new HashMap<>();
-        String[] bitsNames = Mifare.ACCESS_BITS_POSITIONS.split("\\s+");
+        String[] bitsNames = Mifare1K.ACCESS_BITS_POSITIONS.split("\\s+");
 
         int byteIndex = 6;
         int bitIndex = 7;

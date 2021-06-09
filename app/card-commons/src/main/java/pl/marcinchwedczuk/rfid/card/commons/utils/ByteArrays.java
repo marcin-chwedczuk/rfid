@@ -95,4 +95,40 @@ public class ByteArrays {
         System.arraycopy(second, 0, result, first.length, second.length);
         return result;
     }
+
+    /**
+     * @param bytes
+     * @param byteIndex
+     * @param bitIndex
+     *  0 means LSB, 7 means MSB
+     * @return
+     */
+    public static boolean getBit(byte[] bytes, int byteIndex, int bitIndex) {
+        if (bitIndex < 0 || bitIndex > 7) {
+            throw new IllegalArgumentException("bitIndex");
+        }
+
+        byte byte_ = bytes[byteIndex];
+        boolean bit = (byte_ & (1 << bitIndex)) != 0;
+        return bit;
+    }
+
+    /**
+     * @param bytes
+     * @param byteIndex
+     * @param bitIndex
+     *  0 means LSB, 7 means MSB
+     * @param value
+     */
+    public static void setBit(byte[] bytes, int byteIndex, int bitIndex, boolean value) {
+        if (bitIndex < 0 || bitIndex > 7)
+            throw new IllegalArgumentException("bitIndex");
+
+        byte byte_ = bytes[byteIndex];
+
+        byte bit = (byte)(1 << bitIndex);
+        byte_ = (byte)( (byte_ & ~bit) | (value ? bit : 0) );
+
+        bytes[byteIndex] = byte_;
+    }
 }
