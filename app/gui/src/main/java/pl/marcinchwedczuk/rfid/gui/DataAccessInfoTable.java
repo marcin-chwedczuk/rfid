@@ -100,7 +100,7 @@ public class DataAccessInfoTable {
         }
 
         public String getCBits() {
-            return String.format("%s, %s, %s", c1, c2, c3);
+            return String.format("C%s%s%s", c1, c2, c3);
         }
 
         public String getC1() {

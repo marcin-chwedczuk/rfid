@@ -17,7 +17,10 @@ import javafx.stage.Window;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.marcinchwedczuk.rfid.card.acr122.*;
+import pl.marcinchwedczuk.rfid.card.commons.AccessBits;
+import pl.marcinchwedczuk.rfid.card.commons.DataBlockAccess;
 import pl.marcinchwedczuk.rfid.card.commons.KeyType;
+import pl.marcinchwedczuk.rfid.card.commons.TrailerBlockAccess;
 import pl.marcinchwedczuk.rfid.card.commons.utils.ByteArrays;
 import pl.marcinchwedczuk.rfid.gui.commands.*;
 import pl.marcinchwedczuk.rfid.xml.XmlCardData;
@@ -74,13 +77,13 @@ public class CardWindow implements Initializable {
     private final ObservableList<DataRow> rows = FXCollections.observableArrayList();
 
     @FXML
-    private ChoiceBox<String> secBlock0Perms;
+    private ChoiceBox<DataBlockAccess> secBlock0Perms;
     @FXML
-    private ChoiceBox<String> secBlock1Perms;
+    private ChoiceBox<DataBlockAccess> secBlock1Perms;
     @FXML
-    private ChoiceBox<String> secBlock2Perms;
+    private ChoiceBox<DataBlockAccess> secBlock2Perms;
     @FXML
-    private ChoiceBox<String> secTrailerPerms;
+    private ChoiceBox<TrailerBlockAccess> secTrailerPerms;
 
     @FXML
     private MaskedTextField secSector;
@@ -134,10 +137,10 @@ public class CardWindow implements Initializable {
                 new FileChooser.ExtensionFilter("XML Files", "*.xml"),
                 new FileChooser.ExtensionFilter("All Files", "*.*"));
 
-        setupChoiceBox(secBlock0Perms, DataBlockAccess.validCBits());
-        setupChoiceBox(secBlock1Perms, DataBlockAccess.validCBits());
-        setupChoiceBox(secBlock2Perms, DataBlockAccess.validCBits());
-        setupChoiceBox(secTrailerPerms, SectorTrailerAccess.validCBits());
+        setupChoiceBox(secBlock0Perms, DataBlockAccess.values());
+        setupChoiceBox(secBlock1Perms, DataBlockAccess.values());
+        setupChoiceBox(secBlock2Perms, DataBlockAccess.values());
+        setupChoiceBox(secTrailerPerms, TrailerBlockAccess.values());
 
         new DataAccessInfoTable(dataAccessInfo)
                 .setup()
@@ -150,28 +153,28 @@ public class CardWindow implements Initializable {
                 .setup()
                 .addRowMenuEntry("Select", info -> {
                     String cbits = info.getCBits();
-                    secTrailerPerms.getSelectionModel().select(cbits);
+                    secTrailerPerms.getSelectionModel().select(TrailerBlockAccess.valueOf(cbits));
                 });
     }
 
     private void selectAccessForBlock(List<Integer> blocks, String cbits) {
         if (blocks.contains(0)) {
-            secBlock0Perms.getSelectionModel().select(cbits);
+            secBlock0Perms.getSelectionModel().select(DataBlockAccess.valueOf(cbits));
         }
 
         if (blocks.contains(1)) {
-            secBlock1Perms.getSelectionModel().select(cbits);
+            secBlock1Perms.getSelectionModel().select(DataBlockAccess.valueOf(cbits));
         }
 
         if (blocks.contains(2)) {
-            secBlock2Perms.getSelectionModel().select(cbits);
+            secBlock2Perms.getSelectionModel().select(DataBlockAccess.valueOf(cbits));
         }
     }
 
-    private void setupChoiceBox(ChoiceBox<String> choiceBox, List<String> items) {
+    private <T> void setupChoiceBox(ChoiceBox<T> choiceBox, T[] values) {
         choiceBox.setValue(null);
         choiceBox.getItems().clear();
-        choiceBox.getItems().addAll(items);
+        choiceBox.getItems().addAll(values);
     }
 
     private int getCardMaxSector() {
@@ -333,10 +336,10 @@ public class CardWindow implements Initializable {
 
     private void permissionsReadCallback(TrailerBlock trailerBlock) {
         AccessBits accessBits = trailerBlock.accessBits;
-        secBlock0Perms.setValue(accessBits.dataBlockAccesses.get(0).cbits);
-        secBlock1Perms.setValue(accessBits.dataBlockAccesses.get(1).cbits);
-        secBlock2Perms.setValue(accessBits.dataBlockAccesses.get(2).cbits);
-        secTrailerPerms.setValue(accessBits.sectorTrailerAccess.cbits);
+        secBlock0Perms.setValue(accessBits.dataBlockAccessForBlock(0));
+        secBlock1Perms.setValue(accessBits.dataBlockAccessForBlock(1));
+        secBlock2Perms.setValue(accessBits.dataBlockAccessForBlock(2));
+        secTrailerPerms.setValue(accessBits.trailerBlockAccess());
 
         if (useAsKeyChoiceBox.getValue() == KEY_A) {
             secKeyA.loadKey(key.getKey(), key.getEncoding());
@@ -359,10 +362,11 @@ public class CardWindow implements Initializable {
         trailerBlock.setKeyA(keyA);
         trailerBlock.setKeyB(keyB);
 
-        trailerBlock.accessBits.setDataBlockAccess(0, secBlock0Perms.getValue());
-        trailerBlock.accessBits.setDataBlockAccess(1, secBlock1Perms.getValue());
-        trailerBlock.accessBits.setDataBlockAccess(2, secBlock2Perms.getValue());
-        trailerBlock.accessBits.setSectorTrailerAccess(secTrailerPerms.getValue());
+        trailerBlock.accessBits = new AccessBits(
+                secBlock0Perms.getValue(),
+                secBlock1Perms.getValue(),
+                secBlock2Perms.getValue(),
+                secTrailerPerms.getValue());
 
         new WritePermissionsCommand(
                 uiServices,

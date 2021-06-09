@@ -1,39 +1,35 @@
 package pl.marcinchwedczuk.rfid.card.acr122;
 
+import pl.marcinchwedczuk.rfid.card.commons.AccessBits;
+import pl.marcinchwedczuk.rfid.card.commons.AccessBitsParser;
+import pl.marcinchwedczuk.rfid.card.commons.Mifare1K;
 import pl.marcinchwedczuk.rfid.card.commons.utils.ByteArrays;
 
 import java.util.Arrays;
 
 public class TrailerBlock {
-    private static final byte FF = (byte) 0xff;
-
+    // TODO: Hide behind getters/setters
     public byte[] keyA;
     public byte[] keyB;
     public AccessBits accessBits;
 
     public TrailerBlock() {
-        this(new byte[]{
-                FF, FF, FF, FF, FF, FF,
-                FF, 0x07, (byte) 0x80, 0x69,
-                FF, FF, FF, FF, FF, FF,
-        });
+        this(Mifare1K.defaultSectorTrailer());
     }
 
     public TrailerBlock(byte[] data) {
         if (data.length != 16) {
-            throw new IllegalArgumentException("Invalid data size!");
+            throw new IllegalArgumentException("Sector trailer should be 16 bytes long");
         }
 
         keyA = Arrays.copyOfRange(data, 0, 6);
         keyB = Arrays.copyOfRange(data, 10, 16);
-
-        accessBits = new AccessBits(Arrays.copyOfRange(data, 6, 10));
+        accessBits = new AccessBitsParser().parse(data);
     }
 
     public String keyAHexString() {
         return ByteArrays.toMacString(keyA);
     }
-
     public String keyBHexString() {
         return ByteArrays.toMacString(keyB);
     }
@@ -49,14 +45,9 @@ public class TrailerBlock {
     }
 
     public byte[] toBytes() {
-        byte[] result = new byte[16];
-
+        byte[] result = new AccessBitsParser().unparse(accessBits);
         System.arraycopy(keyA, 0, result, 0, 6);
         System.arraycopy(keyB, 0, result, 10, 6);
-
-        byte[] accessBytes = accessBits.toBytes();
-        System.arraycopy(accessBytes, 0, result, 6, 4);
-
         return result;
     }
 

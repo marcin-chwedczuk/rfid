@@ -3,6 +3,10 @@ package pl.marcinchwedczuk.rfid.card.acr122;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import pl.marcinchwedczuk.rfid.card.commons.AccessBits;
+import pl.marcinchwedczuk.rfid.card.commons.AccessLevel;
+import pl.marcinchwedczuk.rfid.card.commons.DataBlockAccess;
+import pl.marcinchwedczuk.rfid.card.commons.TrailerBlockAccess;
 import pl.marcinchwedczuk.rfid.card.commons.utils.ByteArrays;
 import pl.marcinchwedczuk.rfid.card.fake.FakeCardTerminal;
 
@@ -110,35 +114,35 @@ class AcrCardTest {
         AccessBits accessBits = trailerBlock.accessBits;
 
         // Check data block permissions
-        assertThat(accessBits.dataBlockAccesses)
+        assertThat(accessBits.getDataBlockAccesses())
                 .hasSize(3);
 
-        DataBlockAccess block2Access = accessBits.dataBlockAccesses.get(2);
-        assertThat(block2Access.read)
-                .isEqualTo(AccessCond.KEY_A_OR_B);
-        assertThat(block2Access.write)
-                .isEqualTo(AccessCond.KEY_A_OR_B);
-        assertThat(block2Access.increment)
-                .isEqualTo(AccessCond.KEY_A_OR_B);
-        assertThat(block2Access.other)
-                .isEqualTo(AccessCond.KEY_A_OR_B);
+        DataBlockAccess block2Access = accessBits.dataBlockAccessForBlock(2);
+        assertThat(block2Access.readAccess)
+                .isEqualTo(AccessLevel.KEY_A_OR_B);
+        assertThat(block2Access.writeAccess)
+                .isEqualTo(AccessLevel.KEY_A_OR_B);
+        assertThat(block2Access.incrementAccess)
+                .isEqualTo(AccessLevel.KEY_A_OR_B);
+        assertThat(block2Access.otherOperationsAccess)
+                .isEqualTo(AccessLevel.KEY_A_OR_B);
 
         // Check trailer permissions
-        SectorTrailerAccess trailerAccess = accessBits.sectorTrailerAccess;
-        assertThat(trailerAccess.readKeyA)
-                .isEqualTo(AccessCond.NEVER);
-        assertThat(trailerAccess.writeKeyA)
-                .isEqualTo(AccessCond.KEY_A);
+        TrailerBlockAccess trailerAccess = accessBits.trailerBlockAccess();
+        assertThat(trailerAccess.readAccessToKeyA)
+                .isEqualTo(AccessLevel.NEVER);
+        assertThat(trailerAccess.writeAccessToKeyA)
+                .isEqualTo(AccessLevel.KEY_A);
 
-        assertThat(trailerAccess.readKeyB)
-                .isEqualTo(AccessCond.KEY_A);
-        assertThat(trailerAccess.writeKeyB)
-                .isEqualTo(AccessCond.KEY_A);
+        assertThat(trailerAccess.readAccessToKeyB)
+                .isEqualTo(AccessLevel.KEY_A);
+        assertThat(trailerAccess.writeAccessToKeyB)
+                .isEqualTo(AccessLevel.KEY_A);
 
-        assertThat(trailerAccess.accessBitsRead)
-                .isEqualTo(AccessCond.KEY_A);
-        assertThat(trailerAccess.accessBitsWrite)
-                .isEqualTo(AccessCond.KEY_A);
+        assertThat(trailerAccess.readAccessToAccessBits)
+                .isEqualTo(AccessLevel.KEY_A);
+        assertThat(trailerAccess.writeAccessToAccessBits)
+                .isEqualTo(AccessLevel.KEY_A);
     }
 
     @Test
@@ -154,10 +158,8 @@ class AcrCardTest {
         TrailerBlock trailerBlock = new TrailerBlock();
         trailerBlock.setKeyA(defaultKey);
         trailerBlock.setKeyB(newKeyB);
-        trailerBlock.accessBits.setDataBlockAccess(0, "0, 0, 0");
-        trailerBlock.accessBits.setDataBlockAccess(1, "1, 0, 0");
-        trailerBlock.accessBits.setDataBlockAccess(2, "1, 1, 0");
-        trailerBlock.accessBits.setSectorTrailerAccess("1, 0, 0");
+        trailerBlock.accessBits = new AccessBits(
+            DataBlockAccess.C000, DataBlockAccess.C100, DataBlockAccess.C110, TrailerBlockAccess.C100);
 
         acrCard.writeData(trailerBlockAddress, trailerBlock.toBytes());
 
@@ -169,34 +171,34 @@ class AcrCardTest {
         AccessBits accessBits = trailerBlock.accessBits;
 
         // Check data block permissions
-        assertThat(accessBits.dataBlockAccesses)
+        assertThat(accessBits.getDataBlockAccesses())
                 .hasSize(3);
 
-        DataBlockAccess block2Access = accessBits.dataBlockAccesses.get(2);
-        assertThat(block2Access.read)
-                .isEqualTo(AccessCond.KEY_A_OR_B);
-        assertThat(block2Access.write)
-                .isEqualTo(AccessCond.KEY_B);
-        assertThat(block2Access.increment)
-                .isEqualTo(AccessCond.KEY_B);
-        assertThat(block2Access.other)
-                .isEqualTo(AccessCond.KEY_A_OR_B);
+        DataBlockAccess block2Access = accessBits.dataBlockAccessForBlock(2);
+        assertThat(block2Access.readAccess)
+                .isEqualTo(AccessLevel.KEY_A_OR_B);
+        assertThat(block2Access.writeAccess)
+                .isEqualTo(AccessLevel.KEY_B);
+        assertThat(block2Access.incrementAccess)
+                .isEqualTo(AccessLevel.KEY_B);
+        assertThat(block2Access.otherOperationsAccess)
+                .isEqualTo(AccessLevel.KEY_A_OR_B);
 
         // Check trailer permissions
-        SectorTrailerAccess trailerAccess = accessBits.sectorTrailerAccess;
-        assertThat(trailerAccess.readKeyA)
-                .isEqualTo(AccessCond.NEVER);
-        assertThat(trailerAccess.writeKeyA)
-                .isEqualTo(AccessCond.KEY_B);
+        TrailerBlockAccess trailerAccess = accessBits.trailerBlockAccess();
+        assertThat(trailerAccess.readAccessToKeyA)
+                .isEqualTo(AccessLevel.NEVER);
+        assertThat(trailerAccess.writeAccessToKeyA)
+                .isEqualTo(AccessLevel.KEY_B);
 
-        assertThat(trailerAccess.readKeyB)
-                .isEqualTo(AccessCond.NEVER);
-        assertThat(trailerAccess.writeKeyB)
-                .isEqualTo(AccessCond.KEY_B);
+        assertThat(trailerAccess.readAccessToKeyB)
+                .isEqualTo(AccessLevel.NEVER);
+        assertThat(trailerAccess.writeAccessToKeyB)
+                .isEqualTo(AccessLevel.KEY_B);
 
-        assertThat(trailerAccess.accessBitsRead)
-                .isEqualTo(AccessCond.KEY_A_OR_B);
-        assertThat(trailerAccess.accessBitsWrite)
-                .isEqualTo(AccessCond.NEVER);
+        assertThat(trailerAccess.readAccessToAccessBits)
+                .isEqualTo(AccessLevel.KEY_A_OR_B);
+        assertThat(trailerAccess.writeAccessToAccessBits)
+                .isEqualTo(AccessLevel.NEVER);
     }
 }

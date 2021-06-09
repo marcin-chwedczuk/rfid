@@ -7,7 +7,7 @@ import java.util.BitSet;
 
 public class AccessBitsParser {
     /**
-     * @param bytes Trailer sector bytes. Should be `byte[16]` array.
+     * @param sectorTrailerBytes Trailer sector bytes. Should be `byte[16]` array.
      * @return Returns array which at index `i` contains access bits for sector `i`.
      * For example array may contain value `"010"` at index `1`.
      * That means that we have access control bits for sector `1`:
@@ -42,11 +42,11 @@ public class AccessBitsParser {
         char[][] map = new char[][] {
             accessBits.dataBlockAccessForBlock(0).toBits(),
             accessBits.dataBlockAccessForBlock(1).toBits(),
-            accessBits.dataBlockAccessForBlock(1).toBits(),
+            accessBits.dataBlockAccessForBlock(2).toBits(),
             accessBits.trailerBlockAccess().toBits()
         };
 
-        BitSet sectorTrailer = new BitSet(16*8);
+        BitSet sectorTrailer = new BitSet();
 
         Mifare1K.forEachAccessBit((byteIndex, bitIndex, isNegated, forBlock, cPosition) -> {
             boolean value = (map[forBlock][cPosition - 1] == '1');
@@ -57,6 +57,9 @@ public class AccessBitsParser {
             sectorTrailer.set(byteIndex*8 + bitIndex, value);
         });
 
-        return sectorTrailer.toByteArray();
+        // BitSet is too smart (it grows and shrinks the storage space automatically),
+        // but there is no byte[] backed implementation in standard library.
+        // TODO: Refactor to get rid of this crap.
+        return ByteArrays.ensureLength(sectorTrailer.toByteArray(), 16);
     }
 }

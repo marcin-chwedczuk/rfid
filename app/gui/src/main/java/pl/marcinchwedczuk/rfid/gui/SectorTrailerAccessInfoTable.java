@@ -117,7 +117,7 @@ public class SectorTrailerAccessInfoTable {
         }
 
         public String getCBits() {
-            return String.format("%s, %s, %s", getC1(), getC2(), getC3());
+            return String.format("C%s%s%s", getC1(), getC2(), getC3());
         }
 
         public String getC1() {

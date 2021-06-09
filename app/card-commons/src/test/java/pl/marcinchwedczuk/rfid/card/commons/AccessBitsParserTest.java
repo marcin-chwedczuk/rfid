@@ -30,7 +30,10 @@ class AccessBitsParserTest {
     void round_trip_works() {
         byte[] sectorTrailer = Mifare1K.defaultSectorTrailer();
         AccessBits accessBits = new AccessBitsParser().parse(sectorTrailer);
+
         byte[] roundTripped = new AccessBitsParser().unparse(accessBits);
+        assertThat(roundTripped)
+                .hasSize(16);
 
         byte[] sectorTrailerAccessBits = extractAccessBytes(sectorTrailer);
         byte[] roundTrippedAccessBits = extractAccessBytes(roundTripped);
