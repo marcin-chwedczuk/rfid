@@ -37,11 +37,18 @@ public enum TrailerBlockAccess {
         this.writeAccessToKeyB = writeAccessKeyB;
     }
 
-    public static TrailerBlockAccess fromBits(char[] bits) {
+
+    char[] toBits() {
+        return this.name()
+                .substring(1)
+                .toCharArray();
+    }
+
+    static TrailerBlockAccess fromBits(char[] bits) {
         return fromBits(new String(bits));
     }
 
-    public static TrailerBlockAccess fromBits(String bits) {
+    static TrailerBlockAccess fromBits(String bits) {
         return TrailerBlockAccess.valueOf("C" + bits);
     }
 }

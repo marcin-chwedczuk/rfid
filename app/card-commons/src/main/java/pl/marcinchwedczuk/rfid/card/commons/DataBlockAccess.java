@@ -36,11 +36,17 @@ public enum DataBlockAccess {
         this.otherOperationsAccess = otherOperationsAccess;
     }
 
-    public static DataBlockAccess fromBits(char[] bits) {
+    char[] toBits() {
+        return this.name()
+                .substring(1)
+                .toCharArray();
+    }
+
+    static DataBlockAccess fromBits(char[] bits) {
         return fromBits(new String(bits));
     }
 
-    public static DataBlockAccess fromBits(String bits) {
+    static DataBlockAccess fromBits(String bits) {
         return DataBlockAccess.valueOf("C" + bits);
     }
 }
