@@ -37,11 +37,11 @@ class MifareSector {
     public byte[] read(int blockIndex, byte nBytes, KeyType key) {
         // TODO: Disallow reading manufacturer block
 
-        String[] accessBits = new AccessBitsParser().parse(blocks[3]);
+        AccessBits accessBits = new AccessBitsParser().parse(blocks[3]);
 
         if (blockIndex < 3) {
             // Normal block
-            DataBlockAccess access = DataBlockAccess.fromBits(accessBits[blockIndex]);
+            DataBlockAccess access = accessBits.dataBlockAccessForBlock(blockIndex);
             if (!access.readAccess.allowedUsingKey(key)) {
                 return null;
             }
@@ -49,7 +49,7 @@ class MifareSector {
             return Arrays.copyOf(blocks[blockIndex], nBytes);
         } else {
             // Sector trailer
-            TrailerBlockAccess access = TrailerBlockAccess.fromBits(accessBits[3]);
+            TrailerBlockAccess access = accessBits.trailerBlockAccess();
             byte[] trailerCopy = blocks[3].clone();
 
             if (!access.readAccessToKeyA.allowedUsingKey(key)) {
@@ -71,11 +71,11 @@ class MifareSector {
     }
 
     public boolean write(int blockIndex, byte[] blockData, KeyType key) throws CardException {
-        String[] accessBits = new AccessBitsParser().parse(blocks[3]);
+        AccessBits accessBits = new AccessBitsParser().parse(blocks[3]);
 
         if (blockIndex < 3) {
-            // Normal block
-            DataBlockAccess access = DataBlockAccess.fromBits(accessBits[blockIndex]);
+            // Write data to normal block
+            DataBlockAccess access = accessBits.dataBlockAccessForBlock(blockIndex);
             if (!access.writeAccess.allowedUsingKey(key)) {
                 return false;
             }
@@ -83,12 +83,12 @@ class MifareSector {
             System.arraycopy(blockData, 0, blocks[blockIndex], 0, blocks[blockIndex].length);
             return true;
         } else {
-            // Sector trailer
+            // Change sector trailer (keys & access bits)
             if (!new AccessBitsValidator(blockData).isValid()) {
                 return false;
             }
 
-            TrailerBlockAccess access = TrailerBlockAccess.fromBits(accessBits[3]);
+            TrailerBlockAccess access = accessBits.trailerBlockAccess();
             byte[] trailerCopy = blocks[3].clone();
 
             // TODO: Allow partial update? or fail?

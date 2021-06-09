@@ -10,7 +10,7 @@ public class AccessBitsParser {
      * That means that we have access control bits for sector `1`:
      * `C1_1 ... C3_1` set to values `0`, `1` and `0`.
      */
-    public String[] parse(byte[] bytes) {
+    public AccessBits parse(byte[] bytes) {
         char[][] map = new char[4][3];
 
         for (char[] chars : map) {
@@ -38,9 +38,11 @@ public class AccessBitsParser {
             }
         }
 
-        return Arrays.stream(map)
-                .map(String::new)
-                .toArray(String[]::new);
+        return new AccessBits(
+            DataBlockAccess.fromBits(map[0]),
+            DataBlockAccess.fromBits(map[1]),
+            DataBlockAccess.fromBits(map[2]),
+            TrailerBlockAccess.fromBits(map[3]));
     }
 
     private boolean getBit(byte[] trailerSector, int byteIndex, int bitIndex) {
