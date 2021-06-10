@@ -17,8 +17,18 @@ module pl.marcinchwedczuk.rfid {
     requires pl.marcinchwedczuk.rfid.card.commons;
 
     exports pl.marcinchwedczuk.rfid.gui;
+    // Make resources available to javafx
+    opens pl.marcinchwedczuk.rfid.gui.img;
 
     // Allow @FXML injection to private fields.
-    opens pl.marcinchwedczuk.rfid.gui to javafx.fxml;
-    opens pl.marcinchwedczuk.rfid.xml to com.fasterxml.jackson.databind;
+    opens pl.marcinchwedczuk.rfid.gui;
+    opens pl.marcinchwedczuk.rfid.gui.main;
+    opens pl.marcinchwedczuk.rfid.gui.card;
+    opens pl.marcinchwedczuk.rfid.gui.settings;
+    opens pl.marcinchwedczuk.rfid.gui.sender;
+    opens pl.marcinchwedczuk.rfid.gui.progress;
+    opens pl.marcinchwedczuk.rfid.gui.about;
+    opens pl.marcinchwedczuk.rfid.gui.controls.keybox;
+    opens pl.marcinchwedczuk.rfid.gui.controls.maskedtext;
+    opens pl.marcinchwedczuk.rfid.xml;
 }

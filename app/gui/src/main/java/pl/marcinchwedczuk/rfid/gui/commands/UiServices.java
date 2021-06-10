@@ -1,8 +1,8 @@
 package pl.marcinchwedczuk.rfid.gui.commands;
 
 import javafx.scene.Scene;
-import pl.marcinchwedczuk.rfid.gui.FxDialogBoxes;
-import pl.marcinchwedczuk.rfid.gui.FxProgressDialog;
+import pl.marcinchwedczuk.rfid.gui.utils.FxDialogBoxes;
+import pl.marcinchwedczuk.rfid.gui.progress.FxProgressDialog;
 
 public class UiServices {
     private final Scene ownerWindow;

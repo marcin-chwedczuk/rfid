@@ -2,7 +2,7 @@ package pl.marcinchwedczuk.rfid.xml;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import pl.marcinchwedczuk.rfid.gui.DataRow;
+import pl.marcinchwedczuk.rfid.gui.card.DataRow;
 
 import java.util.ArrayList;
 import java.util.List;

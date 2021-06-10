@@ -9,7 +9,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import pl.marcinchwedczuk.rfid.card.acr122.Block;
 import pl.marcinchwedczuk.rfid.card.acr122.Sector;
-import pl.marcinchwedczuk.rfid.gui.DataRow;
+import pl.marcinchwedczuk.rfid.gui.card.DataRow;
 
 import java.util.ArrayList;
 import java.util.List;

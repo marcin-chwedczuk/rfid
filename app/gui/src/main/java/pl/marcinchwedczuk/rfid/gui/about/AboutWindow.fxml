@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.TextFlow?>
+<HBox fx:id="parentHBox" alignment="CENTER" stylesheets="@AboutWindow.css" xmlns="http://javafx.com/javafx/16"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.marcinchwedczuk.rfid.gui.about.AboutWindow">
+    <children>
+        <ImageView fx:id="leftLogo" fitHeight="450.0" pickOnBounds="true" preserveRatio="true">
+            <HBox.margin>
+                <Insets/>
+            </HBox.margin>
+            <image>
+                <Image url="@/pl/marcinchwedczuk/rfid/gui/img/about-tag.jpeg"/>
+            </image>
+        </ImageView>
+        <VBox fx:id="contentVBox" styleClass="contentBox" HBox.hgrow="ALWAYS">
+            <children>
+                <Label styleClass="hugeText" text="RFID Tag Editor v0.1"/>
+                <Separator styleClass="contentSeparator"/>
+                <TextFlow>
+                    <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Created by 0xmarcin&#10;"/>
+                        <Label text="GitHub: "/>
+                        <Hyperlink onAction="#openApplicationGitHubPage" styleClass="no-border"
+                                   text="github.com/marcin-chwedczuk/rfid"/>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="&#10;&#10;Huge thanks to"/>
+                        <Hyperlink onAction="#openSangaYTChannel" styleClass="no-border"
+                                   text="Sanga Chidam YT Channel"/>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0"
+                              text="&#10;for great explanation how RFID cards work."/>
+                    </children>
+                </TextFlow>
+                <Separator styleClass="contentSeparator"/>
+                <HBox alignment="CENTER">
+                    <children>
+                        <Label fx:id="javaFxLabel" styleClass="hugeText" text="JavaFX"/>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@/pl/marcinchwedczuk/rfid/gui/img/about-ani.gif"/>
+                            </image>
+                        </ImageView>
+                    </children>
+                </HBox>
+                <HBox alignment="BOTTOM_RIGHT" styleClass="buttonBox" VBox.vgrow="ALWAYS">
+                    <children>
+                        <Button cancelButton="true" defaultButton="true" mnemonicParsing="false" onAction="#closeWindow"
+                                prefHeight="26.0" prefWidth="106.0" text="OK"/>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</HBox>

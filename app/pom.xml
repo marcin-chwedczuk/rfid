@@ -245,12 +245,12 @@
         <profile>
             <id>dev</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
                 <extra-jvm-options-when-running-gui-app>
                     <!-- enable debugging -->
-                    -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=1044
+                    -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=1044
                     <!-- set logging level to DEBUG -->
                     -Dlog.level=DEBUG
                     <!-- tests use slf4j simple logger.

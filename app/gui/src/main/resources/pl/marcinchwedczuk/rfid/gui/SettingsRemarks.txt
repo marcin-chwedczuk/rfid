@@ -1,8 +1,0 @@
-To understand settings provided on this form please check the Application Programming Interface document, provided on both the manufacturer site and in the docs folder of application repository.
-
-Sending Blinking & Buzzing command that lasts longer than 2 seconds can result in terminal restart. It's best to send at most 3 repetitions of a given pattern. After command timeouts the reader may no longer respond properly. Unplugging the reader and plugging it again will fix this problem.
-
-Setting PICC parameters to incorrect values may result in bricking the terminal.
-Usually unplugging the reader and plugging it again is enough to reset the reader configuration.
-If this does not help, you will need to install official ACR122 drivers and sample applications. They will allow you to reset PICC parameters to their original values.
-You can find more details on the producer webpage: https://www.acs.com.hk/en/products/3/acr122u-usb-nfc-reader/https://www.acs.com.hk/en/products/3/acr122u-usb-nfc-reader/

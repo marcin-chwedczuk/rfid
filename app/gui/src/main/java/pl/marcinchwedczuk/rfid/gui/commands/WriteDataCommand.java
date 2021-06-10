@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.marcinchwedczuk.rfid.card.acr122.*;
 import pl.marcinchwedczuk.rfid.card.commons.KeyType;
-import pl.marcinchwedczuk.rfid.gui.DataRow;
+import pl.marcinchwedczuk.rfid.gui.card.DataRow;
 
 import java.util.Arrays;
 import java.util.List;

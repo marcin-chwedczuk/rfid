@@ -3,7 +3,7 @@ package pl.marcinchwedczuk.rfid.xml;
 import org.junit.jupiter.api.Test;
 import pl.marcinchwedczuk.rfid.card.acr122.Sector;
 import pl.marcinchwedczuk.rfid.card.commons.utils.ByteArrays;
-import pl.marcinchwedczuk.rfid.gui.DataRow;
+import pl.marcinchwedczuk.rfid.gui.card.DataRow;
 
 import java.io.BufferedReader;
 import java.io.IOException;

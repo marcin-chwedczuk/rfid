@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.marcinchwedczuk.rfid.gui.utils.FxDialogBoxes;
 
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
@@ -29,7 +30,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        // Is this placebo? Maybe, but monospaces fonts look better with this
+        // Is this placebo? Maybe, but monospaced fonts look better with this
         // ...or so I think.
         System.setProperty("prism.lcdtext", "false");
 
@@ -41,7 +42,7 @@ public class App extends Application {
         App.hostServices = getHostServices();
 
         Parent root = FXMLLoader.load(
-                getClass().getResource("/pl/marcinchwedczuk/rfid/gui/MainWindow.fxml"));
+                getClass().getResource("/pl/marcinchwedczuk/rfid/gui/main/MainWindow.fxml"));
 
         Scene scene = new Scene(root);
 
@@ -57,10 +58,11 @@ public class App extends Application {
     }
 
     private static void printJvmOptions() {
-        RuntimeMXBean runtimeMxBean = ManagementFactory.getRuntimeMXBean();
-        List<String> arguments = runtimeMxBean.getInputArguments();
-        System.out.println("JVM ARGUMENTS:");
-        System.out.println(String.join(System.lineSeparator(), arguments));
-        System.out.println();
+        try {
+            RuntimeMXBean runtimeMxBean = ManagementFactory.getRuntimeMXBean();
+            List<String> arguments = runtimeMxBean.getInputArguments();
+            logger.info("Jvm Arguments: {}", String.join(System.lineSeparator(), arguments));
+        }
+        catch (Exception e) { }
     }
 }
