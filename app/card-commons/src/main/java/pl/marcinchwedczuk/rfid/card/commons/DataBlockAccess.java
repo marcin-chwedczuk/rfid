@@ -1,5 +1,7 @@
 package pl.marcinchwedczuk.rfid.card.commons;
 
+import pl.marcinchwedczuk.rfid.card.commons.utils.BooleanUtils;
+
 import java.nio.charset.StandardCharsets;
 
 import static java.nio.charset.StandardCharsets.US_ASCII;
@@ -36,17 +38,16 @@ public enum DataBlockAccess {
         this.otherOperationsAccess = otherOperationsAccess;
     }
 
-    char[] toBits() {
-        return this.name()
-                .substring(1)
-                .toCharArray();
+    boolean[] toBits() {
+        return BooleanUtils.zeroOneStringToArray(this.name().substring(1));
     }
 
-    static DataBlockAccess fromBits(char[] bits) {
-        return fromBits(new String(bits));
-    }
+    static DataBlockAccess fromBits(boolean[] bits) {
+        if (bits.length != 3) {
+            throw new IllegalArgumentException("bits");
+        }
 
-    static DataBlockAccess fromBits(String bits) {
-        return DataBlockAccess.valueOf("C" + bits);
+        String name = "C" + BooleanUtils.arrayToZeroOneString(bits);
+        return DataBlockAccess.valueOf(name);
     }
 }

@@ -1,5 +1,7 @@
 package pl.marcinchwedczuk.rfid.card.commons;
 
+import pl.marcinchwedczuk.rfid.card.commons.utils.BooleanUtils;
+
 import static pl.marcinchwedczuk.rfid.card.commons.AccessLevel.*;
 
 public enum TrailerBlockAccess {
@@ -37,18 +39,16 @@ public enum TrailerBlockAccess {
         this.writeAccessToKeyB = writeAccessKeyB;
     }
 
-
-    char[] toBits() {
-        return this.name()
-                .substring(1)
-                .toCharArray();
+    boolean[] toBits() {
+        return BooleanUtils.zeroOneStringToArray(this.name().substring(1));
     }
 
-    static TrailerBlockAccess fromBits(char[] bits) {
-        return fromBits(new String(bits));
-    }
+    static TrailerBlockAccess fromBits(boolean[] bits) {
+        if (bits.length != 3) {
+            throw new IllegalArgumentException("bits");
+        }
 
-    static TrailerBlockAccess fromBits(String bits) {
-        return TrailerBlockAccess.valueOf("C" + bits);
+        String name = "C" + BooleanUtils.arrayToZeroOneString(bits);
+        return TrailerBlockAccess.valueOf(name);
     }
 }

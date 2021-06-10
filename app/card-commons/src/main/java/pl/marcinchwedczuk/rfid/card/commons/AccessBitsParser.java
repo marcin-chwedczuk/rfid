@@ -7,11 +7,7 @@ import java.util.BitSet;
 
 public class AccessBitsParser {
     public AccessBits parse(byte[] sectorTrailerBytes) {
-        char[][] map = new char[4][3];
-        for (char[] chars : map) {
-            Arrays.fill(chars, '?');
-        }
-
+        boolean[][] map = new boolean[4][3];
         BitSet sectorTrailer = BitSet.valueOf(sectorTrailerBytes);
 
         Mifare1K.forEachAccessBit((byteIndex, bitIndex, isNegated, forBlock, cPosition) -> {
@@ -21,7 +17,7 @@ public class AccessBitsParser {
             }
 
             // cPosition is 1 based
-            map[forBlock][cPosition - 1] = bitValue ? '1' : '0';
+            map[forBlock][cPosition - 1] = bitValue;
         });
 
         return new AccessBits(
@@ -32,7 +28,7 @@ public class AccessBitsParser {
     }
 
     public byte[] unparse(AccessBits accessBits) {
-        char[][] map = new char[][] {
+        boolean[][] map = new boolean[][] {
             accessBits.dataBlockAccessForBlock(0).toBits(),
             accessBits.dataBlockAccessForBlock(1).toBits(),
             accessBits.dataBlockAccessForBlock(2).toBits(),
@@ -42,7 +38,7 @@ public class AccessBitsParser {
         BitSet sectorTrailer = new BitSet();
 
         Mifare1K.forEachAccessBit((byteIndex, bitIndex, isNegated, forBlock, cPosition) -> {
-            boolean value = (map[forBlock][cPosition - 1] == '1');
+            boolean value = map[forBlock][cPosition - 1];
             if (isNegated) {
                 value = !value;
             }
