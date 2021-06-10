@@ -17,14 +17,14 @@ import java.util.Objects;
 class FakeCard extends Card {
     private final String protocol;
     private final Acr122Simulator acr122;
-    private final FakeCardChannel channel;
+    private final FakeCardChannel basicChannel;
 
     private boolean disconnected = false;
 
     public FakeCard(String protocol, Acr122Simulator acr122) {
         this.protocol = Objects.requireNonNull(protocol);
         this.acr122 = Objects.requireNonNull(acr122);
-        this.channel = new FakeCardChannel(this, acr122);
+        this.basicChannel = new FakeCardChannel(this, acr122);
     }
 
     @Override
@@ -43,7 +43,7 @@ class FakeCard extends Card {
     @Override
     public CardChannel getBasicChannel() {
         checkState();
-        return channel;
+        return basicChannel;
     }
 
     @Override
@@ -75,7 +75,7 @@ class FakeCard extends Card {
     @Override
     public void disconnect(boolean reset) throws CardException {
         this.disconnected = true;
-        this.channel.close();
+        this.basicChannel.close();
     }
 
     private void checkState() {
