@@ -15,7 +15,6 @@ import static pl.marcinchwedczuk.rfid.card.acr122.Block.BLOCK_0;
 
 public class AcrCard extends AcrTerminalCommands {
     private static final Logger logger = LoggerFactory.getLogger(AcrCard.class);
-    private static final byte FF = (byte) 0xFF;
 
     private final AcrTerminal terminal;
     private final Card card;

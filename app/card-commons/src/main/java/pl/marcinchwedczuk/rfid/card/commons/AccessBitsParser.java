@@ -6,13 +6,6 @@ import java.util.Arrays;
 import java.util.BitSet;
 
 public class AccessBitsParser {
-    /**
-     * @param sectorTrailerBytes Trailer sector bytes. Should be `byte[16]` array.
-     * @return Returns array which at index `i` contains access bits for sector `i`.
-     * For example array may contain value `"010"` at index `1`.
-     * That means that we have access control bits for sector `1`:
-     * `C1_1 ... C3_1` set to values `0`, `1` and `0`.
-     */
     public AccessBits parse(byte[] sectorTrailerBytes) {
         char[][] map = new char[4][3];
         for (char[] chars : map) {
@@ -58,7 +51,7 @@ public class AccessBitsParser {
         });
 
         // BitSet is too smart (it grows and shrinks the storage space automatically),
-        // but there is no byte[] backed implementation in standard library.
+        // but there is no byte[] backed implementation in the standard library.
         // TODO: Refactor to get rid of this crap.
         return ByteArrays.ensureLength(sectorTrailer.toByteArray(), 16);
     }

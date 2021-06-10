@@ -1,58 +1,43 @@
 package pl.marcinchwedczuk.rfid.card.commons;
 
+import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AccessBitsValidator {
+    private final byte[] sectorTrailerBytes;
 
-    private final byte[] trailerSector;
-
-    public AccessBitsValidator(byte[] trailerSector) {
-        this.trailerSector = Objects.requireNonNull(trailerSector);
+    public AccessBitsValidator(byte[] sectorTrailerBytes) {
+        this.sectorTrailerBytes = Objects.requireNonNull(sectorTrailerBytes);
     }
 
     public boolean isValid() {
+        BitSet sectorTrailer = BitSet.valueOf(sectorTrailerBytes);
+        AtomicBoolean isValid = new AtomicBoolean(true);
+
         Map<String, Boolean> bitValues = new HashMap<>();
-        String[] bitsNames = Mifare1K.ACCESS_BITS_POSITIONS.split("\\s+");
-
-        int byteIndex = 6;
-        int bitIndex = 7;
-        for (String bitName : bitsNames) {
-            boolean bit = getBit(byteIndex, bitIndex);
-
-            if (bitName.startsWith("C")) {
-                bit = !bit;
+        Mifare1K.forEachAccessBit((byteIndex, bitIndex, isNegated, forBlock, cPosition) -> {
+            boolean bitValue = sectorTrailer.get(byteIndex*8 + bitIndex);
+            if (isNegated) {
+                bitValue = !bitValue;
             }
 
-            String normalizedBitName = bitName.toLowerCase();
+            String bitName = String.format("C%d_%d", cPosition, forBlock);
 
-            if (bitValues.containsKey(normalizedBitName)) {
-                boolean expected = bitValues.get(normalizedBitName);
-                if (expected != bit) {
-                    return false;
+            if (bitValues.containsKey(bitName)) {
+                boolean expected = bitValues.get(bitName);
+                if (expected != bitValue) {
+                    // There is only 3*8 bits to check, just iterate instead
+                    // of using exception to break from the lambda.
+                    isValid.set(false);
                 }
             } else {
-                bitValues.put(normalizedBitName, bit);
+                bitValues.put(bitName, bitValue);
             }
+        });
 
-            if (bitIndex == 0) {
-                byteIndex++;
-                bitIndex = 7;
-            } else {
-                bitIndex--;
-            }
-        }
-
-        return true;
-    }
-
-    private boolean getBit(int byteIndex, int bitIndex) {
-        if (bitIndex < 0 || bitIndex > 7)
-            throw new IllegalArgumentException("bitIndex");
-
-        byte byte_ = trailerSector[byteIndex];
-        boolean bit = (byte_ & (1 << bitIndex)) != 0;
-        return bit;
+        return isValid.get();
     }
 }
