@@ -4,11 +4,13 @@ import javafx.animation.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.util.Duration;
 import pl.marcinchwedczuk.rfid.gui.App;
 import pl.marcinchwedczuk.rfid.gui.progress.FxProgressDialog;
@@ -23,7 +25,10 @@ public class AboutWindow implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // JavaFX label animation
+        startAnimation();
+    }
+
+    private void startAnimation() {
         RotateTransition rotate = new RotateTransition();
         rotate.setAxis(Rotate.Z_AXIS);
         rotate.setByAngle(360);
@@ -32,7 +37,6 @@ public class AboutWindow implements Initializable {
         rotate.setAutoReverse(false);
         rotate.setNode(javaFxLabel);
         rotate.setInterpolator(Interpolator.LINEAR);
-        rotate.play();
 
         ScaleTransition shrinkGrow = new ScaleTransition(Duration.millis(2000), javaFxLabel);
         shrinkGrow.setByX(1.1f);
@@ -43,16 +47,17 @@ public class AboutWindow implements Initializable {
         new ParallelTransition(rotate, shrinkGrow).play();
     }
 
-    public static void show() {
+    public static void showModal(Window owner) {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    FxProgressDialog.class.getResource("/pl/marcinchwedczuk/rfid/gui/about/AboutWindow.fxml"));
+                    AboutWindow.class.getResource("AboutWindow.fxml"));
 
             Stage childWindow = new Stage();
-            childWindow.setTitle("About...");
-            childWindow.setScene(new Scene(loader.load()));
+            childWindow.initOwner(owner);
             childWindow.initModality(Modality.APPLICATION_MODAL);
+            childWindow.setTitle("About...");
             childWindow.setResizable(false);
+            childWindow.setScene(new Scene(loader.load()));
 
             childWindow.show();
         } catch (IOException e) {
@@ -68,13 +73,15 @@ public class AboutWindow implements Initializable {
 
     @FXML
     private void openApplicationGitHubPage() {
-        App.hostServices().showDocument(
-                "https://github.com/marcin-chwedczuk/rfid");
+        openLink("https://github.com/marcin-chwedczuk/rfid");
     }
 
     @FXML
     private void openSangaYTChannel() {
-        App.hostServices().showDocument(
-                "https://www.youtube.com/watch?v=VZDPBHtS0k4&list=PLXsEtURGV4pRLnvgoTd4FjzKFbXEfFNXn");
+        openLink("https://www.youtube.com/watch?v=VZDPBHtS0k4&list=PLXsEtURGV4pRLnvgoTd4FjzKFbXEfFNXn");
+    }
+
+    private void openLink(String url) {
+        App.hostServices().showDocument(url);
     }
 }

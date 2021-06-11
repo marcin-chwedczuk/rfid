@@ -25,7 +25,7 @@
                 <TextFlow>
                     <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Created by 0xmarcin&#10;"/>
-                        <Label text="GitHub: "/>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="GitHub: "/>
                         <Hyperlink onAction="#openApplicationGitHubPage" styleClass="no-border"
                                    text="github.com/marcin-chwedczuk/rfid"/>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="&#10;&#10;Huge thanks to"/>

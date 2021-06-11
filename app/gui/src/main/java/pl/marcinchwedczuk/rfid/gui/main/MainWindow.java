@@ -97,13 +97,13 @@ public class MainWindow implements Initializable {
 
     @FXML
     private void showAboutDialog() {
-        AboutWindow.show();
+        AboutWindow.showModal(getWindow());
     }
 
     @FXML
     private void showSettings() {
         // TODO: Check terminal not present disable menu
-        SettingsWindow.show(currentTerminal());
+        SettingsWindow.show(getWindow(), currentTerminal());
     }
 
     private AcrTerminal currentTerminal() {

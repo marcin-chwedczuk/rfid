@@ -74,6 +74,4 @@ public class SenderWindow implements Initializable {
             throw new RuntimeException(e);
         }
     }
-
-
 }

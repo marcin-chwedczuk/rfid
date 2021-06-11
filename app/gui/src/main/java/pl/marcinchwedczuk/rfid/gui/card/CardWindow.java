@@ -388,11 +388,11 @@ public class CardWindow implements Initializable {
 
     }
 
-    public void showAboutDialog(ActionEvent unused) {
-        AboutWindow.show();
+    public void showAboutDialog() {
+        AboutWindow.showModal(getScene().getWindow());
     }
 
-    public void displayFirmwareVersion(ActionEvent unused) {
+    public void displayFirmwareVersion() {
         try {
             String terminalName = card.terminal().name();
             String firmware = card.getTerminalFirmwareVersion();
@@ -410,7 +410,7 @@ public class CardWindow implements Initializable {
 
     @FXML
     private void showSettingsDialog() {
-        SettingsWindow.show(card);
+        SettingsWindow.show(getScene().getWindow(), card);
     }
 
     @FXML

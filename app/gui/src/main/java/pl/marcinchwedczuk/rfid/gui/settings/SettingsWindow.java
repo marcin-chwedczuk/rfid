@@ -150,7 +150,6 @@ public class SettingsWindow implements Initializable {
         }
     }
 
-
     private void setPiccOperatingParameter(PiccOperatingParameter parameter) {
         this.autoPiccPoolingCB.setValue(parameter.getAutoPiccPolling());
         this.autoAtsGenerationCB.setValue(parameter.getAutoAtsGeneration());
@@ -239,15 +238,16 @@ public class SettingsWindow implements Initializable {
         return (Stage) window;
     }
 
-    public static SettingsWindow show(AcrTerminalCommands card) {
+    public static SettingsWindow show(Window owner, AcrTerminalCommands card) {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    SettingsWindow.class.getResource("/pl/marcinchwedczuk/rfid/gui/settings/SettingsWindow.fxml"));
+                    SettingsWindow.class.getResource("SettingsWindow.fxml"));
 
             Stage childWindow = new Stage();
-            childWindow.setTitle("ACR122U Settings...");
-            childWindow.setScene(new Scene(loader.load()));
+            childWindow.initOwner(owner);
             childWindow.initModality(Modality.APPLICATION_MODAL);
+            childWindow.setTitle("Settings...");
+            childWindow.setScene(new Scene(loader.load()));
             childWindow.setResizable(false);
 
             SettingsWindow controller = (SettingsWindow) loader.getController();

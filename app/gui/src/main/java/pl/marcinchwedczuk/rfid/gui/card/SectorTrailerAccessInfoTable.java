@@ -70,6 +70,7 @@ public class SectorTrailerAccessInfoTable {
         return this;
     }
 
+    @SafeVarargs
     private TableColumn<SectorTrailerAccessInfoBean, String> containerColumn(
             String name, TableColumn<SectorTrailerAccessInfoBean, String>... childColumns) {
         TableColumn<SectorTrailerAccessInfoBean, String> col = new TableColumn<>(name);

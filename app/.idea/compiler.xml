@@ -16,6 +16,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="acr122" target="11" />
+      <module name="app" target="11" />
       <module name="card-acr122" target="11" />
       <module name="card-api" target="11" />
       <module name="card-commons" target="11" />
