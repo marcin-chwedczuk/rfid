@@ -1,10 +1,13 @@
 package pl.marcinchwedczuk.rfid.gui.commands;
 
 import javafx.scene.Scene;
+import pl.marcinchwedczuk.rfid.gui.utils.DialogBoxes;
 import pl.marcinchwedczuk.rfid.gui.utils.FxDialogBoxes;
 import pl.marcinchwedczuk.rfid.gui.progress.FxProgressDialog;
 
 public class UiServices {
+    private DialogBoxes dialogBoxes = new FxDialogBoxes();
+
     private final Scene ownerWindow;
 
     public UiServices(Scene ownerWindow) {
@@ -12,7 +15,7 @@ public class UiServices {
     }
 
     void showErrorDialog(String message, String details) {
-        FxDialogBoxes.error(message, details);
+        dialogBoxes.error(message, details);
     }
 
     ProgressDialog showProgressDialog(String message, Runnable cancelCallback) {

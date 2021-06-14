@@ -36,7 +36,7 @@ public class App extends Application {
 
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
             logger.error("Unhandled exception", e);
-            FxDialogBoxes.exception(e);
+            new FxDialogBoxes().exception(e);
         });
 
         App.hostServices = getHostServices();

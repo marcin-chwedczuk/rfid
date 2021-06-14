@@ -24,6 +24,7 @@
         <log4j.version>2.13.3</log4j.version>
         <jackson.version>2.11.1</jackson.version>
         <woodstox.version>5.1.0</woodstox.version>
+        <mc.javafx.validation>0.1.0-SNAPSHOT</mc.javafx.validation>
 
         <junit.version>5.7.0</junit.version>
         <assertj.version>3.19.0</assertj.version>
@@ -71,6 +72,17 @@
                 <groupId>pl.marcinchwedczuk</groupId>
                 <artifactId>gui</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>pl.marcinchwedczuk.javafx.validation</groupId>
+                <artifactId>validation</artifactId>
+                <version>${mc.javafx.validation}</version>
+            </dependency>
+            <dependency>
+                <groupId>pl.marcinchwedczuk.javafx.validation</groupId>
+                <artifactId>extras</artifactId>
+                <version>${mc.javafx.validation}</version>
             </dependency>
 
             <dependency>

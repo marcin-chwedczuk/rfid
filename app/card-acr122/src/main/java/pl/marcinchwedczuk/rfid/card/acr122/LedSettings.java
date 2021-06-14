@@ -1,6 +1,7 @@
 package pl.marcinchwedczuk.rfid.card.acr122;
 
 import pl.marcinchwedczuk.rfid.card.acr122.impl.RichByte;
+import pl.marcinchwedczuk.rfid.card.commons.utils.ToStringBuilder;
 
 import java.util.Objects;
 
@@ -11,6 +12,7 @@ import static pl.marcinchwedczuk.rfid.card.acr122.LedState.ON;
 import static pl.marcinchwedczuk.rfid.card.acr122.StateMask.NO_CHANGE;
 import static pl.marcinchwedczuk.rfid.card.acr122.StateMask.UPDATE;
 
+// TODO: Split into red and green settings
 public class LedSettings {
     static LedSettings newDefault() {
         return ofControlByte((byte)0x00);
@@ -63,6 +65,52 @@ public class LedSettings {
                 .withBit(6, blinkingMaskRedLED == BLINK)
                 .withBit(7, blinkingMaskGreenLED == BLINK)
                 .asByte();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(LedSettings.class)
+                .appendField("finalRedLED", finalRedLED)
+                .appendField("finalGreenLED", finalGreenLED)
+                .appendField("maskRedLED", maskRedLED)
+                .appendField("maskGreenLED", maskGreenLED)
+                .appendField("initialBlinkingRedLED", initialBlinkingRedLED)
+                .appendField("initialBlinkingGreenLED", initialBlinkingGreenLED)
+                .appendField("blinkingMaskRedLED", blinkingMaskRedLED)
+                .appendField("blinkingMaskGreenLED", blinkingMaskGreenLED)
+                .toString();
+    }
+
+    public LedState getFinalRedLED() {
+        return finalRedLED;
+    }
+
+    public LedState getFinalGreenLED() {
+        return finalGreenLED;
+    }
+
+    public StateMask getMaskRedLED() {
+        return maskRedLED;
+    }
+
+    public StateMask getMaskGreenLED() {
+        return maskGreenLED;
+    }
+
+    public LedState getInitialBlinkingRedLED() {
+        return initialBlinkingRedLED;
+    }
+
+    public LedState getInitialBlinkingGreenLED() {
+        return initialBlinkingGreenLED;
+    }
+
+    public LedBlinkingMask getBlinkingMaskRedLED() {
+        return blinkingMaskRedLED;
+    }
+
+    public LedBlinkingMask getBlinkingMaskGreenLED() {
+        return blinkingMaskGreenLED;
     }
 
     public void setFinalRedLED(LedState finalRedLED) {

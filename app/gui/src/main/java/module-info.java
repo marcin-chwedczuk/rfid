@@ -16,6 +16,9 @@ module pl.marcinchwedczuk.rfid {
     requires pl.marcinchwedczuk.rfid.card.fake;
     requires pl.marcinchwedczuk.rfid.card.commons;
 
+    requires pl.marcinchwedczuk.javafx.validation;
+    requires pl.marcinchwedczuk.javafx.validation.extras;
+
     exports pl.marcinchwedczuk.rfid.gui;
     // Make resources available to javafx
     opens pl.marcinchwedczuk.rfid.gui.img;

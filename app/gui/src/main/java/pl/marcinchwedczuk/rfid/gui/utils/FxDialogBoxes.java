@@ -11,11 +11,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Optional;
 
-public class FxDialogBoxes {
-    private FxDialogBoxes() {
-    }
-
-    public static boolean ask(String question) {
+public class FxDialogBoxes implements DialogBoxes {
+    public boolean ask(String question) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Question");
         alert.setHeaderText(null);
@@ -25,7 +22,7 @@ public class FxDialogBoxes {
         return result.get() == ButtonType.OK;
     }
 
-    public static void info(String text) {
+    public void info(String text) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Info");
         alert.setHeaderText(null);
@@ -34,11 +31,11 @@ public class FxDialogBoxes {
         alert.showAndWait();
     }
 
-    public static void error(String body) {
+    public void error(String body) {
         error(body, "");
     }
 
-    public static void error(String title, String body) {
+    public void error(String title, String body) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setHeaderText(title);
@@ -47,7 +44,7 @@ public class FxDialogBoxes {
         alert.showAndWait();
     }
 
-    public static void exception(Throwable ex) {
+    public void exception(Throwable ex) {
         // from: https://code.makery.ch/blog/javafx-dialogs-official/
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Exception Dialog");

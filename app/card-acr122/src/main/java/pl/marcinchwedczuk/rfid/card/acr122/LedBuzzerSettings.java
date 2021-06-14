@@ -1,6 +1,6 @@
 package pl.marcinchwedczuk.rfid.card.acr122;
 
-import pl.marcinchwedczuk.rfid.card.commons.utils.ByteArrays;
+import pl.marcinchwedczuk.rfid.card.commons.utils.ToStringBuilder;
 
 import java.util.Objects;
 
@@ -63,11 +63,22 @@ public class LedBuzzerSettings {
 
     int[] toUnsignedControlBytes() {
         return new int[] {
-            T1.toUnsignedByte(),
-            T2.toUnsignedByte(),
+            T1.units(),
+            T2.units(),
             numberOfRepetitions,
             linkToBuzzer.toUnsignedByte()
         };
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(LedBuzzerSettings.class)
+                .appendField("ledSettings", ledSettings)
+                .appendField("T1", T1)
+                .appendField("T2", T2)
+                .appendField("numberOfRepetitions", numberOfRepetitions)
+                .appendField("linkToBuzzer", linkToBuzzer)
+                .toString();
     }
 
     public LedSettings getLedSettings() {

@@ -31,6 +31,15 @@
         </dependency>
 
         <dependency>
+            <groupId>pl.marcinchwedczuk.javafx.validation</groupId>
+            <artifactId>validation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>pl.marcinchwedczuk.javafx.validation</groupId>
+            <artifactId>extras</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
         </dependency>

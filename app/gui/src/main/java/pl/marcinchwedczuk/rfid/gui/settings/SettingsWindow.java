@@ -14,16 +14,41 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.marcinchwedczuk.javafx.validation.extras.UiBindings;
 import pl.marcinchwedczuk.rfid.card.acr122.*;
+import pl.marcinchwedczuk.rfid.gui.utils.DialogBoxes;
 import pl.marcinchwedczuk.rfid.gui.utils.FxDialogBoxes;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-
+// TODO: Split into window + two sub windows
 public class SettingsWindow implements Initializable {
     private static final Logger logger = LoggerFactory.getLogger(SettingsWindow.class);
+
+    public static SettingsWindow show(Window owner, AcrTerminalCommands card) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    SettingsWindow.class.getResource("SettingsWindow.fxml"));
+
+            Stage childWindow = new Stage();
+            childWindow.initOwner(owner);
+            childWindow.initModality(Modality.APPLICATION_MODAL);
+            childWindow.setTitle("Settings...");
+            childWindow.setScene(new Scene(loader.load()));
+            childWindow.setResizable(false);
+
+            SettingsWindow controller = (SettingsWindow) loader.getController();
+            controller.setTerminalCommands(card);
+            childWindow.sizeToScene();
+
+            childWindow.show();
+            return controller;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     // LED Settings
     @FXML
@@ -55,26 +80,32 @@ public class SettingsWindow implements Initializable {
 
     // PICC Parameter Settings
     @FXML
-    private ChoiceBox<FeatureStatus> autoPiccPoolingCB;
+    private ChoiceBox<FeatureStatus> autoPiccPooling;
     @FXML
-    private ChoiceBox<FeatureStatus> autoAtsGenerationCB;
+    private ChoiceBox<FeatureStatus> autoAtsGeneration;
+
     @FXML
-    private ChoiceBox<PoolingInterval> pollingIntervalCB;
+    private ChoiceBox<PoolingInterval> pollingInterval;
+
     @FXML
-    private ChoiceBox<DetectionStatus> feliCa424KCB;
+    private ChoiceBox<DetectionStatus> feliCa212K;
     @FXML
-    private ChoiceBox<DetectionStatus> feliCa212KCB;
+    private ChoiceBox<DetectionStatus> feliCa424K;
     @FXML
-    private ChoiceBox<DetectionStatus> topazCB;
+    private ChoiceBox<DetectionStatus> topaz;
     @FXML
-    private ChoiceBox<DetectionStatus> isoTypeB_CB;
+    private ChoiceBox<DetectionStatus> isoTypeA;
     @FXML
-    private ChoiceBox<DetectionStatus> isoTypeA_CB;
+    private ChoiceBox<DetectionStatus> isoTypeB;
 
     @FXML
     private TitledPane remarksPane;
 
+    private final DialogBoxes dialogBoxes = new FxDialogBoxes();
+
     private AcrTerminalCommands terminalCommands;
+    private PiccViewModel piccViewModel;
+    private LedBuzzViewModel ledBuzzViewModel;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -95,14 +126,14 @@ public class SettingsWindow implements Initializable {
         repetitionsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10, 3));
         enumChoiceBox(linkToBuzzerCB, Buzzer.values());
 
-        enumChoiceBox(autoPiccPoolingCB, FeatureStatus.values());
-        enumChoiceBox(autoAtsGenerationCB, FeatureStatus.values());
-        enumChoiceBox(pollingIntervalCB, PoolingInterval.values());
-        enumChoiceBox(feliCa424KCB, DetectionStatus.values());
-        enumChoiceBox(feliCa212KCB, DetectionStatus.values());
-        enumChoiceBox(topazCB, DetectionStatus.values());
-        enumChoiceBox(isoTypeB_CB, DetectionStatus.values());
-        enumChoiceBox(isoTypeA_CB, DetectionStatus.values());
+        enumChoiceBox(autoPiccPooling, FeatureStatus.values());
+        enumChoiceBox(autoAtsGeneration, FeatureStatus.values());
+        enumChoiceBox(pollingInterval, PoolingInterval.values());
+        enumChoiceBox(feliCa212K, DetectionStatus.values());
+        enumChoiceBox(feliCa424K, DetectionStatus.values());
+        enumChoiceBox(topaz, DetectionStatus.values());
+        enumChoiceBox(isoTypeA, DetectionStatus.values());
+        enumChoiceBox(isoTypeB, DetectionStatus.values());
 
         remarksPane.expandedProperty().addListener((prop, oldValue, isAnimated) -> {
             Platform.runLater(() -> getStage().sizeToScene());
@@ -112,104 +143,61 @@ public class SettingsWindow implements Initializable {
     public void setTerminalCommands(AcrTerminalCommands terminalCommands) {
         this.terminalCommands = terminalCommands;
 
-        refreshPICC();
-        loadDefaultsForLedSettings();
-        loadDefaultsForBuzzerSettings();
+        setupPiccViewModel();
+        setupLedBuzzViewModel(terminalCommands);
+    }
+
+    private void setupPiccViewModel() {
+        this.piccViewModel = new PiccViewModel(dialogBoxes, terminalCommands);
+
+        UiBindings.biBind(autoPiccPooling, piccViewModel.autoPiccPooling);
+        UiBindings.biBind(autoAtsGeneration, piccViewModel.autoAtsGeneration);
+
+        UiBindings.biBind(pollingInterval, piccViewModel.pollingInterval);
+
+        UiBindings.biBind(feliCa212K, piccViewModel.feliCa212K);
+        UiBindings.biBind(feliCa424K, piccViewModel.feliCa424K);
+        UiBindings.biBind(topaz, piccViewModel.topaz);
+        UiBindings.biBind(isoTypeA, piccViewModel.isoTypeA);
+        UiBindings.biBind(isoTypeB, piccViewModel.isoTypeB);
+
+        piccViewModel.refresh();
+    }
+
+    private void setupLedBuzzViewModel(AcrTerminalCommands terminalCommands) {
+        this.ledBuzzViewModel = new LedBuzzViewModel(dialogBoxes, terminalCommands);
+
+        UiBindings.biBind(finalRedLedCB, ledBuzzViewModel.finalRedLed);
+        UiBindings.biBind(finalGreenLedCB, ledBuzzViewModel.finalGreenLed);
+
+        UiBindings.biBind(maskRedLedCB, ledBuzzViewModel.maskRedLed);
+        UiBindings.biBind(maskGreenLedCB, ledBuzzViewModel.maskGreenLed);
+
+        UiBindings.biBind(blinkingRedLedCB, ledBuzzViewModel.blinkingRedLed);
+        UiBindings.biBind(blinkingGreenLedCB, ledBuzzViewModel.blinkingGreenLed);
+
+        UiBindings.biBind(blinkingMaskRedLedCB, ledBuzzViewModel.blinkingMaskRedLed);
+        UiBindings.biBind(blinkingMaskGreenLedCB, ledBuzzViewModel.blinkingMaskGreenLed);
+
+        UiBindings.biBind(t1Spinner, ledBuzzViewModel.t1);
+        UiBindings.biBind(t2Spinner, ledBuzzViewModel.t2);
+        UiBindings.biBind(repetitionsSpinner, ledBuzzViewModel.repetitions);
+        UiBindings.biBind(linkToBuzzerCB, ledBuzzViewModel.linkToBuzzer);
     }
 
     @FXML
     private void refreshPICC() {
-        PiccOperatingParameter picc;
-        try {
-            picc = terminalCommands.getPiccOperatingParameter();
-        } catch (Exception e) {
-            FxDialogBoxes.error("Cannot read PICC parameter.", e.getMessage());
-            return;
-        }
-
-        setPiccOperatingParameter(picc);
+        piccViewModel.refresh();
     }
 
     @FXML
     private void savePICC() {
-        PiccOperatingParameter picc = PiccOperatingParameter.newDefault();
-        picc.setAutoPiccPolling(this.autoPiccPoolingCB.getValue());
-        picc.setAutoAtsGeneration(this.autoAtsGenerationCB.getValue());
-        picc.setPollingInterval(this.pollingIntervalCB.getValue());
-        picc.setFeliCa424K(this.feliCa424KCB.getValue());
-        picc.setFeliCa212K(this.feliCa212KCB.getValue());
-        picc.setTopaz(this.topazCB.getValue());
-        picc.setIso14443TypeB(this.isoTypeB_CB.getValue());
-        picc.setIso14443TypeA(this.isoTypeA_CB.getValue());
-
-        try {
-            terminalCommands.setPiccOperatingParameter(picc);
-            FxDialogBoxes.info("PICC parameters were changed!");
-        } catch (Exception e) {
-            FxDialogBoxes.exception(e);
-        }
-    }
-
-    private void setPiccOperatingParameter(PiccOperatingParameter parameter) {
-        this.autoPiccPoolingCB.setValue(parameter.getAutoPiccPolling());
-        this.autoAtsGenerationCB.setValue(parameter.getAutoAtsGeneration());
-
-        this.pollingIntervalCB.setValue(parameter.getPollingInterval());
-
-        this.feliCa424KCB.setValue(parameter.getFeliCa424K());
-        this.feliCa212KCB.setValue(parameter.getFeliCa212K());
-        this.topazCB.setValue(parameter.getTopaz());
-        this.isoTypeB_CB.setValue(parameter.getIso14443TypeB());
-        this.isoTypeA_CB.setValue(parameter.getIso14443TypeA());
-    }
-
-    private void loadDefaultsForLedSettings() {
-        this.finalRedLedCB.setValue(LedState.OFF);
-        this.finalGreenLedCB.setValue(LedState.OFF);
-
-        this.maskRedLedCB.setValue(StateMask.UPDATE);
-        this.maskGreenLedCB.setValue(StateMask.UPDATE);
-
-        this.blinkingRedLedCB.setValue(LedState.OFF);
-        this.blinkingGreenLedCB.setValue(LedState.OFF);
-
-        this.blinkingMaskRedLedCB.setValue(LedBlinkingMask.NOT_BLINK);
-        this.blinkingMaskGreenLedCB.setValue(LedBlinkingMask.NOT_BLINK);
-    }
-
-    private void loadDefaultsForBuzzerSettings() {
-        this.t1Spinner.getValueFactory().setValue(3);
-        this.t2Spinner.getValueFactory().setValue(3);
-
-        this.repetitionsSpinner.getValueFactory().setValue(1);
-        this.linkToBuzzerCB.setValue(Buzzer.BUZZER_DURING_T1);
+        piccViewModel.save();
     }
 
     @FXML
     public void sendBlinkBuzzCommand() {
-        // Save Led & Buzzer
-        LedBuzzerSettings newSettings = LedBuzzerSettings.newDefaults();
-        newSettings.setT1(TDuration.fromNumberOf100msUnits(t1Spinner.getValue()));
-        newSettings.setT2(TDuration.fromNumberOf100msUnits(t2Spinner.getValue()));
-        newSettings.setNumberOfRepetitions(repetitionsSpinner.getValue());
-        newSettings.setLinkToBuzzer(linkToBuzzerCB.getValue());
-
-        // LED Stuff
-        LedSettings ledSettings = newSettings.getLedSettings();
-        ledSettings.setFinalRedLED(this.finalRedLedCB.getValue());
-        ledSettings.setFinalGreenLED(this.finalGreenLedCB.getValue());
-        ledSettings.setMaskRedLED(this.maskRedLedCB.getValue());
-        ledSettings.setMaskGreenLED(this.maskGreenLedCB.getValue());
-        ledSettings.setInitialBlinkingRedLED(this.blinkingRedLedCB.getValue());
-        ledSettings.setInitialBlinkingGreenLED(this.blinkingGreenLedCB.getValue());
-        ledSettings.setBlinkingMaskRedLED(this.blinkingMaskRedLedCB.getValue());
-        ledSettings.setBlinkingMaskGreenLED(this.blinkingMaskGreenLedCB.getValue());
-
-        try {
-            terminalCommands.configureLedAndBuzzer(newSettings);
-        } catch (Exception e) {
-            FxDialogBoxes.exception(e);
-        }
+        ledBuzzViewModel.sendCommand();
     }
 
     @FXML
@@ -236,29 +224,6 @@ public class SettingsWindow implements Initializable {
         }
 
         return (Stage) window;
-    }
-
-    public static SettingsWindow show(Window owner, AcrTerminalCommands card) {
-        try {
-            FXMLLoader loader = new FXMLLoader(
-                    SettingsWindow.class.getResource("SettingsWindow.fxml"));
-
-            Stage childWindow = new Stage();
-            childWindow.initOwner(owner);
-            childWindow.initModality(Modality.APPLICATION_MODAL);
-            childWindow.setTitle("Settings...");
-            childWindow.setScene(new Scene(loader.load()));
-            childWindow.setResizable(false);
-
-            SettingsWindow controller = (SettingsWindow) loader.getController();
-            controller.setTerminalCommands(card);
-            childWindow.sizeToScene();
-
-            childWindow.show();
-            return controller;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private static <E extends Enum<E>>

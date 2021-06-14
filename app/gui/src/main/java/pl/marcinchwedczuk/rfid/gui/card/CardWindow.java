@@ -28,6 +28,7 @@ import pl.marcinchwedczuk.rfid.gui.controls.keybox.KeyBox;
 import pl.marcinchwedczuk.rfid.gui.controls.maskedtext.MaskedTextField;
 import pl.marcinchwedczuk.rfid.gui.sender.SenderWindow;
 import pl.marcinchwedczuk.rfid.gui.settings.SettingsWindow;
+import pl.marcinchwedczuk.rfid.gui.utils.DialogBoxes;
 import pl.marcinchwedczuk.rfid.gui.utils.FxDialogBoxes;
 import pl.marcinchwedczuk.rfid.gui.utils.KeyForm;
 import pl.marcinchwedczuk.rfid.xml.XmlCardData;
@@ -102,6 +103,7 @@ public class CardWindow implements Initializable {
 
     private AcrCard card;
     private UiServices uiServices;
+    private DialogBoxes dialogBoxes = new FxDialogBoxes();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -260,13 +262,13 @@ public class CardWindow implements Initializable {
                     : keyString.getBytes(StandardCharsets.US_ASCII);
 
             if (keyBytes.length != 6) {
-                FxDialogBoxes.error("Invalid key!", "Key must consists of 6 bytes!");
+                dialogBoxes.error("Invalid key!", "Key must consists of 6 bytes!");
                 return null;
             }
 
             return keyBytes;
         } catch (NumberFormatException e) {
-            FxDialogBoxes.error("Invalid key!", e.getMessage());
+            dialogBoxes.error("Invalid key!", e.getMessage());
             return null;
         }
     }
@@ -287,7 +289,7 @@ public class CardWindow implements Initializable {
         try {
             card.loadKeyIntoRegister(keyBytes, REGISTER_0);
         } catch (AcrException e) {
-            FxDialogBoxes.error("Cannot read data from card!", e.getMessage());
+            dialogBoxes.error("Cannot read data from card!", e.getMessage());
             return;
         }
 
@@ -318,7 +320,7 @@ public class CardWindow implements Initializable {
                 Files.writeString(target.toPath(), xml,
                         StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
             } catch (Exception e) {
-                FxDialogBoxes.error("Exporting data failed.", e.getMessage());
+                dialogBoxes.error("Exporting data failed.", e.getMessage());
             }
         }
     }
@@ -327,7 +329,7 @@ public class CardWindow implements Initializable {
         fileChooser.setTitle("Import cart data from XML file...");
         fileChooser.showOpenDialog(cardId.getScene().getWindow());
 
-        FxDialogBoxes.error("TODO", "Not implemented yet!");
+        dialogBoxes.error("TODO", "Not implemented yet!");
     }
 
     public void secReadPermissions(ActionEvent unused) {
@@ -397,12 +399,12 @@ public class CardWindow implements Initializable {
             String terminalName = card.terminal().name();
             String firmware = card.getTerminalFirmwareVersion();
 
-            FxDialogBoxes.info(String.format(
+            dialogBoxes.info(String.format(
                     "Terminal name: %s" + System.lineSeparator() +
                             "Firmware version: %s.",
                     terminalName, firmware));
         } catch (Exception e) {
-            FxDialogBoxes.error(
+            dialogBoxes.error(
                     "Reading firmware version failed.",
                     e.getMessage());
         }

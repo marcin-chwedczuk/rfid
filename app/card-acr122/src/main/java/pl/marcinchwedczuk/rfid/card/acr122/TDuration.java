@@ -20,7 +20,7 @@ public class TDuration {
         this.nUnits = nUnits;
     }
 
-    int toUnsignedByte() {
+    public int units() {
         return nUnits;
     }
 
