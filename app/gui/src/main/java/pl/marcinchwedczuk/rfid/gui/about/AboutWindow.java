@@ -4,49 +4,19 @@ import javafx.animation.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.transform.Rotate;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.Duration;
 import pl.marcinchwedczuk.rfid.gui.App;
-import pl.marcinchwedczuk.rfid.gui.progress.FxProgressDialog;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class AboutWindow implements Initializable {
-    @FXML
-    private Label javaFxLabel;
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        startAnimation();
-    }
-
-    private void startAnimation() {
-        RotateTransition rotate = new RotateTransition();
-        rotate.setAxis(Rotate.Z_AXIS);
-        rotate.setByAngle(360);
-        rotate.setCycleCount(Animation.INDEFINITE);
-        rotate.setDuration(Duration.millis(2000));
-        rotate.setAutoReverse(false);
-        rotate.setNode(javaFxLabel);
-        rotate.setInterpolator(Interpolator.LINEAR);
-
-        ScaleTransition shrinkGrow = new ScaleTransition(Duration.millis(2000), javaFxLabel);
-        shrinkGrow.setByX(1.1f);
-        shrinkGrow.setByY(1.1f);
-        shrinkGrow.setCycleCount(Animation.INDEFINITE);
-        shrinkGrow.setAutoReverse(true);
-
-        new ParallelTransition(rotate, shrinkGrow).play();
-    }
-
     public static void showModal(Window owner) {
         try {
             FXMLLoader loader = new FXMLLoader(
@@ -63,6 +33,33 @@ public class AboutWindow implements Initializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @FXML
+    private Label javaFxLabel;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        startAnimation();
+    }
+
+    private void startAnimation() {
+        final Duration SEC_2 = Duration.millis(2000);
+
+        RotateTransition rotate = new RotateTransition(SEC_2);
+        rotate.setByAngle(360);
+        rotate.setAutoReverse(false);
+        rotate.setInterpolator(Interpolator.LINEAR);
+        rotate.setCycleCount(Animation.INDEFINITE);
+
+        ScaleTransition shrinkGrow = new ScaleTransition(SEC_2);
+        shrinkGrow.setByX(1.1f);
+        shrinkGrow.setByY(1.1f);
+        shrinkGrow.setAutoReverse(true);
+        shrinkGrow.setCycleCount(Animation.INDEFINITE);
+
+        ParallelTransition parallelTransition = new ParallelTransition(javaFxLabel, rotate, shrinkGrow);
+        parallelTransition.play();
     }
 
     @FXML
