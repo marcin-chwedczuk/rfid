@@ -57,7 +57,6 @@ public class SettingsWindow implements Initializable {
         }
     }
 
-
     @FXML
     private TitledPane remarksPane;
 

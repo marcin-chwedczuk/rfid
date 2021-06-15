@@ -11,6 +11,7 @@ import pl.marcinchwedczuk.javafx.validation.extras.UiBindings;
 import pl.marcinchwedczuk.rfid.card.acr122.DetectionStatus;
 import pl.marcinchwedczuk.rfid.card.acr122.FeatureStatus;
 import pl.marcinchwedczuk.rfid.card.acr122.PoolingInterval;
+import pl.marcinchwedczuk.rfid.gui.utils.FxUtils;
 
 import java.io.IOException;
 import java.net.URL;
@@ -63,14 +64,14 @@ public class PiccFragment implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Setup view
-        enumChoiceBox(autoPiccPooling, FeatureStatus.values());
-        enumChoiceBox(autoAtsGeneration, FeatureStatus.values());
-        enumChoiceBox(pollingInterval, PoolingInterval.values());
-        enumChoiceBox(feliCa212K, DetectionStatus.values());
-        enumChoiceBox(feliCa424K, DetectionStatus.values());
-        enumChoiceBox(topaz, DetectionStatus.values());
-        enumChoiceBox(isoTypeA, DetectionStatus.values());
-        enumChoiceBox(isoTypeB, DetectionStatus.values());
+        FxUtils.enumChoiceBox(autoPiccPooling, FeatureStatus.values());
+        FxUtils.enumChoiceBox(autoAtsGeneration, FeatureStatus.values());
+        FxUtils.enumChoiceBox(pollingInterval, PoolingInterval.values());
+        FxUtils.enumChoiceBox(feliCa212K, DetectionStatus.values());
+        FxUtils.enumChoiceBox(feliCa424K, DetectionStatus.values());
+        FxUtils.enumChoiceBox(topaz, DetectionStatus.values());
+        FxUtils.enumChoiceBox(isoTypeA, DetectionStatus.values());
+        FxUtils.enumChoiceBox(isoTypeB, DetectionStatus.values());
 
         // Bind to ViewModel
         UiBindings.biBind(autoPiccPooling, piccViewModel.autoPiccPooling);
@@ -99,10 +100,5 @@ public class PiccFragment implements Initializable {
 
     public Node getRoot() {
         return piccFragment;
-    }
-
-    private static <E extends Enum<E>>
-    void enumChoiceBox(ChoiceBox<E> cb, E[] values) {
-        cb.getItems().setAll(values);
     }
 }

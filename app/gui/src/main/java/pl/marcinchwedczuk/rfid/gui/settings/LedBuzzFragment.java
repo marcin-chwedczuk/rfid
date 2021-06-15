@@ -13,6 +13,7 @@ import pl.marcinchwedczuk.rfid.card.acr122.Buzzer;
 import pl.marcinchwedczuk.rfid.card.acr122.LedBlinkingMask;
 import pl.marcinchwedczuk.rfid.card.acr122.LedState;
 import pl.marcinchwedczuk.rfid.card.acr122.StateMask;
+import pl.marcinchwedczuk.rfid.gui.utils.FxUtils;
 
 import java.io.IOException;
 import java.net.URL;
@@ -71,22 +72,22 @@ public class LedBuzzFragment implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        enumChoiceBox(finalRedLedCB, LedState.values());
-        enumChoiceBox(finalGreenLedCB, LedState.values());
+        FxUtils.enumChoiceBox(finalRedLedCB, LedState.values());
+        FxUtils.enumChoiceBox(finalGreenLedCB, LedState.values());
 
-        enumChoiceBox(maskRedLedCB, StateMask.values());
-        enumChoiceBox(maskGreenLedCB, StateMask.values());
+        FxUtils.enumChoiceBox(maskRedLedCB, StateMask.values());
+        FxUtils.enumChoiceBox(maskGreenLedCB, StateMask.values());
 
-        enumChoiceBox(blinkingRedLedCB, LedState.values());
-        enumChoiceBox(blinkingGreenLedCB, LedState.values());
+        FxUtils.enumChoiceBox(blinkingRedLedCB, LedState.values());
+        FxUtils.enumChoiceBox(blinkingGreenLedCB, LedState.values());
 
-        enumChoiceBox(blinkingMaskRedLedCB, LedBlinkingMask.values());
-        enumChoiceBox(blinkingMaskGreenLedCB, LedBlinkingMask.values());
+        FxUtils.enumChoiceBox(blinkingMaskRedLedCB, LedBlinkingMask.values());
+        FxUtils.enumChoiceBox(blinkingMaskGreenLedCB, LedBlinkingMask.values());
 
         t1Spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 255, 10));
         t2Spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 255, 10));
         repetitionsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10, 3));
-        enumChoiceBox(linkToBuzzerCB, Buzzer.values());
+        FxUtils.enumChoiceBox(linkToBuzzerCB, Buzzer.values());
 
         // Setup ViewModel
         UiBindings.biBind(finalRedLedCB, ledBuzzViewModel.finalRedLed);
@@ -116,8 +117,4 @@ public class LedBuzzFragment implements Initializable {
         return ledBuzzFragment;
     }
 
-    private static <E extends Enum<E>>
-    void enumChoiceBox(ChoiceBox<E> cb, E[] values) {
-        cb.getItems().setAll(values);
-    }
 }
