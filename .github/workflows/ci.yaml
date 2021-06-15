@@ -14,6 +14,6 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
       - name: Build with Maven
-        run: ./mvnw -B -e --update-snapshots verify
+        run: ./mvnw -B -e --update-snapshots verify -Pci
         # Run maven in app subdirectory!
         working-directory: app 
