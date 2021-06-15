@@ -2,3 +2,8 @@
 .byteEditor {
     -​fx-font-family: monospace;
 }
+
+.text-area.output .content {
+    -fx-background-color: whitesmoke;
+}
+

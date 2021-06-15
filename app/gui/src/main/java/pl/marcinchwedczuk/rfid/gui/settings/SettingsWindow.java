@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.marcinchwedczuk.rfid.card.acr122.*;
 import pl.marcinchwedczuk.rfid.gui.utils.DialogBoxes;
+import pl.marcinchwedczuk.rfid.gui.utils.FxUtils;
 import pl.marcinchwedczuk.rfid.gui.utils.JavaFxDialogBoxes;
 
 import java.io.IOException;
@@ -74,7 +75,7 @@ public class SettingsWindow implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         remarksPane.expandedProperty().addListener((prop, oldValue, isAnimated) -> {
-            Platform.runLater(() -> getStage().sizeToScene());
+            Platform.runLater(() -> FxUtils.getStage(childPanesContainer).sizeToScene());
         });
 
         childPanesContainer.getChildren().addAll(
@@ -88,23 +89,9 @@ public class SettingsWindow implements Initializable {
     }
 
     private void closeWindow() {
-        Stage stage = getStage();
+        Stage stage = FxUtils.getStage(childPanesContainer);
         if (stage != null) {
             stage.close();
         }
-    }
-
-    private Stage getStage() {
-        Scene scene = childPanesContainer.getScene();
-        if (scene == null) {
-            return null;
-        }
-
-        Window window = scene.getWindow();
-        if (window == null) {
-            return null;
-        }
-
-        return (Stage) window;
     }
 }
