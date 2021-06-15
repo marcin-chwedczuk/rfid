@@ -53,12 +53,12 @@ public class LedBuzzViewModel {
         this.dialogBoxes = Objects.requireNonNull(dialogBoxes);
         this.terminalCommands = Objects.requireNonNull(terminalCommands);
 
-        setLedBuzzerSettings(LedBuzzerSettings.newDefaults());
+        mapToViewModel(LedBuzzerSettings.newDefaults());
     }
 
     @FXML
     public void sendCommand() {
-        LedBuzzerSettings newSettings = getLedBuzzerSettings();
+        LedBuzzerSettings newSettings = mapViewModelToDomain();
 
         try {
             terminalCommands.configureLedAndBuzzer(newSettings);
@@ -67,7 +67,7 @@ public class LedBuzzViewModel {
         }
     }
 
-    private void setLedBuzzerSettings(LedBuzzerSettings settings) {
+    private void mapToViewModel(LedBuzzerSettings settings) {
         LedSettings ledSettings = settings.getLedSettings();
 
         finalRedLed.setModelValue(ledSettings.getFinalRedLED());
@@ -88,7 +88,7 @@ public class LedBuzzViewModel {
         linkToBuzzer.setModelValue(settings.getLinkToBuzzer());
     }
 
-    private LedBuzzerSettings getLedBuzzerSettings() {
+    private LedBuzzerSettings mapViewModelToDomain() {
         LedBuzzerSettings settings = LedBuzzerSettings.newDefaults();
         LedSettings ledSettings = settings.getLedSettings();
 

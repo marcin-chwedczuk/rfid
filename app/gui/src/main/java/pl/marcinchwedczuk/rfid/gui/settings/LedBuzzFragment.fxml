@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<TitledPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            animated="false" collapsible="false"
+            fx:id="ledBuzzFragment"
+            text="Request LED blinking &amp; Buzzer buzzing...">
+    <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0">
+            <children>
+                <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                          AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <columnConstraints>
+                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES"
+                                           minWidth="10.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0"
+                                           minWidth="10.0"
+                                           prefWidth="12.999992370605469"/>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                        vgrow="SOMETIMES"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                        vgrow="SOMETIMES"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                        vgrow="SOMETIMES"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                        vgrow="SOMETIMES"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                        vgrow="SOMETIMES"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                        vgrow="SOMETIMES"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                        vgrow="SOMETIMES"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                        vgrow="SOMETIMES"/>
+                        <RowConstraints vgrow="SOMETIMES"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                        vgrow="SOMETIMES"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                        vgrow="SOMETIMES"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                        vgrow="SOMETIMES"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                        vgrow="SOMETIMES"/>
+                        <RowConstraints vgrow="SOMETIMES"/>
+                        <RowConstraints vgrow="SOMETIMES"/>
+                    </rowConstraints>
+                    <children>
+                        <Label text="Final State: Red LED:"/>
+                        <ChoiceBox fx:id="finalRedLedCB" prefWidth="150.0"
+                                   GridPane.columnIndex="2"/>
+                        <Label text="Final State: Green LED:" GridPane.rowIndex="1"/>
+                        <Label text="State Mask: Red LED:" GridPane.rowIndex="2"/>
+                        <Label text="State Mask: Green LED:" GridPane.rowIndex="3"/>
+                        <Label text="Initial Blinking State: Red LED:"
+                               GridPane.rowIndex="4"/>
+                        <Label text="Initial Blinking State: Green LED:"
+                               GridPane.rowIndex="5"/>
+                        <Label text="Blinking Mask: Red LED:" GridPane.rowIndex="6"/>
+                        <Label text="Blinking Mask: Green LED:" GridPane.rowIndex="7"/>
+                        <ChoiceBox fx:id="finalGreenLedCB" prefWidth="150.0"
+                                   GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                        <ChoiceBox fx:id="maskRedLedCB" prefWidth="150.0"
+                                   GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                        <ChoiceBox fx:id="maskGreenLedCB" prefWidth="150.0"
+                                   GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+                        <ChoiceBox fx:id="blinkingRedLedCB" prefWidth="150.0"
+                                   GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+                        <ChoiceBox fx:id="blinkingGreenLedCB" prefWidth="150.0"
+                                   GridPane.columnIndex="2" GridPane.rowIndex="5"/>
+                        <ChoiceBox fx:id="blinkingMaskRedLedCB" prefWidth="150.0"
+                                   GridPane.columnIndex="2" GridPane.rowIndex="6"/>
+                        <ChoiceBox fx:id="blinkingMaskGreenLedCB" prefWidth="150.0"
+                                   GridPane.columnIndex="2" GridPane.rowIndex="7"/>
+                        <Separator GridPane.columnSpan="2147483647"
+                                   GridPane.rowIndex="8">
+                            <padding>
+                                <Insets bottom="10.0" top="10.0"/>
+                            </padding>
+                        </Separator>
+                        <Label text="T1 Duration (unit = 100ms):"
+                               GridPane.rowIndex="9"/>
+                        <Label text="T2 Duration (unit = 100ms):"
+                               GridPane.rowIndex="10"/>
+                        <Label text="Number of repetitions:" GridPane.rowIndex="11"/>
+                        <Label text="Link to Buzzer:" GridPane.rowIndex="12"/>
+                        <Spinner fx:id="t1Spinner" GridPane.columnIndex="2"
+                                 GridPane.rowIndex="9"/>
+                        <Spinner fx:id="t2Spinner" GridPane.columnIndex="2"
+                                 GridPane.rowIndex="10"/>
+                        <Spinner fx:id="repetitionsSpinner" GridPane.columnIndex="2"
+                                 GridPane.rowIndex="11"/>
+                        <ChoiceBox fx:id="linkToBuzzerCB" prefWidth="150.0"
+                                   GridPane.columnIndex="2" GridPane.rowIndex="12"/>
+                        <Separator GridPane.columnSpan="2147483647"
+                                   GridPane.rowIndex="13">
+                            <padding>
+                                <Insets bottom="10.0" top="10.0"/>
+                            </padding>
+                        </Separator>
+                        <HBox alignment="CENTER_RIGHT" GridPane.columnSpan="2147483647"
+                              GridPane.rowIndex="14">
+                            <children>
+                                <Button mnemonicParsing="false"
+                                        onAction="#sendBlinkBuzzCommand"
+                                        text="Send command"/>
+                            </children>
+                        </HBox>
+                    </children>
+                </GridPane>
+            </children>
+        </AnchorPane>
+    </content>
+</TitledPane>

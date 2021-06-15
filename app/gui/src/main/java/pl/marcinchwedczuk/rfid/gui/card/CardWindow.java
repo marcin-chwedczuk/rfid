@@ -29,7 +29,7 @@ import pl.marcinchwedczuk.rfid.gui.controls.maskedtext.MaskedTextField;
 import pl.marcinchwedczuk.rfid.gui.sender.SenderWindow;
 import pl.marcinchwedczuk.rfid.gui.settings.SettingsWindow;
 import pl.marcinchwedczuk.rfid.gui.utils.DialogBoxes;
-import pl.marcinchwedczuk.rfid.gui.utils.FxDialogBoxes;
+import pl.marcinchwedczuk.rfid.gui.utils.JavaFxDialogBoxes;
 import pl.marcinchwedczuk.rfid.gui.utils.KeyForm;
 import pl.marcinchwedczuk.rfid.xml.XmlCardData;
 
@@ -103,7 +103,7 @@ public class CardWindow implements Initializable {
 
     private AcrCard card;
     private UiServices uiServices;
-    private DialogBoxes dialogBoxes = new FxDialogBoxes();
+    private DialogBoxes dialogBoxes = new JavaFxDialogBoxes();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

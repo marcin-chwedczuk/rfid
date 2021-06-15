@@ -8,7 +8,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.marcinchwedczuk.rfid.gui.utils.FxDialogBoxes;
+import pl.marcinchwedczuk.rfid.gui.utils.JavaFxDialogBoxes;
 
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
@@ -36,7 +36,7 @@ public class App extends Application {
 
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
             logger.error("Unhandled exception", e);
-            new FxDialogBoxes().exception(e);
+            new JavaFxDialogBoxes().exception(e);
         });
 
         App.hostServices = getHostServices();
