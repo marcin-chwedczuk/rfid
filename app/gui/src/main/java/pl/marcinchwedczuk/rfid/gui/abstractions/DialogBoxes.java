@@ -1,4 +1,4 @@
-package pl.marcinchwedczuk.rfid.gui.utils;
+package pl.marcinchwedczuk.rfid.gui.abstractions;
 
 public interface DialogBoxes {
     void info(String message);

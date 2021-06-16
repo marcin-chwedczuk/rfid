@@ -28,8 +28,8 @@ import pl.marcinchwedczuk.rfid.gui.controls.keybox.KeyBox;
 import pl.marcinchwedczuk.rfid.gui.controls.maskedtext.MaskedTextField;
 import pl.marcinchwedczuk.rfid.gui.sender.SenderWindow;
 import pl.marcinchwedczuk.rfid.gui.settings.SettingsWindow;
-import pl.marcinchwedczuk.rfid.gui.utils.DialogBoxes;
-import pl.marcinchwedczuk.rfid.gui.utils.JavaFxDialogBoxes;
+import pl.marcinchwedczuk.rfid.gui.abstractions.DialogBoxes;
+import pl.marcinchwedczuk.rfid.gui.abstractions.impl.JavaFxDialogBoxes;
 import pl.marcinchwedczuk.rfid.gui.utils.KeyForm;
 import pl.marcinchwedczuk.rfid.xml.XmlCardData;
 

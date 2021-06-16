@@ -1,4 +1,4 @@
-package pl.marcinchwedczuk.rfid.gui.utils;
+package pl.marcinchwedczuk.rfid.gui.abstractions.impl;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import pl.marcinchwedczuk.rfid.gui.abstractions.DialogBoxes;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

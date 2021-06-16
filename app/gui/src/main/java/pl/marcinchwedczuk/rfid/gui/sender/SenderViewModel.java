@@ -6,7 +6,7 @@ import javafx.beans.property.*;
 import pl.marcinchwedczuk.javafx.validation.Input;
 import pl.marcinchwedczuk.javafx.validation.converters.Converters;
 import pl.marcinchwedczuk.rfid.card.acr122.AcrTerminalCommands;
-import pl.marcinchwedczuk.rfid.card.commons.utils.ByteArrays;
+import pl.marcinchwedczuk.rfid.gui.abstractions.TimeProvider;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -17,6 +17,9 @@ public class SenderViewModel {
             .withInitialValue(
                     "# Get firmware version\n" +
                     "FF 00 48 00 00");
+
+    public final Input<Boolean, Boolean> clearOnSendFlag = new Input<Boolean, Boolean>(Converters.identityConverter())
+            .withInitialValue(false);
 
     // TODO: Create Output class in validation library
     private final StringProperty outputText = new SimpleStringProperty("");
@@ -36,9 +39,12 @@ public class SenderViewModel {
     private final CommandTextParser commandTextParser = new CommandTextParser();
     private final HexEditorFormatter hexEditorFormatter = new HexEditorFormatter();
 
+    private final TimeProvider timeProvider;
     private final AcrTerminalCommands terminalCommands;
 
-    public SenderViewModel(AcrTerminalCommands terminalCommands) {
+    public SenderViewModel(TimeProvider timeProvider,
+                           AcrTerminalCommands terminalCommands) {
+        this.timeProvider = Objects.requireNonNull(timeProvider);
         this.terminalCommands = Objects.requireNonNull(terminalCommands);
     }
 
@@ -52,25 +58,38 @@ public class SenderViewModel {
         if (outputText.get().length() > 0) {
             appendOutput("");
             appendOutput("---------------------------------------------------------------");
+            appendOutput("");
         }
 
+        appendOutput("TIME>");
+        appendOutput(timeProvider.localNow().toString());
+        appendOutput("");
+
+        appendOutput("COMMAND>");
         appendOutput(commandText.getModelValue());
         appendOutput("");
 
         try {
             byte[] responseBytes = terminalCommands.sendCommand(command);
+            appendOutput("RESPONSE>");
             appendOutput(hexEditorFormatter.formatAsString(responseBytes));
         } catch (Exception e) {
             StringBuilder message = new StringBuilder();
 
             message.append(e.toString()).append(System.lineSeparator());
 
+            // TODO: Extract to util class
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             e.printStackTrace(pw);
             message.append(sw.toString());
 
+            appendOutput("ERROR>");
             appendOutput(message.toString());
+        }
+
+        if (clearOnSendFlag.getModelValue()) {
+            commandText.setModelValue("");
         }
     }
 

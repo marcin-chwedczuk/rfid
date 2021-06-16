@@ -4,7 +4,7 @@ import javafx.fxml.FXML;
 import pl.marcinchwedczuk.javafx.validation.Input;
 import pl.marcinchwedczuk.javafx.validation.converters.Converters;
 import pl.marcinchwedczuk.rfid.card.acr122.*;
-import pl.marcinchwedczuk.rfid.gui.utils.DialogBoxes;
+import pl.marcinchwedczuk.rfid.gui.abstractions.DialogBoxes;
 
 import java.util.Objects;
 
