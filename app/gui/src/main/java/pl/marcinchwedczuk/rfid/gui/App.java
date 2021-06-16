@@ -5,6 +5,7 @@ import javafx.application.HostServices;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import pl.marcinchwedczuk.rfid.gui.abstractions.impl.JavaFxDialogBoxes;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
+import java.lang.reflect.Method;
 import java.util.List;
 
 public class App extends Application {
@@ -41,6 +43,8 @@ public class App extends Application {
 
         App.hostServices = getHostServices();
 
+        loadIcons(primaryStage, "/pl/marcinchwedczuk/rfid/gui/appicon/icon-acr122-%d.png", 32, 128, 256);
+
         Parent root = FXMLLoader.load(
                 getClass().getResource("/pl/marcinchwedczuk/rfid/gui/main/MainWindow.fxml"));
 
@@ -50,6 +54,20 @@ public class App extends Application {
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();
+    }
+
+    // TODO: Does not work on macOS - can be fixed with this:
+    // https://www.reddit.com/r/java/comments/ugugi/how_to_set_the_dock_icon_on_osx/
+    private static void loadIcons(Stage stage, String iconPathFormat, int... sizes) {
+        for (int size: sizes) {
+            String fullPath = String.format(iconPathFormat, size);
+            try {
+                Image icon = new Image(App.class.getResourceAsStream(fullPath));
+                stage.getIcons().add(icon);
+            } catch (Exception e) {
+                logger.error("Cannot load icon: {}.", fullPath, e);
+            }
+        }
     }
 
     public static void main(String[] args) {

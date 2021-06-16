@@ -79,8 +79,6 @@ public class SenderViewModel {
         } catch (Exception e) {
             StringBuilder message = new StringBuilder();
 
-            message.append(e.toString()).append(System.lineSeparator());
-
             // TODO: Extract to util class
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
@@ -93,18 +91,6 @@ public class SenderViewModel {
 
         if (clearOnSendFlag.getModelValue()) {
             commandText.setModelValue("");
-        }
-    }
-
-    private boolean validateInput() {
-        if (!commandTextParser.isValid(commandText.getModelValue())) {
-            errorMessage.set("Invalid command text. " +
-                    "Command bytes should be written using hex literals e.g. 'AA BB CC 01'.");
-            return false;
-        }
-        else {
-            errorMessage.set("");
-            return true;
         }
     }
 

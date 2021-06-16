@@ -33,20 +33,21 @@ public class AcrTerminalProvider {
 
     public Collection<? extends AcrTerminal> findTerminals() {
         logger.info("Getting list of the terminals.");
+
+        List<CardTerminal> terminals = new ArrayList<>();
         try {
             TerminalFactory factory = TerminalFactory.getInstance("PC/SC", null);
-
-            List<CardTerminal> terminals = new ArrayList<>(factory.terminals().list());
-            if (fakeTerminal != null) {
-                terminals.add(fakeTerminal);
-            }
-
-            return terminals.stream()
-                    .map(AcrTerminal::new)
-                    .collect(toList());
+            terminals.addAll(factory.terminals().list());
         } catch (CardException | NoSuchAlgorithmException e) {
-            logger.warn("Cannot get list of the terminals.", e);
-            return Collections.emptyList();
+            logger.warn("Cannot get list of the terminals from PC/SC.", e);
         }
+
+        if (fakeTerminal != null) {
+            terminals.add(fakeTerminal);
+        }
+
+        return terminals.stream()
+                .map(AcrTerminal::new)
+                .collect(toList());
     }
 }

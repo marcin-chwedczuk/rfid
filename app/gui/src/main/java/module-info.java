@@ -22,6 +22,7 @@ module pl.marcinchwedczuk.rfid {
     exports pl.marcinchwedczuk.rfid.gui;
     // Make resources available to javafx
     opens pl.marcinchwedczuk.rfid.gui.img;
+    opens pl.marcinchwedczuk.rfid.gui.appicon;
 
     // Allow @FXML injection to private fields.
     opens pl.marcinchwedczuk.rfid.gui;
