@@ -1,0 +1,51 @@
+.banner:type-info {
+  -fx-spacing: 0.4em;
+  -fx-alignment: CENTER_LEFT;
+  -fx-background-color: #99efff;
+  -fx-padding: 1em 0.5em 1em 0.5em;
+  -fx-border-insets: 0.5em 0 0.5em 0;
+  -fx-background-insets: 0.5em 0 0.5em 0;
+  -fx-background-radius: 0.5em;
+}
+.banner:type-info .icon .circle {
+  -fx-fill: #006ec2;
+}
+.banner:type-info .icon .exclamation {
+  -fx-fill: white;
+  -fx-font-size: 26;
+  -fx-font-family: monospace;
+}
+.banner:type-warning {
+  -fx-spacing: 0.4em;
+  -fx-alignment: CENTER_LEFT;
+  -fx-background-color: #fffdba;
+  -fx-padding: 1em 0.5em 1em 0.5em;
+  -fx-border-insets: 0.5em 0 0.5em 0;
+  -fx-background-insets: 0.5em 0 0.5em 0;
+  -fx-background-radius: 0.5em;
+}
+.banner:type-warning .icon .circle {
+  -fx-fill: #ffd000;
+}
+.banner:type-warning .icon .exclamation {
+  -fx-fill: black;
+  -fx-font-size: 26;
+  -fx-font-family: monospace;
+}
+.banner:type-error {
+  -fx-spacing: 0.4em;
+  -fx-alignment: CENTER_LEFT;
+  -fx-background-color: #ffa7a1;
+  -fx-padding: 1em 0.5em 1em 0.5em;
+  -fx-border-insets: 0.5em 0 0.5em 0;
+  -fx-background-insets: 0.5em 0 0.5em 0;
+  -fx-background-radius: 0.5em;
+}
+.banner:type-error .icon .circle {
+  -fx-fill: #d10700;
+}
+.banner:type-error .icon .exclamation {
+  -fx-fill: black;
+  -fx-font-size: 26;
+  -fx-font-family: monospace;
+}

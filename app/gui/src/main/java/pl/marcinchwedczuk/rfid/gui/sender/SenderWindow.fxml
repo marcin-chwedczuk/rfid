@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
+<?import pl.marcinchwedczuk.rfid.gui.controls.banner.Banner?>
 <AnchorPane prefHeight="668.0" prefWidth="608.0" stylesheets="@SenderWindow.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
    <opaqueInsets>
       <Insets />
@@ -21,7 +22,8 @@
                   <String fx:value="byteEditor" />
                </styleClass>
             </TextArea>
-            <TextArea fx:id="inputTextArea" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" VBox.vgrow="NEVER" />
+            <Banner fx:id="errorBanner" type="ERROR" VBox.vgrow="NEVER" />
+            <TextArea fx:id="inputTextArea" minHeight="-Infinity" styleClass="byteEditor" minWidth="-Infinity" prefHeight="150.0" VBox.vgrow="NEVER" />
             <HBox spacing="10.0" VBox.vgrow="NEVER">
                <children>
                   <HBox HBox.hgrow="ALWAYS">

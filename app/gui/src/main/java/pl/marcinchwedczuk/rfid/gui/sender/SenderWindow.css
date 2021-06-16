@@ -1,6 +1,6 @@
 
 .byteEditor {
-    -​fx-font-family: monospace;
+    -fx-font-family: 'monospaced';
 }
 
 .text-area.output .content {

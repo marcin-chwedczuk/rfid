@@ -18,6 +18,7 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 import pl.marcinchwedczuk.rfid.card.commons.utils.ByteArrays;
+import pl.marcinchwedczuk.rfid.gui.controls.banner.Banner;
 import pl.marcinchwedczuk.rfid.gui.progress.FxProgressDialog;
 import pl.marcinchwedczuk.rfid.gui.utils.FxUtils;
 
@@ -53,6 +54,9 @@ public class SenderWindow implements Initializable {
     @FXML
     private TextArea inputTextArea;
 
+    @FXML
+    private Banner errorBanner;
+
     private final SenderViewModel viewModel;
 
     public SenderWindow(SenderViewModel viewModel) {
@@ -61,8 +65,17 @@ public class SenderWindow implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        outputTextArea.textProperty().bind(viewModel.outputTextProperty());
+        outputTextArea.textProperty()
+                .bind(viewModel.outputTextProperty());
         UiBindings.biBind(inputTextArea, viewModel.commandText);
+
+        errorBanner.textProperty()
+                .bind(viewModel.errorMessageProperty());
+
+        errorBanner.visibleProperty()
+                .bind(viewModel.showErrorProperty());
+        errorBanner.managedProperty()
+                .bind(viewModel.showErrorProperty());
     }
 
     @FXML

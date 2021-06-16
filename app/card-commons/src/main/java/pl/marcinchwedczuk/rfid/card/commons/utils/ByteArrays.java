@@ -89,6 +89,24 @@ public class ByteArrays {
         return sb.toString();
     }
 
+    public static String toPrintableAscii(byte[] bytes) {
+        StringBuilder sb = new StringBuilder(bytes.length);
+        for (byte b : bytes) {
+            char c = (char)(b & 0xff);
+            if (isAsciiPrintable(c)) {
+                sb.append(c);
+            }
+            else {
+                sb.append('.');
+            }
+        }
+        return sb.toString();
+    }
+
+    private static boolean isAsciiPrintable(char ch) {
+        return ch >= 32 && ch < 127;
+    }
+
     public static byte[] concat(byte[] first, byte[] second) {
         byte[] result = new byte[first.length + second.length];
         System.arraycopy(first, 0, result, 0, first.length);

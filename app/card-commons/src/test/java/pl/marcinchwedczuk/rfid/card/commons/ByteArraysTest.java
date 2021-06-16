@@ -86,6 +86,15 @@ class ByteArraysTest {
     }
 
     @Test
+    void toPrintableAscii_works() {
+        String result = ByteArrays.toPrintableAscii(
+                ByteArrays.of(65, 66, 67, 0, 10, 32, 126, 140, 160, 255));
+
+        assertThat(result)
+                .isEqualTo("ABC.. ~...");
+    }
+
+    @Test
     void concat_works() {
         byte[] first = new byte[] { 1, 2, 3 };
         byte[] second = new byte[] { 10, 20 };

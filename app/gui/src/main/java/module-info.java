@@ -33,5 +33,6 @@ module pl.marcinchwedczuk.rfid {
     opens pl.marcinchwedczuk.rfid.gui.about;
     opens pl.marcinchwedczuk.rfid.gui.controls.keybox;
     opens pl.marcinchwedczuk.rfid.gui.controls.maskedtext;
+    opens pl.marcinchwedczuk.rfid.gui.controls.banner;
     opens pl.marcinchwedczuk.rfid.xml;
 }

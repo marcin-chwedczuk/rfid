@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Text?>
+<fx:root stylesheets="@Banner.css" styleClass="banner" type="javafx.scene.layout.HBox"
+         xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <StackPane minHeight="-Infinity" minWidth="-Infinity" styleClass="icon">
+            <children>
+                <Circle radius="15.0" styleClass="circle"/>
+                <Text styleClass="exclamation" text="!"/>
+            </children>
+        </StackPane>
+        <Text fx:id="msg" styleClass="message"/>
+    </children>
+</fx:root>
