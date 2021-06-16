@@ -4,6 +4,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.*;
 import pl.marcinchwedczuk.javafx.validation.Input;
+import pl.marcinchwedczuk.javafx.validation.ValidationGroup;
 import pl.marcinchwedczuk.javafx.validation.converters.Converters;
 import pl.marcinchwedczuk.rfid.card.acr122.AcrTerminalCommands;
 import pl.marcinchwedczuk.rfid.gui.abstractions.TimeProvider;
@@ -13,7 +14,11 @@ import java.io.StringWriter;
 import java.util.Objects;
 
 public class SenderViewModel {
+    private final CommandTextParser commandTextParser = new CommandTextParser();
+    private final HexEditorFormatter hexEditorFormatter = new HexEditorFormatter();
+
     public final Input<String, String> commandText = new Input<String, String>(Converters.identityConverter())
+            .withModelValidator(new CommandValidator(commandTextParser))
             .withInitialValue(
                     "# Get firmware version\n" +
                     "FF 00 48 00 00");
@@ -27,17 +32,12 @@ public class SenderViewModel {
         return outputText;
     }
 
-    private final StringProperty errorMessage = new SimpleStringProperty("");
+    private final StringProperty errorMessage = new SimpleStringProperty(null);
     public ReadOnlyStringProperty errorMessageProperty() {
         return errorMessage;
     }
 
-    public BooleanBinding showErrorProperty() {
-        return Bindings.greaterThan(Bindings.length(errorMessage), 0);
-    }
-
-    private final CommandTextParser commandTextParser = new CommandTextParser();
-    private final HexEditorFormatter hexEditorFormatter = new HexEditorFormatter();
+    private final ValidationGroup allInputs = new ValidationGroup(commandText);
 
     private final TimeProvider timeProvider;
     private final AcrTerminalCommands terminalCommands;
@@ -49,7 +49,10 @@ public class SenderViewModel {
     }
 
     public void send() {
-        if (!validateInput()) {
+        errorMessage.set(null);
+        if (!allInputs.validate()) {
+            // Set error to first objection
+            errorMessage.set(commandText.getObjections().get(0).userMessage);
             return;
         }
 

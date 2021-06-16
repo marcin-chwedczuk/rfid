@@ -74,17 +74,22 @@ public class SenderWindow implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         outputTextArea.textProperty()
                 .bind(viewModel.outputTextProperty());
+
         UiBindings.biBind(inputTextArea, viewModel.commandText);
-
-        errorBanner.textProperty()
-                .bind(viewModel.errorMessageProperty());
-
         UiBindings.biBind(clearOnSendFlag, viewModel.clearOnSendFlag);
 
-        errorBanner.visibleProperty()
-                .bind(viewModel.showErrorProperty());
-        errorBanner.managedProperty()
-                .bind(viewModel.showErrorProperty());
+        // Hide or show validation errors
+        errorBanner.setVisible(false);
+        errorBanner.setManaged(false);
+
+        viewModel.errorMessageProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    boolean showPanel = (newValue != null);
+                    errorBanner.setVisible(showPanel);
+                    errorBanner.setManaged(showPanel);
+
+                    errorBanner.setText(showPanel ? newValue : "");
+                });
 
         // Scroll output to end when new text appears
         outputTextArea.textProperty()
