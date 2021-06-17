@@ -12,7 +12,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Optional;
 
-public class JavaFxDialogBoxes implements DialogBoxes {
+public class FxDialogBoxes implements DialogBoxes {
     public boolean ask(String question) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Question");

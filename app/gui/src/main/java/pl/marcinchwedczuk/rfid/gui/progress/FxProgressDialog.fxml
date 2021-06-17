@@ -10,7 +10,7 @@
     <children>
         <ProgressBar fx:id="progressBar" layoutX="35.0" layoutY="54.0" prefHeight="20.0" prefWidth="506.0"
                      progress="0.0"/>
-        <Label fx:id="operationName" layoutX="35.0" layoutY="25.0" text="OpertionName"/>
+        <Label fx:id="operationName" layoutX="35.0" layoutY="25.0" text="Operation name..."/>
         <Button fx:id="cancelButton" layoutX="426.0" layoutY="102.0" mnemonicParsing="false" prefHeight="27.0"
                 prefWidth="115.0" text="Cancel"/>
     </children>

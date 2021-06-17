@@ -16,7 +16,8 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane stylesheets="@MainWindow.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.marcinchwedczuk.rfid.gui.main.MainWindow">
+<AnchorPane stylesheets="@MainWindow.css"
+            xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <GridPane layoutX="11.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <columnConstraints>
@@ -75,7 +76,6 @@
                     </children>
                 </HBox>
                 <Button fx:id="closeWindowButton" mnemonicParsing="false" onAction="#closeMainWindow" prefHeight="34.0" prefWidth="125.0" text="Close" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
-            <Button mnemonicParsing="false" onAction="#testAction" text="Test Action" GridPane.columnIndex="1" GridPane.rowIndex="6" />
             </children>
         </GridPane>
     </children>

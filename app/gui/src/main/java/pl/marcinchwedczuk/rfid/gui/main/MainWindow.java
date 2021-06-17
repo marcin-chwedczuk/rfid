@@ -2,9 +2,10 @@ package pl.marcinchwedczuk.rfid.gui.main;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -15,10 +16,11 @@ import org.slf4j.LoggerFactory;
 import pl.marcinchwedczuk.rfid.card.acr122.*;
 import pl.marcinchwedczuk.rfid.card.fake.FakeCardTerminal;
 import pl.marcinchwedczuk.rfid.gui.about.AboutWindow;
+import pl.marcinchwedczuk.rfid.gui.abstractions.impl.FxTimer;
 import pl.marcinchwedczuk.rfid.gui.card.CardWindow;
 import pl.marcinchwedczuk.rfid.gui.settings.SettingsWindow;
 
-import javax.smartcardio.*;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.Timer;
@@ -26,6 +28,29 @@ import java.util.TimerTask;
 
 public class MainWindow implements Initializable {
     private static final Logger logger = LoggerFactory.getLogger(MainWindow.class);
+
+    public static MainWindow show(Stage primaryStage) {
+        pl.marcinchwedczuk.rfid.gui.abstractions.Timer timer = new FxTimer();
+        MainWindowViewModel viewModel = new MainWindowViewModel(timer);
+        MainWindow controller = new MainWindow(viewModel);
+
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    MainWindow.class.getResource("MainWindow.fxml"));
+            loader.setController(controller);
+
+            primaryStage.setTitle("Mifare Tag Editor");
+            primaryStage.setScene(new Scene(loader.load()));
+            primaryStage.setResizable(false);
+
+            primaryStage.sizeToScene();
+            primaryStage.show();
+
+            return controller;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @FXML
     private ComboBox<AcrTerminal> terminalsList;
@@ -38,6 +63,12 @@ public class MainWindow implements Initializable {
 
     private final Timer timer = new Timer(true);
     private CardWindow cartWindow = null;
+
+    private MainWindowViewModel viewModel;
+
+    public MainWindow(MainWindowViewModel viewModel) {
+        this.viewModel = viewModel;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -117,32 +148,5 @@ public class MainWindow implements Initializable {
 
     private Window getWindow() {
         return terminalsList.getScene().getWindow();
-    }
-
-    public void testAction(ActionEvent actionEvent) {
-        try {
-            /*
-            Card direct = currentTerminal().getUnderlyingTerminal()
-                    .connect("DIRECT");
-
-            ATR atr = direct.getATR();
-            logger.info("ATR = {}", atr);
-             */
-
-            Card card = currentTerminal().getUnderlyingTerminal()
-                    .connect("T=0");
-            try {
-                card.disconnect(false);
-
-                card.openLogicalChannel().getChannelNumber();
-            } catch (Exception e) {
-                logger.error("After disconnect!", e);
-            }
-
-            // Have to be closed
-        }
-        catch (Exception e) {
-            logger.error("err", e);
-        }
     }
 }

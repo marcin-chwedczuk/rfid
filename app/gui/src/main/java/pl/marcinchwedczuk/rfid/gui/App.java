@@ -9,16 +9,15 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.marcinchwedczuk.rfid.gui.abstractions.impl.JavaFxDialogBoxes;
+import pl.marcinchwedczuk.rfid.gui.abstractions.impl.FxDialogBoxes;
+import pl.marcinchwedczuk.rfid.gui.main.MainWindow;
 
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
-import java.lang.reflect.Method;
 import java.util.List;
 
 public class App extends Application {
-
     private static final Logger logger = LoggerFactory.getLogger(App.class);
 
     private static HostServices hostServices = null;
@@ -31,29 +30,17 @@ public class App extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws IOException {
-        // Is this placebo? Maybe, but monospaced fonts look better with this
-        // ...or so I think.
-        System.setProperty("prism.lcdtext", "false");
-
+    public void start(Stage primaryStage) {
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
             logger.error("Unhandled exception", e);
-            new JavaFxDialogBoxes().exception(e);
+            new FxDialogBoxes().exception(e);
         });
 
         App.hostServices = getHostServices();
 
         loadIcons(primaryStage, "/pl/marcinchwedczuk/rfid/gui/appicon/icon-acr122-%d.png", 32, 128, 256);
 
-        Parent root = FXMLLoader.load(
-                getClass().getResource("/pl/marcinchwedczuk/rfid/gui/main/MainWindow.fxml"));
-
-        Scene scene = new Scene(root);
-
-        primaryStage.setTitle("Mifare Tag Editor");
-        primaryStage.setScene(scene);
-        primaryStage.setResizable(false);
-        primaryStage.show();
+        MainWindow.show(primaryStage);
     }
 
     // TODO: Does not work on macOS - can be fixed with this:
@@ -71,6 +58,10 @@ public class App extends Application {
     }
 
     public static void main(String[] args) {
+        // Is this placebo? Maybe, but monospaced fonts look better with this
+        // ...or so I think.
+        System.setProperty("prism.lcdtext", "false");
+
         printJvmOptions();
         launch();
     }

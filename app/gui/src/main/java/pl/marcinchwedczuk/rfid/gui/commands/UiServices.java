@@ -2,11 +2,12 @@ package pl.marcinchwedczuk.rfid.gui.commands;
 
 import javafx.scene.Scene;
 import pl.marcinchwedczuk.rfid.gui.abstractions.DialogBoxes;
-import pl.marcinchwedczuk.rfid.gui.abstractions.impl.JavaFxDialogBoxes;
+import pl.marcinchwedczuk.rfid.gui.abstractions.ProgressDialog;
+import pl.marcinchwedczuk.rfid.gui.abstractions.impl.FxDialogBoxes;
 import pl.marcinchwedczuk.rfid.gui.progress.FxProgressDialog;
 
 public class UiServices {
-    private DialogBoxes dialogBoxes = new JavaFxDialogBoxes();
+    private DialogBoxes dialogBoxes = new FxDialogBoxes();
 
     private final Scene ownerWindow;
 
@@ -22,9 +23,4 @@ public class UiServices {
         return FxProgressDialog.show(ownerWindow, message, cancelCallback);
     }
 
-    public interface ProgressDialog {
-        void updateProgress(double percentage);
-
-        void close();
-    }
 }

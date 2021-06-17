@@ -23,13 +23,13 @@ import pl.marcinchwedczuk.rfid.card.commons.KeyType;
 import pl.marcinchwedczuk.rfid.card.commons.TrailerBlockAccess;
 import pl.marcinchwedczuk.rfid.card.commons.utils.ByteArrays;
 import pl.marcinchwedczuk.rfid.gui.about.AboutWindow;
+import pl.marcinchwedczuk.rfid.gui.abstractions.impl.FxDialogBoxes;
 import pl.marcinchwedczuk.rfid.gui.commands.*;
 import pl.marcinchwedczuk.rfid.gui.controls.keybox.KeyBox;
 import pl.marcinchwedczuk.rfid.gui.controls.maskedtext.MaskedTextField;
 import pl.marcinchwedczuk.rfid.gui.sender.SenderWindow;
 import pl.marcinchwedczuk.rfid.gui.settings.SettingsWindow;
 import pl.marcinchwedczuk.rfid.gui.abstractions.DialogBoxes;
-import pl.marcinchwedczuk.rfid.gui.abstractions.impl.JavaFxDialogBoxes;
 import pl.marcinchwedczuk.rfid.gui.utils.KeyForm;
 import pl.marcinchwedczuk.rfid.xml.XmlCardData;
 
@@ -103,7 +103,7 @@ public class CardWindow implements Initializable {
 
     private AcrCard card;
     private UiServices uiServices;
-    private DialogBoxes dialogBoxes = new JavaFxDialogBoxes();
+    private DialogBoxes dialogBoxes = new FxDialogBoxes();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

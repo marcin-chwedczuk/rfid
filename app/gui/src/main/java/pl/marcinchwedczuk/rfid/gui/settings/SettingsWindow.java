@@ -14,8 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.marcinchwedczuk.rfid.card.acr122.*;
 import pl.marcinchwedczuk.rfid.gui.abstractions.DialogBoxes;
+import pl.marcinchwedczuk.rfid.gui.abstractions.impl.FxDialogBoxes;
 import pl.marcinchwedczuk.rfid.gui.utils.FxUtils;
-import pl.marcinchwedczuk.rfid.gui.abstractions.impl.JavaFxDialogBoxes;
 
 import java.io.IOException;
 import java.net.URL;
@@ -27,7 +27,7 @@ public class SettingsWindow implements Initializable {
     private static final Logger logger = LoggerFactory.getLogger(SettingsWindow.class);
 
     public static SettingsWindow show(Window owner, AcrTerminalCommands terminalCommands) {
-        DialogBoxes dialogBoxes = new JavaFxDialogBoxes();
+        DialogBoxes dialogBoxes = new FxDialogBoxes();
 
         PiccViewModel piccViewModel = new PiccViewModel(dialogBoxes, terminalCommands);
         LedBuzzViewModel ledBuzzViewModel = new LedBuzzViewModel(dialogBoxes, terminalCommands);

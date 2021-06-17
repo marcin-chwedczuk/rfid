@@ -8,11 +8,33 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import pl.marcinchwedczuk.rfid.gui.commands.UiServices;
+import pl.marcinchwedczuk.rfid.gui.abstractions.ProgressDialog;
 
 import java.io.IOException;
 
-public class FxProgressDialog implements UiServices.ProgressDialog {
+public class FxProgressDialog implements ProgressDialog {
+    public static FxProgressDialog show(Scene owner, String description, Runnable onCancel) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    FxProgressDialog.class.getResource("FxProgressDialog.fxml"));
+
+            Stage childWindow = new Stage();
+            childWindow.initOwner(owner.getWindow());
+            childWindow.initModality(Modality.APPLICATION_MODAL);
+            childWindow.setTitle("Operation in progress...");
+            childWindow.setScene(new Scene(loader.load()));
+            childWindow.setResizable(false);
+
+            FxProgressDialog controller = loader.getController();
+            controller.init(childWindow, description, onCancel);
+
+            childWindow.show();
+            return controller;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private Stage window;
     private boolean cancelled = false;
 
@@ -47,25 +69,4 @@ public class FxProgressDialog implements UiServices.ProgressDialog {
         window.close();
     }
 
-    public static FxProgressDialog show(Scene owner, String description, Runnable onCancel) {
-        try {
-            FXMLLoader loader = new FXMLLoader(
-                    FxProgressDialog.class.getResource("/pl/marcinchwedczuk/rfid/gui/progress/ProgressDialog.fxml"));
-
-            Stage childWindow = new Stage();
-            childWindow.setTitle("Operation in progress...");
-            childWindow.setScene(new Scene(loader.load()));
-            childWindow.initModality(Modality.APPLICATION_MODAL);
-            childWindow.initOwner(owner.getWindow());
-            childWindow.setResizable(false);
-
-            FxProgressDialog controller = loader.getController();
-            controller.init(childWindow, description, onCancel);
-
-            childWindow.show();
-            return controller;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

@@ -3,6 +3,7 @@ package pl.marcinchwedczuk.rfid.gui.commands;
 import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.marcinchwedczuk.rfid.gui.abstractions.ProgressDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,7 @@ public abstract class BaseUiCommand<W> {
 
     private boolean canceled = false;
     private Exception error = null;
-    private UiServices.ProgressDialog progressDialog = null;
+    private ProgressDialog progressDialog = null;
 
     protected BaseUiCommand(UiServices uiServices) {
         this.uiServices = uiServices;
